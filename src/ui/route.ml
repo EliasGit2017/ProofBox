@@ -1,5 +1,6 @@
 open Js_of_ocaml
 open Js
+open Data_types
 
 let get_app ?app () = match app with
   | None -> V.app ()
@@ -11,10 +12,10 @@ let route ?app path =
   app##.path := string path;
   match String.split_on_char '/' path with
   | [ path ] -> begin match path with
-      (* | "db" ->
+      | "db" ->
         Request.get0 Services.version (fun {v_db; v_db_version} ->
             app##.database := string v_db;
-            app##.db_version_ := v_db_version) *)  (* Don't forget to uncomment ... adding json body *)
+            app##.db_version_ := v_db_version)
       | "api" ->
         Common.wait ~t:10. @@ fun () ->
         (Unsafe.pure_js_expr "Redoc")##init

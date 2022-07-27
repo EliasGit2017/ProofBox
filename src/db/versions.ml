@@ -70,7 +70,7 @@ let init () =
        user_desc TEXT NOT NULL,
        first_login_date VARCHAR NOT NULL
     )
-    |};
+    |}
   ]
   ~downgrade:[
     {|DROP EXTENSION "uuid-ossp"|};

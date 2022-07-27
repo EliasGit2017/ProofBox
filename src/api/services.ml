@@ -25,7 +25,7 @@ let version_test_json_body : (request_v, version, server_error_type, no_security
     ~output:version_enc
     Path.(root // "version_json_body")
 
-let version : (version, server_error_type, no_security) service0 =
+let version : (version, exn, no_security) service0 =
   service
     ~section:section_main
     ~name:"version"
