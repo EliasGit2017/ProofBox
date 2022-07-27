@@ -1,5 +1,84 @@
 
-let downgrade_1_to_0 = []
+
+let counter_ver = ref 0
+
+let upgrades : (int * (unit PGOCaml.t -> int -> unit)) list ref = ref []
+
+let downgrades : (int * string list) list ref = ref []
+
+let register_version ?version ?(before_upgrade = fun _ -> ())
+  ?(after_upgrade = fun _ -> ())
+  ~downgrade
+  ~upgrade () =
+  let prev_version = !counter_ver in
+  let version = match version with
+  | None -> !counter_ver + 1
+  | Some v -> 
+    if v <= !counter_ver then
+      Format.ksprintf failwith "Registering version %d forbidden (min %d)"
+      v (!counter_ver + 1);
+    v in
+  let upgrade dbh version =
+    before_upgrade dbh;
+    EzPG.upgrade ~dbh ~version ~downgrade upgrade;
+    after_upgrade dbh;
+  in
+  counter_ver := version;
+  upgrades := !upgrades @ [prev_version, upgrade];
+  downgrades := (version, downgrade) :: !downgrades;
+  ()
+;;
+
+
+let init () =
+  register_version ()
+  ~upgrade:[
+    {| CREATE EXTENSION if not exists "uuid-ossp";|};
+       {|CREATE EXTENSION citext;|};
+       {|CREATE DOMAIN domain_email AS citext
+       CHECK(
+        VALUE ~ '^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$'
+       );
+    |};
+    {| CREATE TABLE jobs_description
+    (
+       job_id VARCHAR PRIMARY KEY,
+       job_client VARCHAR NOT NULL,
+       order_ts VARCHAR NOT NULL,
+       path_to_f VARCHAR NOT NULL,
+       status VARCHAR NOT NULL
+    )
+    |};
+    {| CREATE TABLE jobs_cache
+    (
+       job_id VARCHAR PRIMARY KEY,
+       path_to_results VARCHAR NOT NULL UNIQUE,
+       time_taken VARCHAR NOT NULL,
+       status VARCHAR NOT NULL
+    )
+    |};
+    {| CREATE TABLE users
+    (
+       username VARCHAR PRIMARY KEY,
+       email VARCHAR NOT NULL UNIQUE,
+       password VARCHAR NOT NULL,
+       user_desc TEXT NOT NULL,
+       first_login_date VARCHAR NOT NULL
+    )
+    |};
+  ]
+  ~downgrade:[
+    {|DROP TABLE jobs_description CASCADE|};
+    {|DROP TABLE jobs_cache CASCADE|};
+    {|DROP TABLE users CASCADE|}
+  ]
+;;
+
+let () = init ()
+
+(* Skeleton predefined variables and function *)
+
+(* let downgrade_1_to_0 = []
 
 let upgrade_0_to_1 dbh version =
   EzPG.upgrade ~dbh ~version ~downgrade:downgrade_1_to_0 []
@@ -10,4 +89,5 @@ let upgrades = [
 
 let downgrades = [
   1, downgrade_1_to_0
-]
+] *)
+

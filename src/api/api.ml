@@ -9,6 +9,7 @@ module MakeRegisterer(S: module type of Services)(H:module type of Handlers) = s
   let register dir =
     dir
   |> register S.version H.version
+  |> register S.version_test_json_body H.version_test_json_body
 
 end
 

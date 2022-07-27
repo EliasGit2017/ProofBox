@@ -25,6 +25,13 @@ config/db-version.txt:
 db-update: config/db-version.txt db-updater
 	@_build/default/src/db/db-update/db_updater.exe --witness config/db-version.txt --database $(PGDATABASE)
 
+db-downgrade: db-updater
+	$(eval DBVERSION := $(shell psql $(PGDATABASE) -c "select value from ezpg_info where name='version'" -t -A))
+	_build/default/src/db/db-update/db_updater.exe --allow-downgrade --database $(PGDATABASE) --target `expr $(DBVERSION) - 1`
+
+db-version:
+	psql $(PGDATABASE) -c "select value from ezpg_info where name='version'" -t -A
+
 build: db-update
 	dune build --profile release
 

@@ -11,10 +11,10 @@ let route ?app path =
   app##.path := string path;
   match String.split_on_char '/' path with
   | [ path ] -> begin match path with
-      | "db" ->
+      (* | "db" ->
         Request.get0 Services.version (fun {v_db; v_db_version} ->
             app##.database := string v_db;
-            app##.db_version_ := v_db_version)
+            app##.db_version_ := v_db_version) *)  (* Don't forget to uncomment ... adding json body *)
       | "api" ->
         Common.wait ~t:10. @@ fun () ->
         (Unsafe.pure_js_expr "Redoc")##init
@@ -37,4 +37,3 @@ let init () =
       _true);
   path
 
-  
