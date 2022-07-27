@@ -34,11 +34,16 @@ let init () =
   register_version ()
   ~upgrade:[
     {| CREATE EXTENSION if not exists "uuid-ossp";|};
-       {|CREATE EXTENSION citext;|};
-       {|CREATE DOMAIN domain_email AS citext
-       CHECK(
-        VALUE ~ '^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$'
-       );
+       {|CREATE EXTENSION if not exists citext;|};
+       {| DO $$
+          BEGIN
+          IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'domain_email') THEN
+                  CREATE DOMAIN domain_email AS citext
+                  CHECK(
+                    VALUE ~ '^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$'
+                  );
+          END IF;
+        END$$;
     |};
     {| CREATE TABLE jobs_description
     (
@@ -60,7 +65,7 @@ let init () =
     {| CREATE TABLE users
     (
        username VARCHAR PRIMARY KEY,
-       email VARCHAR NOT NULL UNIQUE,
+       email domain_email NOT NULL UNIQUE,
        password VARCHAR NOT NULL,
        user_desc TEXT NOT NULL,
        first_login_date VARCHAR NOT NULL
@@ -68,6 +73,9 @@ let init () =
     |};
   ]
   ~downgrade:[
+    {|DROP EXTENSION "uuid-ossp"|};
+    {|DROP EXTENSION citext|};
+    {|DROP DOMAIN domain_email|};
     {|DROP TABLE jobs_description CASCADE|};
     {|DROP TABLE jobs_cache CASCADE|};
     {|DROP TABLE users CASCADE|}
