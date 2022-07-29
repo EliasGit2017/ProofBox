@@ -2,6 +2,9 @@ open Js_of_ocaml
 open Js
 open Data_types
 
+open EzAPI.TYPES
+(* What are the differences when I query with *)
+
 let get_app ?app () = match app with
   | None -> V.app ()
   | Some app -> app
@@ -13,9 +16,21 @@ let route ?app path =
   match String.split_on_char '/' path with
   | [ path ] -> begin match path with
       | "db" ->
-        Request.get0 Services.version (fun {v_db; v_db_version} ->
+        Request.get0 Services.version
+        (fun ({v_db; v_db_version}) ->
             app##.database := string v_db;
             app##.db_version_ := v_db_version)
+          (* let api = Common.test_host_api in
+          EzRequest.ANY.post0 ~msg:"Service.version_test_json_body" api
+          Services.version_test_json_body
+          ~error:(failwith "Bad test in route.ml")
+          ~input: {basic = "this is a test"}
+          (function 
+            | Ok r ->
+              app##.database := string r.v_db;
+              app##.db_version_ := r.v_db_version
+            | Error _ -> 
+              Js_of_ocaml.Firebug.console##log (Js.string "Bad request JS!")) *)
       | "api" ->
         Common.wait ~t:10. @@ fun () ->
         (Unsafe.pure_js_expr "Redoc")##init

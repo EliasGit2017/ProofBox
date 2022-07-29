@@ -14,6 +14,20 @@ let version_test =
     ~construct:version_test_to_string
     ()
 
+
+module Errors = struct
+  let server_errors = [
+    (* Generic error, for testing purposes *)
+    Err.make
+    ~code:500
+    ~name:"Base error"
+    ~encoding:Json_encoding.unit
+    ~select:(function Invalid_request -> Some () | _ -> None)
+    ~deselect:(fun () -> Unknown)
+  ]
+end
+
+
 let version_test_json_body : (request_v, version, server_error_type, no_security) post_service0 =
   post_service
     ~section:section_main
@@ -23,16 +37,18 @@ let version_test_json_body : (request_v, version, server_error_type, no_security
     ~params:[]
     ~input:request_v_enc
     ~output:version_enc
+    ~errors:Errors.server_errors
     Path.(root // "version_json_body")
 
-let version : (version, exn, no_security) service0 =
+let version : (version, server_error_type, no_security) service0 =
   service
     ~section:section_main
     ~name:"version"
-    ~descr:"Trying to add json in body"
+    ~descr:"template/skeleton service"
     ~meth:`GET
     ~params:[]
     ~output:version_enc
+    ~errors:Errors.server_errors
     Path.(root // "version")
 
 

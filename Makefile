@@ -22,6 +22,10 @@ config/db-version.txt:
 	@mkdir -p config
 	@echo 0 > config/db-version.txt
 
+manual-db-reset:
+	@echo "Manually fixing version index"
+	@$(shell psql $(PGDATABASE) -c "UPDATE ezpg_info SET value = 0 where name ='version'" -t -A)
+
 db-update: config/db-version.txt db-updater
 	@_build/default/src/db/db-update/db_updater.exe --witness config/db-version.txt --database $(PGDATABASE)
 

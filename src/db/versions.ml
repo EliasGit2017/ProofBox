@@ -73,12 +73,12 @@ let init () =
     |}
   ]
   ~downgrade:[
-    {|DROP EXTENSION "uuid-ossp"|};
-    {|DROP EXTENSION citext|};
-    {|DROP DOMAIN domain_email|};
     {|DROP TABLE jobs_description CASCADE|};
     {|DROP TABLE jobs_cache CASCADE|};
-    {|DROP TABLE users CASCADE|}
+    {|DROP TABLE users CASCADE|};
+    {|DROP EXTENSION "uuid-ossp"|};
+    {|DROP DOMAIN domain_email|};
+    {|DROP EXTENSION citext|}
   ]
 ;;
 

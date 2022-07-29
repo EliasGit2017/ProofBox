@@ -1,3 +1,10 @@
+(** Module [Data_type] defines all the types (input, queries, server errors ...) used by server and client *)
+
+type www_server_info = {
+  www_apis : string list;
+}
+(** Type that lists all server host names *)
+
 type version = {
   v_db: string;
   v_db_version: int;
@@ -7,8 +14,11 @@ type request_v = {
   basic: string;
 }
 
-type www_server_info = {
-  www_apis : string list;
+type jobs_descr = {
+  job_client : string;
+  order_ts : string;
+  path_to_f : string;
+  status : string;
 }
 
 type server_error_type =

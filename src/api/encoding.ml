@@ -17,6 +17,13 @@ type nonrec request_v = Data_types.request_v = {
   basic: string;
 }[@@deriving json_encoding]
 
+type nonrec jobs_descr = Data_types.jobs_descr = {
+  job_client : string;
+  order_ts : string;
+  path_to_f : string;
+  status : string;
+}[@@deriving json_encoding]
+
 let api_config = obj1 (opt "port" int)
 
 let info_encoding = conv

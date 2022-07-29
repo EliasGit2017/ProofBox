@@ -1,7 +1,7 @@
 open Data_types
 
-let to_result : type conv.
-    string ->
+let to_result : 
+    type conv.string ->
     convf:(string -> conv) ->
     (conv, string) result
     =
@@ -12,6 +12,9 @@ let to_result : type conv.
             Failure str -> Error ("Not recognized data_type : " ^ str)
 (** [to_result str ~convf] encapsulates application of [convf] on [str] within [result] type *)
 
+
+
+(* ********* Might not be so usefull *********** *)
 let version_test_of_string str =
   match String.split_on_char '+' str with
   | v_db::v_db_version::[] ->

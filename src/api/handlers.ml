@@ -16,7 +16,7 @@ let to_api p =
     [Data_types.server_error_type] from client-side. If [p] raises another type of error, then it is
     converted to [Unknown].*)
 
-let version _params () = to_api_v0 (
+let version _params () = to_api (
     (* let () = bod_ver in  *)
     Db.get_version () >|= fun v_db_version ->
         Ok { v_db = PConfig.database; v_db_version })
