@@ -28,6 +28,17 @@ module Errors = struct
 end
 
 
+let version : (version, server_error_type, no_security) service0 =
+  service
+    ~section:section_main
+    ~name:"version"
+    ~descr:"template/skeleton service"
+    ~meth:`GET
+    ~params:[]
+    ~output:version_enc
+    ~errors:Errors.server_errors
+    Path.(root // "version")
+
 let version_test_json_body : (request_v, version, server_error_type, no_security) post_service0 =
   post_service
     ~section:section_main
@@ -40,16 +51,15 @@ let version_test_json_body : (request_v, version, server_error_type, no_security
     ~errors:Errors.server_errors
     Path.(root // "version_json_body")
 
-let version : (version, server_error_type, no_security) service0 =
-  service
-    ~section:section_main
-    ~name:"version"
-    ~descr:"template/skeleton service"
-    ~meth:`GET
-    ~params:[]
-    ~output:version_enc
-    ~errors:Errors.server_errors
-    Path.(root // "version")
-
-
+let sr_job_desc : (job_desc_req, jobs, server_error_type, no_security) post_service0 =
+  post_service
+  ~section:section_main
+  ~name:"retrieve_job_desc"
+  ~descr:"get job description in db"
+  (* ~meth:`GET *)
+  ~params:[]
+  ~input:Encoding.job_desc_req_enc
+  ~output:Encoding.jobs
+  ~errors:Errors.server_errors
+  Path.(root // "retrieve_job_description")
 

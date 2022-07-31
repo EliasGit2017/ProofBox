@@ -3,13 +3,15 @@ open Data_types
 
 let host = ref (EzAPI.TYPES.BASE PConfig.web_host)
 
+let server_errors_handler err =
+  match err with
+  | Invalid_request -> Common.warn "Server_error_type : Invalid_request"
+  | No_sources_config -> Common.warn "Server_error_type : Invalid_argument"
+  | Unknown -> Common.warn "Server_error_type : Unknown"
+
 let wrap_res ?error f = function
   | Ok x -> f x
-  | Error exn -> (* let s = Printexc.to_string exn in *) match exn with
-    | Invalid_request -> Common.warn "Server_error_type : Invalid_request"
-    | No_sources_config -> Common.warn "Server_error_type : Invalid_argument"
-    | Unknown -> Common.warn "Server_error_type : Unknown" (* Refactor this into a more generic server_error_type handler *)
-
+  | Error exn -> server_errors_handler exn
 
 let get0 ?post ?headers ?params ?error ?msg ?(host= !host) service f =
   EzRequest.ANY.get0 host service ?msg ?post ?headers ?error ?params

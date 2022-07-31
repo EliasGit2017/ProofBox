@@ -1,8 +1,10 @@
 open Lwt.Infix
 open Data_types
 (* open Services *)
+open Db
 
 let to_api_v0 p = Lwt.bind p EzAPIServerUtils.return
+(** Initial to_api  *)
 
 let to_api p =
     Lwt.catch
@@ -21,6 +23,12 @@ let version _params () = to_api (
     Db.get_version () >|= fun v_db_version ->
         Ok { v_db = PConfig.database; v_db_version })
 
-let version_test_json_body _params _ = to_api (
+let version_test_json_body _params elem = to_api (
+    print_endline elem.basic;
     Db.get_version () >|= fun v_db_version ->
         Ok { v_db = PConfig.database; v_db_version })
+
+let sr_job_desc _params elem = to_api (
+    (* print_endline @@ elem.job_client_r ^ elem.job_ref_tag_v; *)
+    Db.get_job_desc elem >|= fun jobs ->
+        Ok jobs)

@@ -1,4 +1,4 @@
-(lang dune 2.9.3)
+(lang dune 2.9)
 (name proofbox)
 
 (source (uri git://github.com/EliasGit2017/ProofBox))

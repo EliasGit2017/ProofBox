@@ -10,6 +10,7 @@ module MakeRegisterer(S: module type of Services)(H:module type of Handlers) = s
     dir
   |> register S.version H.version
   |> register S.version_test_json_body H.version_test_json_body
+  |> register S.sr_job_desc H.sr_job_desc
 
 end
 

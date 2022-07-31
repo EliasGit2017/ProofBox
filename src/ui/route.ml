@@ -1,9 +1,8 @@
 open Js_of_ocaml
 open Js
 open Data_types
+(* open EzAPI.TYPES *)
 
-open EzAPI.TYPES
-(* What are the differences when I query with *)
 
 let get_app ?app () = match app with
   | None -> V.app ()
@@ -20,8 +19,8 @@ let route ?app path =
         (fun ({v_db; v_db_version}) ->
             app##.database := string v_db;
             app##.db_version_ := v_db_version)
-          (* let api = Common.test_host_api in
-          EzRequest.ANY.post0 ~msg:"Service.version_test_json_body" api
+          (* (* let api = Common.test_host_api in *)
+          EzRequest.ANY.post0 ~msg:"Service.version_test_json_body" Common.test_host_api
           Services.version_test_json_body
           ~error:(failwith "Bad test in route.ml")
           ~input: {basic = "this is a test"}

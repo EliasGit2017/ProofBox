@@ -14,12 +14,23 @@ type request_v = {
   basic: string;
 }
 
+type job_desc_req = {
+  job_client : string;
+  job_ref_tag_v : string;
+}
+
 type jobs_descr = {
   job_client : string;
+  job_ref_tag : string;
   order_ts : string;
   path_to_f : string;
   status : string;
 }
+
+type nonrec jobs = jobs_descr list
+
+(* type main_jobs =
+  | Jobs of jobs *)
 
 type server_error_type =
   | Invalid_request

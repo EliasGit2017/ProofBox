@@ -17,12 +17,30 @@ type nonrec request_v = Data_types.request_v = {
   basic: string;
 }[@@deriving json_encoding]
 
+type nonrec job_desc_req = Data_types.job_desc_req = {
+  job_client : string;
+  job_ref_tag_v : string;
+}[@@deriving json_encoding {remove_prefix = false}]
+
 type nonrec jobs_descr = Data_types.jobs_descr = {
   job_client : string;
+  job_ref_tag : string;
   order_ts : string;
   path_to_f : string;
   status : string;
 }[@@deriving json_encoding]
+
+let jobs = list jobs_descr_enc
+
+(* let main_jobs =
+  let cases =
+    [case
+    ~title:"Jobs"
+    jobs
+    (function | Jobs s -> Some s )
+    (function s -> Jobs s);
+    ]
+  in union cases *)
 
 let api_config = obj1 (opt "port" int)
 
