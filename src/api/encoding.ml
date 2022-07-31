@@ -19,12 +19,16 @@ type nonrec request_v = Data_types.request_v = {
 
 type nonrec job_desc_req = Data_types.job_desc_req = {
   job_client : string;
-  job_ref_tag_v : string;
+  job_ref_tag_v : int;
 }[@@deriving json_encoding {remove_prefix = false}]
+
+type nonrec all_jobs_get = Data_types.all_jobs_get = {
+  job_client_req : string;
+}[@@deriving json_encoding]
 
 type nonrec jobs_descr = Data_types.jobs_descr = {
   job_client : string;
-  job_ref_tag : string;
+  job_ref_tag : int;
   order_ts : string;
   path_to_f : string;
   status : string;

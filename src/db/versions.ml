@@ -47,7 +47,7 @@ let init () =
     |};
     {| CREATE TABLE jobs_description
     (
-       job_id VARCHAR PRIMARY KEY,
+       job_id SERIAL PRIMARY KEY,
        job_client VARCHAR NOT NULL,
        order_ts VARCHAR NOT NULL,
        path_to_f VARCHAR NOT NULL,
@@ -56,7 +56,7 @@ let init () =
     |};
     {| CREATE TABLE jobs_cache
     (
-       job_id VARCHAR PRIMARY KEY,
+       job_id SERIAL PRIMARY KEY,
        path_to_results VARCHAR NOT NULL UNIQUE,
        time_taken VARCHAR NOT NULL,
        status VARCHAR NOT NULL
@@ -66,16 +66,20 @@ let init () =
     (
        username VARCHAR PRIMARY KEY,
        email domain_email NOT NULL UNIQUE,
-       password VARCHAR NOT NULL,
+       password VARCHAR NOT NULL UNIQUE,
        user_desc TEXT NOT NULL,
        first_login_date VARCHAR NOT NULL
     )
     |};
     (* Dummy values to populate db for testing purposes *)
-    {|INSERT INTO jobs_description (job_id, job_client, order_ts, path_to_f, status) 
-      values ('rafa#nada1234', 'ocamlpro', '29-07-2022-17-45-30', 'root', 'scheduled'); |};
     {|INSERT INTO users (username, email, password, user_desc, first_login_date)
-      values ('ocamlpro', 'azwbdj@gmail.com', 'this_will_be_hashed', 'Real OG, first proofbox user', '29-07-2022-12-00-00'); |}
+      values ('ocamlpro', 'azwbdj@gmail.com', 'this_will_be_hashed', 'Real OG, first proofbox user', '29-07-2022-12-00-00'); |};
+    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, status) 
+      values ('ocamlpro', '29-07-2022-17-45-30', 'root', 'scheduled'); |};
+    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, status)
+      values ('ocamlpro', '31-07-2022-18-15-30', 'root', 'scheduled'); |};
+    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, status) 
+      values ('ocamlpro', '29-07-2022-17-45-30', 'root', 'scheduled'); |}
   ]
   ~downgrade:[
     {|DROP TABLE jobs_description CASCADE|};

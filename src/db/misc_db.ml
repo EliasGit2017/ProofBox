@@ -16,7 +16,7 @@ let catch_db_error f =
 let jobs_of_rows rows =
   List.map (function row ->
     {job_client = row#job_client;
-    job_ref_tag = row#job_id;
+    job_ref_tag = Int32.to_int row#job_id;
     order_ts = row#order_ts;
     path_to_f = row#path_to_f;
     status = row#status}

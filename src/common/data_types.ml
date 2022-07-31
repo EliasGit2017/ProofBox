@@ -16,12 +16,16 @@ type request_v = {
 
 type job_desc_req = {
   job_client : string;
-  job_ref_tag_v : string;
+  job_ref_tag_v : int;
+}
+
+type all_jobs_get = {
+  job_client_req : string;
 }
 
 type jobs_descr = {
   job_client : string;
-  job_ref_tag : string;
+  job_ref_tag : int;
   order_ts : string;
   path_to_f : string;
   status : string;

@@ -63,3 +63,15 @@ let sr_job_desc : (job_desc_req, jobs, server_error_type, no_security) post_serv
   ~errors:Errors.server_errors
   Path.(root // "retrieve_job_description")
 
+
+let sr_job_desc_from_user : (all_jobs_get, jobs, server_error_type, no_security) post_service0 =
+  post_service
+  ~section:section_main
+  ~name:"retrieve_job_desc"
+  ~descr:"get job description in db"
+  (* ~meth:`GET *)
+  ~params:[]
+  ~input:Encoding.all_jobs_get_enc
+  ~output:Encoding.jobs
+  ~errors:Errors.server_errors
+  Path.(root // "retrieve_job_description_from_user")
