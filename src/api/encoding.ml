@@ -1,12 +1,6 @@
 open Json_encoding
 open Data_types
 
-(* let version = conv
-  (fun {v_db; v_db_version} -> (v_db, v_db_version))
-  (fun (v_db, v_db_version) -> {v_db; v_db_version}) @@
-  obj2
-    (req "db" string)
-    (req "db_version" int) *)
 
 type nonrec version = Data_types.version = {
   v_db : string;
@@ -31,10 +25,23 @@ type nonrec jobs_descr = Data_types.jobs_descr = {
   job_ref_tag : int;
   order_ts : string;
   path_to_f : string;
+  priority : int;
   status : string;
 }[@@deriving json_encoding]
 
 let jobs = list jobs_descr_enc
+
+
+let api_config = obj1 (opt "port" int)
+
+let info_encoding = conv
+(fun {www_apis} -> www_apis)
+(fun www_apis -> {www_apis}) @@
+obj1
+(req "apis" (list string))
+
+(*****************************************************************************)
+(* Unused data structures *)
 
 (* let main_jobs =
   let cases =
@@ -46,11 +53,10 @@ let jobs = list jobs_descr_enc
     ]
   in union cases *)
 
-let api_config = obj1 (opt "port" int)
-
-let info_encoding = conv
-    (fun {www_apis} -> www_apis)
-    (fun www_apis -> {www_apis}) @@
-  obj1
-    (req "apis" (list string))
+(* let version = conv
+  (fun {v_db; v_db_version} -> (v_db, v_db_version))
+  (fun (v_db, v_db_version) -> {v_db; v_db_version}) @@
+  obj2
+    (req "db" string)
+    (req "db_version" int) *)
 

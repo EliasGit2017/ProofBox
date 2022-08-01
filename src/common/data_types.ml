@@ -28,13 +28,11 @@ type jobs_descr = {
   job_ref_tag : int;
   order_ts : string;
   path_to_f : string;
+  priority : int;
   status : string;
 }
 
 type nonrec jobs = jobs_descr list
-
-(* type main_jobs =
-  | Jobs of jobs *)
 
 type server_error_type =
   | Invalid_request
@@ -50,3 +48,6 @@ let server_error_type err =
   | Proofbox_api_error typ -> typ
   | _ -> Unknown
 (** Decapsulate server_error_type *)
+
+(* type main_jobs =
+  | Jobs of jobs *)

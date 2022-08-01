@@ -36,6 +36,20 @@ db-downgrade: db-updater
 db-version:
 	psql $(PGDATABASE) -c "select value from ezpg_info where name='version'" -t -A
 
+see-db-types:
+	@echo "Displaying $(PGDATABASE) types :"
+	@echo "users"
+	@echo "------------------------------------------"
+	psql $(PGDATABASE) -c "select column_name , data_type from information_schema.columns where table_name = 'users'"
+	@echo "------------------------------------------"
+	@echo "jobs_description"
+	@echo "------------------------------------------"
+	psql $(PGDATABASE) -c "select column_name , data_type from information_schema.columns where table_name = 'jobs_description'"
+	@echo "------------------------------------------"
+	@echo "jobs_cache"
+	@echo "------------------------------------------"
+	psql $(PGDATABASE) -c "select column_name , data_type from information_schema.columns where table_name = 'jobs_cache'"
+
 build: db-update
 	dune build --profile release
 

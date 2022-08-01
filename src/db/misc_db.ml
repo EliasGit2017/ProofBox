@@ -19,5 +19,7 @@ let jobs_of_rows rows =
     job_ref_tag = Int32.to_int row#job_id;
     order_ts = row#order_ts;
     path_to_f = row#path_to_f;
+    priority = Int32.to_int row#priority;
     status = row#status}
     ) rows
+(** Creates [Data_types.jobs_descr] from DB jobs_description table *)

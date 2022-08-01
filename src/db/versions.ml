@@ -1,4 +1,4 @@
-
+(* Manage Db versions, set Schema and dummy values *)
 
 let counter_ver = ref 0
 
@@ -51,6 +51,7 @@ let init () =
        job_client VARCHAR NOT NULL,
        order_ts VARCHAR NOT NULL,
        path_to_f VARCHAR NOT NULL,
+       priority INTEGER NOT NULL,
        status VARCHAR NOT NULL
     )
     |};
@@ -74,12 +75,12 @@ let init () =
     (* Dummy values to populate db for testing purposes *)
     {|INSERT INTO users (username, email, password, user_desc, first_login_date)
       values ('ocamlpro', 'azwbdj@gmail.com', 'this_will_be_hashed', 'Real OG, first proofbox user', '29-07-2022-12-00-00'); |};
-    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, status) 
-      values ('ocamlpro', '29-07-2022-17-45-30', 'root', 'scheduled'); |};
-    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, status)
-      values ('ocamlpro', '31-07-2022-18-15-30', 'root', 'scheduled'); |};
-    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, status) 
-      values ('ocamlpro', '29-07-2022-17-45-30', 'root', 'scheduled'); |}
+    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, priority, status) 
+      values ('ocamlpro', '29-07-2022-17-45-30', 'root', 100, 'scheduled'); |};
+    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, priority, status)
+      values ('ocamlpro', '31-07-2022-18-15-30', 'root', 200, 'scheduled'); |};
+    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, priority, status) 
+      values ('ocamlpro', '29-07-2022-17-45-30', 'root', 300, 'scheduled'); |}
   ]
   ~downgrade:[
     {|DROP TABLE jobs_description CASCADE|};
