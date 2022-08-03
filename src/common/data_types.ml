@@ -51,3 +51,7 @@ let server_error_type err =
 
 (* type main_jobs =
   | Jobs of jobs *)
+
+type user_info = string
+
+

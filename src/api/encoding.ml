@@ -41,7 +41,7 @@ obj1
 (req "apis" (list string))
 
 (*****************************************************************************)
-(* Unused data structures *)
+(* Unused data structures, variables ... TO CLEAN*)
 
 (* let main_jobs =
   let cases =
@@ -60,3 +60,4 @@ obj1
     (req "db" string)
     (req "db_version" int) *)
 
+let user_info = string

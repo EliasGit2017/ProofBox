@@ -2,14 +2,14 @@
  (name api_services)
  (wrapped false)
  (modules encoding services)
- (libraries ez_api.request data_common)
+ (libraries ez_api ez_api.request data_common)
  (preprocess (pps ppx_deriving_encoding)))
 
 (library
  (name api_lib)
  (wrapped false)
  (modules handlers api)
- (libraries ez_api.server api_services db_lwt))
+ (libraries ez_api.server ez_api.server_session api_services db_lwt))
 
 (executable
  (name api_server)
