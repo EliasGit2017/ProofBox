@@ -61,3 +61,11 @@ obj1
     (req "db_version" int) *)
 
 let user_info = string
+
+type nonrec user_description = Data_types.user_description = {
+  username : string;
+  email : string;
+  password : string;
+  description : string;
+  first_login_date : string;
+} [@@deriving json_encoding]

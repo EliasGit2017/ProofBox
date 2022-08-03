@@ -5,6 +5,8 @@ type www_server_info = {
 }
 (** Type that lists all server host names *)
 
+type user_info = string
+
 type version = {
   v_db: string;
   v_db_version: int;
@@ -13,6 +15,10 @@ type version = {
 type request_v = {
   basic: string;
 }
+
+(* **************************************************** *)
+
+(* Job types and handling *)
 
 type job_desc_req = {
   job_client : string;
@@ -34,6 +40,11 @@ type jobs_descr = {
 
 type nonrec jobs = jobs_descr list
 
+
+(* **************************************************** *)
+
+(* Error types *)
+
 type server_error_type =
   | Invalid_request
   | No_sources_config
@@ -43,15 +54,20 @@ exception Proofbox_api_error of server_error_type
 
 let proofbox_api_error typ = Proofbox_api_error typ
 
+(** Decapsulate server_error_type *)
 let server_error_type err =
   match err with
   | Proofbox_api_error typ -> typ
   | _ -> Unknown
-(** Decapsulate server_error_type *)
 
-(* type main_jobs =
-  | Jobs of jobs *)
+(* **************************************************** *)
 
-type user_info = string
+type user_description = {
+  username : string;
+  email : string;
+  password : string;
+  description : string;
+  first_login_date : string;
+}
 
 

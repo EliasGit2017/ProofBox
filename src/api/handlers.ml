@@ -6,6 +6,8 @@ open Db
 
 (* ****************************************************************** *)
 
+(* Redefine this in its own file when mastered *)
+
 module SessionArg = struct
     type user_id = string
     type user_info = Data_types.user_info
@@ -54,6 +56,7 @@ let get_all_jobs _params req = to_api (
         Ok jobs
 )
 
+(** Testing session ? ...  *)
 let test_session (req, _arg) r = to_api (
     My_Session.get_request_session req >>= function
     | Some {session_token; session_login; session_last; session_user_id; _ } ->
@@ -64,6 +67,17 @@ let test_session (req, _arg) r = to_api (
             Ok {v_db = "bad"; v_db_version = -100}
 )
 
+
+
+let sign_up_new_user _param r = to_api (
+    Registered_Users.create_user ~password:r.password ~login:r.username r.description;
+    print_endline @@ "These are the details of the signup : " ^ r.username ^ " ; " ^ r.email ^ " ; " ^ r.password ^ " ; "
+    ^ r.description ^ " ; " ^ r.first_login_date ^ " ; ";
+    let _ = Db.add_user_to_db r in
+    Db.get_version () >|= fun v_db_version ->
+        Ok { v_db = PConfig.database; v_db_version }
+    
+)
 
 
 

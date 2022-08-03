@@ -23,3 +23,5 @@ let jobs_of_rows rows =
     status = row#status}
     ) rows
 (** Creates [Data_types.jobs_descr] from DB jobs_description table *)
+
+

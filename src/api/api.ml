@@ -13,6 +13,7 @@ module MakeRegisterer(S: module type of Services)(H:module type of Handlers) = s
   |> register S.sr_job_desc H.sr_job_desc
   |> register S.sr_job_desc_from_user H.get_all_jobs
   |> register S.test_session H.test_session
+  |> register S.sign_up_new_user H.sign_up_new_user
 
 end
 

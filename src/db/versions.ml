@@ -33,7 +33,7 @@ let register_version ?version ?(before_upgrade = fun _ -> ())
 let init () =
   register_version ()
   ~upgrade:[
-    {| CREATE EXTENSION if not exists "uuid-ossp";|};
+    (* {| CREATE EXTENSION if not exists "uuid-ossp";|};
        {|CREATE EXTENSION if not exists citext;|};
        {| DO $$
           BEGIN
@@ -44,7 +44,7 @@ let init () =
                   );
           END IF;
         END$$;
-    |};
+    |}; *)
     {| CREATE TABLE jobs_description
     (
        job_id SERIAL PRIMARY KEY,
@@ -66,7 +66,7 @@ let init () =
     {| CREATE TABLE users
     (
        username VARCHAR PRIMARY KEY,
-       email domain_email NOT NULL UNIQUE,
+       email VARCHAR NOT NULL UNIQUE,
        password VARCHAR NOT NULL UNIQUE,
        user_desc TEXT NOT NULL,
        first_login_date VARCHAR NOT NULL
@@ -85,10 +85,10 @@ let init () =
   ~downgrade:[
     {|DROP TABLE jobs_description CASCADE|};
     {|DROP TABLE jobs_cache CASCADE|};
-    {|DROP TABLE users CASCADE|};
-    {|DROP EXTENSION "uuid-ossp"|};
+    {|DROP TABLE users CASCADE|}
+    (* {|DROP EXTENSION "uuid-ossp"|};
     {|DROP DOMAIN domain_email|};
-    {|DROP EXTENSION citext|}
+    {|DROP EXTENSION citext|} *)
   ]
 ;;
 
