@@ -87,19 +87,19 @@ let test_session : (string, request_v, version, server_error_type, no_security) 
     ~input:request_v_enc
     ~output:version_enc
     ~errors:Errors.server_errors
-    Path.(root // "version_session" /:arg_test)
+    Path.(root // "version_session" /: arg_test)
 
 
-let sign_up_new_user : (user_description, version, server_error_type, no_security) post_service0 =
+let sign_up_new_user : (string, user_description, version, server_error_type, no_security) post_service1 =
   post_service
     ~section:section_main
     ~name:"Sign Up"
     ~descr:"Trying EzApi Session and sign up"
-    ~params:[]
+    ~params:[param_arg]
     ~input:user_description_enc
     ~output:version_enc
     ~errors:Errors.server_errors
-    Path.(root // "signup_return_version")
+    Path.(root // "signup_return_version" /: arg_test)
 
 
 

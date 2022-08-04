@@ -58,6 +58,7 @@ let get_all_jobs _params req = to_api (
 
 (** Testing session ? ...  *)
 let test_session (req, _arg) r = to_api (
+    (* My_Session.connect req EzAPI.no_security *)
     My_Session.get_request_session req >>= function
     | Some {session_token; session_login; session_last; session_user_id; _ } ->
         Db.get_version () >|= fun v_db_version ->
@@ -69,7 +70,7 @@ let test_session (req, _arg) r = to_api (
 
 
 
-let sign_up_new_user _param r = to_api (
+let sign_up_new_user (req, _arg) r = to_api (
     Registered_Users.create_user ~password:r.password ~login:r.username r.description;
     print_endline @@ "These are the details of the signup : " ^ r.username ^ " ; " ^ r.email ^ " ; " ^ r.password ^ " ; "
     ^ r.description ^ " ; " ^ r.first_login_date ^ " ; ";
@@ -78,6 +79,5 @@ let sign_up_new_user _param r = to_api (
         Ok { v_db = PConfig.database; v_db_version }
     
 )
-
 
 

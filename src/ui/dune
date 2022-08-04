@@ -19,3 +19,9 @@
  (modes js)
  (js_of_ocaml
   (flags (:standard --no-sourcemap))))
+
+(executable
+ (name testing_reqs)
+ (modules testing_reqs)
+ (libraries ez_api ez_api.session_client data_common api_services safepass)
+)
