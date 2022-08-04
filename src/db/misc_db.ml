@@ -24,4 +24,11 @@ let jobs_of_rows rows =
     ) rows
 (** Creates [Data_types.jobs_descr] from DB jobs_description table *)
 
-
+let users_of_rows rows =
+  List.map (function row ->
+    {username = row#username;
+    email = row#email;
+    password = row#password;
+    user_desc = row#user_desc;
+    first_login_date = row#first_login_date}
+    ) rows

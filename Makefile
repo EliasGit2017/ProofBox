@@ -63,6 +63,7 @@ website: config/info.json
 api-server: _build/default/src/api/api_server.exe
 	@mkdir -p bin
 	@cp -f _build/default/src/api/api_server.exe bin/api-server
+	@cp -f _build/default/src/ui/testing_reqs.exe bin/testing_reqs
 
 release:
 	@sudo cp -r www/* $(RLS_DIR)

@@ -29,3 +29,11 @@ let version_test_to_string
       v_db
       v_db_version
 (**  *)
+
+let users_to_string {username; email; password; user_desc; first_login_date} =
+    Printf.sprintf "%s %s %s %s %s"
+        username
+        email
+        password
+        user_desc
+        first_login_date

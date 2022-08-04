@@ -38,6 +38,16 @@ let to_api p =
     [Data_types.server_error_type] from client-side. If [p] raises another type of error, then it is
     converted to [Unknown].*)
 
+
+let load_predefined_users =
+    Db.get_all_users () >|= fun users ->
+        let res = List.map Utils.users_to_string users in
+        List.map print_endline res
+
+
+(* ****************************************************************** *)
+
+
 let version _params () = to_api (
     Db.get_version () >|= fun v_db_version ->
         Ok { v_db = PConfig.database; v_db_version })
@@ -71,9 +81,9 @@ let test_session (req, _arg) r = to_api (
 
 
 let sign_up_new_user (req, _arg) r = to_api (
-    Registered_Users.create_user ~password:r.password ~login:r.username r.description;
+    Registered_Users.create_user ~password:r.password ~login:r.username r.user_desc;
     print_endline @@ "These are the details of the signup : " ^ r.username ^ " ; " ^ r.email ^ " ; " ^ r.password ^ " ; "
-    ^ r.description ^ " ; " ^ r.first_login_date ^ " ; ";
+    ^ r.user_desc ^ " ; " ^ r.first_login_date ^ " ; ";
     let _ = Db.add_user_to_db r in
     Db.get_version () >|= fun v_db_version ->
         Ok { v_db = PConfig.database; v_db_version }

@@ -66,6 +66,8 @@ type nonrec user_description = Data_types.user_description = {
   username : string;
   email : string;
   password : string;
-  description : string;
+  user_desc : string;
   first_login_date : string;
 } [@@deriving json_encoding]
+
+let all_users = list user_description_enc

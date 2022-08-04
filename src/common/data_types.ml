@@ -66,8 +66,8 @@ type user_description = {
   username : string;
   email : string;
   password : string;
-  description : string;
+  user_desc : string;
   first_login_date : string;
 }
 
-
+type nonrec all_users = user_description list

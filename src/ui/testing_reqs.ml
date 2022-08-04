@@ -194,7 +194,7 @@ let () =
   let requests = [
     (* proofbox_session_test {username = "test_ouser"; email = "azwbdklo@gmail.com"; password = "dummy1234!"; description = "This user is here for testing purposes"; first_login_date = "25-04-1997 20:45:30"}; *)
     (* proofbox_session_test {username = "test_user1"; email = "azwbdj@gmail.com"; password = "dummy1234!"; description = "This user is also here for testing purposes"; first_login_date = "25-04-1997 20:45:30"}; *)
-    proofbox_session_test {username = "test_user60"; email = "azwbdjefegdsdaqdzar@gmail.com"; password = "dummydedada1234!"; description = "This user is also here for testing purposes"; first_login_date = "25-04-1997 20:45:30"};
+    proofbox_session_test {username = "test_user60"; email = "azwbdjefegdsdaqdzar@gmail.com"; password = "dummydedada1234!"; user_desc = "This user is also here for testing purposes"; first_login_date = "25-04-1997 20:45:30"};
     proofbox_session_test_json {basic = "okok"};
     ]
   in
