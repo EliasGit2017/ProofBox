@@ -23,8 +23,9 @@ let catch path exn =
 let server services =
   Printexc.record_backtrace true;
 
+  let _ = Server.load_testing_users in
   let _ = Handlers.load_predefined_users in
-  
+
   Arg.parse [] (fun config_file ->
       load_config config_file) "API server" ;
   let servers = [ !api_port, EzAPIServerUtils.API services ] in

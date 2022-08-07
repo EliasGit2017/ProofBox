@@ -1,6 +1,7 @@
 open Lwt.Infix
 open Data_types
 open Db
+open Bcrypt
 (* open Services *)
 
 
@@ -38,11 +39,20 @@ let to_api p =
     [Data_types.server_error_type] from client-side. If [p] raises another type of error, then it is
     converted to [Unknown].*)
 
+let hash_bcrypt pre_hashed_password =
+    Bcrypt.string_of_hash @@ Bcrypt.hash ~count:8 pre_hashed_password
+
+let register_predefined_users user_d =
+    Registered_Users.create_user 
+      ~login:user_d.username
+      ~password:(hash_bcrypt user_d.password)
+      user_d.user_desc
 
 let load_predefined_users =
     Db.get_all_users () >|= fun users ->
         let res = List.map Utils.users_to_string users in
-        List.map print_endline res
+        let _ = List.map print_endline res in
+        List.map register_predefined_users users
 
 
 (* ****************************************************************** *)
