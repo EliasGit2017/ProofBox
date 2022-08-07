@@ -31,7 +31,7 @@ let version_test_to_string
 (**  *)
 
 let users_to_string {username; email; password; user_desc; first_login_date} =
-    Printf.sprintf "%s %s %s %s %s"
+    Printf.sprintf "username = %s\nemail = %s\npassword = %s\nuser_description = %s\nfirst_login_date = %s\n"
         username
         email
         password

@@ -49,7 +49,7 @@ let init () =
     (
        job_id SERIAL PRIMARY KEY,
        job_client VARCHAR NOT NULL,
-       order_ts VARCHAR NOT NULL,
+       order_ts TIMESTAMP NOT NULL,
        path_to_f VARCHAR NOT NULL,
        priority INTEGER NOT NULL,
        status VARCHAR NOT NULL
@@ -69,18 +69,18 @@ let init () =
        email VARCHAR NOT NULL UNIQUE,
        password VARCHAR NOT NULL UNIQUE,
        user_desc TEXT NOT NULL,
-       first_login_date VARCHAR NOT NULL
+       first_login_date TIMESTAMP NOT NULL
     )
     |};
     (* Dummy values to populate db for testing purposes *)
     {|INSERT INTO users (username, email, password, user_desc, first_login_date)
-      values ('ocamlpro', 'azwbdj@gmail.com', 'this_will_be_hashed', 'Real OG, first proofbox user', '29-07-2022-12-00-00'); |};
+      values ('ocamlpro', 'azwbdj@gmail.com', 'this_will_be_hashed', 'Real OG, first proofbox user', current_timestamp); |};
     {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, priority, status) 
-      values ('ocamlpro', '29-07-2022-17-45-30', 'root', 100, 'scheduled'); |};
+      values ('ocamlpro', current_timestamp, 'root', 100, 'scheduled'); |};
     {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, priority, status)
-      values ('ocamlpro', '31-07-2022-18-15-30', 'root', 200, 'scheduled'); |};
+      values ('ocamlpro', current_timestamp, 'root', 200, 'scheduled'); |};
     {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, priority, status) 
-      values ('ocamlpro', '29-07-2022-17-45-30', 'root', 300, 'scheduled'); |}
+      values ('ocamlpro', current_timestamp, 'root', 300, 'scheduled'); |}
   ]
   ~downgrade:[
     {|DROP TABLE jobs_description CASCADE|};
