@@ -1,8 +1,6 @@
 open Data_types
 open Bcrypt
 open Db
-(* Empty file for the moment,
-   will be in charge of handling jobs *)
 
 let load_testing_users =
   let user1 =
@@ -32,5 +30,18 @@ let load_testing_users =
       first_login_date = "2022-08-07 14:45:52.523274";
     }
   in
-  let user_list = [user1; user2; user3] in
-  Lwt_list.map_s Db.add_user_to_db user_list
+  let user_list = [ user1; user2; user3 ] in
+  let hashed_password_list =
+    List.map
+      (fun e ->
+        {
+          username = e.username;
+          email = e.email;
+          password = Handlers.hash_bcrypt e.password;
+          user_desc = e.user_desc;
+          first_login_date = e.first_login_date;
+        })
+      user_list
+  in
+  Lwt_list.map_s Db.add_user_to_db hashed_password_list
+

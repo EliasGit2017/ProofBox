@@ -39,6 +39,10 @@ let to_api p =
     [Data_types.server_error_type] from client-side. If [p] raises another type of error, then it is
     converted to [Unknown].*)
 
+
+
+(* ****************************************************************** *)
+
 let hash_bcrypt pre_hashed_password =
     Bcrypt.string_of_hash @@ Bcrypt.hash ~count:8 pre_hashed_password
 
