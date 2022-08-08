@@ -1,7 +1,5 @@
 open Data_types
 
-(** Example : used for v_db_version  *)
-let version_of_rows = function [ Some v ] -> Int32.to_int v | _ -> 0
 
 (** Catches DB excetpions and raises [Data_types.Proofbox_api_error] coresponding to DB error *)
 let catch_db_error f =
@@ -13,6 +11,13 @@ let catch_db_error f =
       Lwt.fail @@ proofbox_api_error Invalid_request)
       | exn -> Printf.eprintf "Another error : %s\n" (Printexc.to_string exn);
           flush stderr;Lwt.fail @@ proofbox_api_error Unknown)
+
+
+(* ****************************************************************** *)
+
+
+(** Example : used for v_db_version  *)
+let version_of_rows = function [ Some v ] -> Int32.to_int v | _ -> 0
 
 (** Creates [Data_types.jobs_descr] from DB jobs_description table rows *)
 let jobs_of_rows rows =

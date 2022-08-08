@@ -1,5 +1,5 @@
 open Data_types
-
+open Str
 
 
 (* Conversion & data printing : ( *_to_string, *_of_string, etc) *)
@@ -39,3 +39,19 @@ let users_to_string { username; email; password; user_desc; first_login_date } =
     username email password user_desc first_login_date
 
 (* Utilities *)
+
+(** Regex check on email : pattern identical to domain attempt in
+    [db/versions.ml] *)
+let check_email_validity email =
+  let right_email = Str.regexp "^([a-zA-Z0-9_-.]+)@([a-zA-Z0-9_-.]+).([a-zA-Z]{2,5})$" in
+  Str.string_match right_email email 0
+
+(** Regex check on password rules :
+    At least one digit [0-9]
+    At least one lowercase character [a-z]
+    At least one uppercase character [A-Z]
+    At least one special character [\[*.!@#$%^&(){}[]:;<>,.?/~_+-=|\]]
+    At least 8 characters in length, but no more than 32.*)
+let check_password_validity password =
+  let right_password = Str.regexp "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|]).{8,32}$" in
+  Str.string_match right_password password 0

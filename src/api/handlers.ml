@@ -3,6 +3,7 @@ open Data_types
 open Db
 open Bcrypt
 (* open Services *)
+(* Not needed *)
 
 (* ****************************************************************** *)
 
@@ -124,10 +125,15 @@ let test_session (req, _arg) r =
     Register (active) session for newly signed up user *)
 let sign_up_new_user _params user =
   to_api
-    ((* print_endline @@ "These are the details of the signup : " ^ user.username ^ " ; "
+    ((* Check data type and content : debug TO REMOVE *)
+     (* print_endline @@ "These are the details of the signup : " ^ user.username ^ " ; "
         ^ user.email ^ " ; " ^ user.password ^ " ; " ^ user.user_desc ^ " ; "
         ^ user.first_login_date ^ " ; " ;
-      *)
+     *)
+     if not (Utils.check_email_validity user.email) then
+       raise (Proofbox_api_error Invalid_request);
+     if not (Utils.check_password_validity user.password) then
+      raise (Proofbox_api_error Invalid_request);
      let _ = Db.add_user_to_db user in
      try
        Registered_Users.create_user ~password:user.password ~login:user.username
