@@ -48,12 +48,14 @@ let hash_bcrypt pre_hashed_password =
   Bcrypt.string_of_hash @@ Bcrypt.hash ~count:8 pre_hashed_password
 
 (** [Registered_Users.create_user] wrapper for server side session management 
-    (currently unused & deprecated)*)
-let register_predefined_users user_d =
+    (not used consistently)*)
+let register_users user_d =
   Registered_Users.create_user ~login:user_d.username
     ~password:(hash_bcrypt user_d.password)
     user_d.user_desc
 
+(** Load sessions from predefined users (dummy values) 
+    in Database [users] *)
 let load_predefined_users =
   Db.get_all_users () >|= fun users ->
   let res = List.map Utils.users_to_string users in
@@ -63,6 +65,14 @@ let load_predefined_users =
       Registered_Users.create_user ~login:e.username
         ~password:(hash_bcrypt e.password) e.user_desc)
     users
+
+(* ****************************************************************** *)
+
+(** Dummy [result Lwt.t] return value (used for debug in some handlers/
+    services) : (not encapsulated in [result EzAPIServerUtils.Answer.t Lwt.t]) *)
+let dummy_response () =
+  Db.get_version () >|= fun v_db_version ->
+  Ok { v_db = PConfig.database; v_db_version }
 
 (* ****************************************************************** *)
 
@@ -90,7 +100,8 @@ let get_all_jobs _params req =
 (** Testing session ? ...  *)
 let test_session (req, _arg) r =
   to_api
-    ((* My_Session.connect req EzAPI.no_security *) (* connect is to be used client side atm *)
+    ((* My_Session.connect req EzAPI.no_security *)
+     (* connect is to be used client side atm *)
      My_Session.get_request_session req
      >>= function
      | Some { session_token; session_login; session_last; session_user_id; _ }
@@ -108,13 +119,24 @@ let test_session (req, _arg) r =
          Db.get_version () >|= fun v_db_version ->
          Ok { v_db = "bad"; v_db_version = -100 })
 
-let sign_up_new_user (req, _arg) r =
+(** Signup new user with data provided in [Data_types.user_description] user .
+    Initialize first login date to current_timestamp .
+    Register (active) session for newly signed up user *)
+let sign_up_new_user _params user =
   to_api
-    (Registered_Users.create_user ~password:r.password ~login:r.username
-       r.user_desc;
-     print_endline @@ "These are the details of the signup : " ^ r.username
-     ^ " ; " ^ r.email ^ " ; " ^ r.password ^ " ; " ^ r.user_desc ^ " ; "
-     ^ r.first_login_date ^ " ; ";
-     let _ = Db.add_user_to_db r in
-     Db.get_version () >|= fun v_db_version ->
-     Ok { v_db = PConfig.database; v_db_version })
+    ((* print_endline @@ "These are the details of the signup : " ^ user.username ^ " ; "
+        ^ user.email ^ " ; " ^ user.password ^ " ; " ^ user.user_desc ^ " ; "
+        ^ user.first_login_date ^ " ; " ;
+      *)
+     let _ = Db.add_user_to_db user in
+     try
+       Registered_Users.create_user ~password:user.password ~login:user.username
+         user.user_desc;
+       dummy_response ()
+     with
+     | EzSessionServer.UserAlreadyDefined ->
+         print_endline "User already defined";
+         dummy_response ()
+     | EzSessionServer.NoPasswordProvided ->
+         print_endline "Please provide a decent password";
+         dummy_response ())

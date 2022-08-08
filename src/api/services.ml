@@ -71,7 +71,7 @@ let sr_job_desc_from_user : (all_jobs_get, jobs, server_error_type, no_security)
   post_service
     ~section:section_main
     ~name:"retrieve_job_desc"
-    ~descr:"get job description in db"
+    ~descr:"get all jobs description in db (table jobs_description) from user"
     ~params:[]
     ~input:all_jobs_get_enc
     ~output:jobs
@@ -90,16 +90,16 @@ let test_session : (string, request_v, version, server_error_type, no_security) 
     Path.(root // "version_session" /: arg_test)
 
 
-let sign_up_new_user : (string, user_description, version, server_error_type, no_security) post_service1 =
+let sign_up_new_user : (user_description, version, server_error_type, no_security) post_service0 =
   post_service
     ~section:section_main
     ~name:"Sign Up"
     ~descr:"Trying EzApi Session and sign up"
-    ~params:[param_arg]
+    ~params:[]
     ~input:user_description_enc
     ~output:version_enc
     ~errors:Errors.server_errors
-    Path.(root // "signup_return_version" /: arg_test)
+    Path.(root // "signup_return_auth_info")
 
 
 

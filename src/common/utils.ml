@@ -1,7 +1,8 @@
 open Data_types
 
 
-(* Conversion & data printing *)
+
+(* Conversion & data printing : ( *_to_string, *_of_string, etc) *)
 
 (** [to_result str ~convf] encapsulates application of [convf] on [str] within [result] type *)
 let to_result :
@@ -12,7 +13,8 @@ let to_result :
 
 (* ********* Might not be so usefull *********** *)
 
-(**  *)
+(** Create [Data_types.version] from string where record field are separated by '+'
+    (to generalize) *)
 let version_test_of_string str =
   match String.split_on_char '+' str with
   | [ v_db; v_db_version ] ->
@@ -20,10 +22,13 @@ let version_test_of_string str =
       { v_db; v_db_version }
   | _ -> failwith ("Not valid entry info : " ^ str)
 
-(**  *)
+(** Create string describing [Data_types.version] with '+' as separator
+    (to genralize) *)
 let version_test_to_string { v_db; v_db_version } =
   Printf.sprintf "%s+%d" v_db v_db_version
 
+(** Create string describing [Data_types.user_description] .
+    Here for debugging/verbose purposes only. *)
 let users_to_string { username; email; password; user_desc; first_login_date } =
   Printf.sprintf
     "username = %s\n\

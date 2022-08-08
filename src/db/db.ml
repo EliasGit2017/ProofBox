@@ -25,11 +25,12 @@ let get_all_jobs_from_user {job_client_req} =
                           where job_client = $job_client_req"]
       >|= jobs_of_rows
 
-let add_user_to_db {username; email; password; user_desc; first_login_date} =
+let add_user_to_db {username; email; password; user_desc; _} =
+  let fld_to_caltype = CalendarLib.Calendar.now () in
   with_dbh >>> fun dbh -> catch_db_error @@
     fun () ->
       [%pgsql dbh "INSERT INTO users (username, email, password, user_desc, first_login_date)
-                   VALUES ($username, $email, $password, $user_desc, $first_login_date)"]
+                   VALUES ($username, $email, $password, $user_desc, $fld_to_caltype)"]
 
 
 let get_all_users () =
