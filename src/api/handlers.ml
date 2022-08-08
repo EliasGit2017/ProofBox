@@ -78,6 +78,8 @@ let version_test_json_body _params elem =
     ( Db.get_version () >|= fun v_db_version ->
       Ok { v_db = PConfig.database; v_db_version } )
 
+(** Get job list from user with corresponding [Data_types.jobs_descr.job_client] : [elem.job_client]
+    and [Data_types.jobs_descr.job_ref_tag] : [elem.job_ref_tag_v] *)
 let sr_job_desc _params elem =
   to_api (Db.get_job_desc elem >|= fun jobs -> Ok jobs)
 
@@ -88,7 +90,7 @@ let get_all_jobs _params req =
 (** Testing session ? ...  *)
 let test_session (req, _arg) r =
   to_api
-    ((* My_Session.connect req EzAPI.no_security *)
+    ((* My_Session.connect req EzAPI.no_security *) (* connect is to be used client side atm *)
      My_Session.get_request_session req
      >>= function
      | Some { session_token; session_login; session_last; session_user_id; _ }
