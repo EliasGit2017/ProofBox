@@ -90,14 +90,14 @@ let test_session : (string, request_v, version, server_error_type, no_security) 
     Path.(root // "version_session" /: arg_test)
 
 
-let sign_up_new_user : (user_description, version, server_error_type, no_security) post_service0 =
+let sign_up_new_user : (user_description, all_users, server_error_type, no_security) post_service0 =
   post_service
     ~section:section_main
     ~name:"Sign Up"
     ~descr:"Trying EzApi Session and sign up"
     ~params:[]
     ~input:user_description_enc
-    ~output:version_enc
+    ~output:all_users
     ~errors:Errors.server_errors
     Path.(root // "signup_return_auth_info")
 

@@ -131,18 +131,32 @@ let sign_up_new_user _params user =
         ^ user.first_login_date ^ " ; " ;
      *)
      if not (Utils.check_email_validity user.email) then
-       raise (Proofbox_api_error Invalid_request);
+      begin
+        print_endline "email invalid : regex invalid"; 
+        raise (Proofbox_api_error Invalid_request)
+      end;
      if not (Utils.check_password_validity user.password) then
-      raise (Proofbox_api_error Invalid_request);
+      begin
+        print_endline "password invalid : regex invalid";
+        raise (Proofbox_api_error Invalid_request)
+      end;
      let _ = Db.add_user_to_db user in
      try
        Registered_Users.create_user ~password:user.password ~login:user.username
          user.user_desc;
-       dummy_response ()
+       Db.get_user user >|= fun user_res ->
+       Ok (List.hd user_res)
+       
      with
      | EzSessionServer.UserAlreadyDefined ->
          print_endline "User already defined";
-         dummy_response ()
+         (* dummy_response () *)
+         Db.get_user user >|= fun user_res ->
+          Ok (List.hd user_res)
      | EzSessionServer.NoPasswordProvided ->
          print_endline "Please provide a decent password";
-         dummy_response ())
+         (* dummy_response () *)
+         Db.get_user user >|= fun user_res ->
+          Ok (List.hd user_res)
+    )
+
