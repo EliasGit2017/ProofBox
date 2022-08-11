@@ -2,7 +2,34 @@ open Data_types
 open Bcrypt
 open Db
 
-let user3 =
+let user_test1 =
+  {
+    username = "test_user0";
+    email = "azwbdklo@gmail.com";
+    password = "dummy1234!";
+    user_desc = "This user is here for testing purposes";
+    first_login_date = "25-04-1997 20:45:30";
+  }
+
+let user_test2 =
+  {
+    username = "test_user1";
+    email = "azwbdj@hotmail.com";
+    password = "dummy1234!";
+    user_desc = "This user is also here for testing purposes";
+    first_login_date = "25-04-1997 20:45:30";
+  }
+
+let user_test3 =
+  {
+    username = "test_user60";
+    email = "azwbdjefegdsdaqdzar@gmail.com";
+    password = "dummydedada1234!";
+    user_desc = "This user is also here for testing purposes";
+    first_login_date = "25-04-1997 20:45:30";
+  }
+
+let user_test_tyler =
   {
     username = "tyler";
     email = "tyler_durden@gmail.com";
@@ -11,7 +38,7 @@ let user3 =
     first_login_date = "2022-08-07 14:45:52.523274";
   }
 
-let user2 =
+let user_test_marla =
   {
     username = "marla";
     email = "marla1991@hotmail.fr";
@@ -20,7 +47,7 @@ let user2 =
     first_login_date = "2022-08-07 14:45:52.523274";
   }
 
-let user1 =
+let user_test_james =
   {
     username = "james";
     email = "james.dean@gmail.com";
@@ -29,7 +56,9 @@ let user1 =
     first_login_date = "2022-08-07 14:45:52.523274";
   }
 
-let default_users_list = [user1; user2; user3]
+
+
+let default_users_list = [user_test1; user_test2; user_test3]
 
 let load_testing_users =
   (* let user_list = [ user1; user2; user3 ] in *) (* custom list of users *)

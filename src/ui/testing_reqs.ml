@@ -2,205 +2,194 @@ open Data_types
 open Bcrypt
 open Utils
 open Lwt.Infix
-
-let api_port = ref 8080
-
-let user1_login = "test_user60"
-
-(* Bcrypt.string_of_hash @@ Bcrypt.hash ~count:7 "OcamlIsGood65!" *)
-
-let user1_password = "dummydedada1234!"
-
-let user1_info = "This user is also here for testing purposes"
-
-let nrequests = ref 0
-
-let waiting = ref false
-
-let waiter,finalizer = Lwt.wait ()
-
-let begin_request () = incr nrequests
-let end_request () =
-  decr nrequests;
-  if !waiting && !nrequests = 0 then
-    Lwt.wakeup finalizer ()
-
-let waiting = ref false
-
-(* let string_of_version t : Encoding.version -> string =
-  Printf.sprintf "{ v_db = %S;\n  v_db_version = %S;\n}"
-    t.name t.version *)
-
-module SessionArg = struct
-  type user_id = string
-  type user_info = Data_types.user_info
-  let user_id_encoding = Json_encoding.string
-  let user_info_encoding = Encoding.user_info
-  let rpc_path = []
-  let token_kind = `CSRF "X-Csrf-Token" (* `Cookie "EZSESSION" *)
-end
-
-module Session = EzSessionClient.Make(SessionArg)
+open EzAPI
 open EzAPI.TYPES
 
-(* type login_error =
-            [ `Bad_user_or_password
-            | `Challenge_not_found_or_expired of user_info
-            | `Invalid_session_connect of user_info
-            | `Invalid_session_login of user_info
-            | `Invalid_session_logout of user_info
-            | `Session_expired
-            | `Too_many_login_attempts
-            | `Unverified_user
-            | `User_not_registered ] *)
+let api_port = ref 8080
+let user1_login = "test_user60"
+let user1_password = "dummydedada1234!"
+let user1_info = "This user is also here for testing purposes"
 
-let to_str_err = function
-          | `Bad_user_or_password -> "`Bad_user_or_password"
-          | `Challenge_not_found_or_expired -> "`Challenge_not_found_or_expired"
-          | `Invalid_session_connect -> "`Invalid_session_connect"
-          | `Invalid_session_login -> "`Invalid_session_connect"
-          | `Session_expired -> "`Invalid_session_connect"
-          | `Too_many_login_attempts -> "`Invalid_session_connect"
-          | `Unverified_user -> "`Invalid_session_connect"
-          | `User_not_registered -> "`Invalid_session_connect"
+(* lwt management *)
+let waiter, finalizer = Lwt.wait ()
+let waiting = ref false
+let nrequests = ref 0
+let begin_request () = incr nrequests
 
+let end_request () =
+  decr nrequests;
+  if !waiting && !nrequests = 0 then Lwt.wakeup finalizer ()
+(* // *)
 
- (* `Bad_user_or_password -> "`Bad_user_or_password"
-| `Challenge_not_found_or_expired -> "`Challenge_not_found_or_expired"
-| `Invalid_session_connect -> "`Invalid_session_connect"
-| `Invalid_session_login ->  "`Invalid_session_login"
-(* | `Invalid_session_logout -> "`Invalid_session_logout" *)
-| `Session_expired -> "`Session_expired"
-| `Too_many_login_attempts -> "`Too_many_login_attempts"
-| `Unverified_user -> "`Unverified_user"
-| `User_not_registered -> "`User_not_registered"
-|`Unverified_user -> "`Unverified_user"
-|`User_not_registered -> "`User_not_registered" *)
+type 'res response = ('res, server_error_type) result
+(** Polymorphic response type from search-api. *)
 
-let proofbox_session_test arg api =
-  print_endline "trying to connect";
-  let open EzSession.TYPES in
+(** Handler that converts [ez_api] error structure to [response] *)
+let handle_error err =
+  Lwt.return
+  @@
+  match err with
+  | EzReq_lwt_S.UnknownError _ -> Error Unknown
+  | EzReq_lwt_S.KnownError { error; _ } -> Error error
+
+let handle_response (resp : 'res) : 'res response Lwt.t = Lwt.return @@ Ok resp
+(* Data examples *)
+
+let user_test1 =
+  {
+    username = "test_user0";
+    email = "azwbdklo@gmail.com";
+    password = "dummy1234!";
+    user_desc = "This user is here for testing purposes";
+    first_login_date = "25-04-1997 20:45:30";
+  }
+
+let user_test2 =
+  {
+    username = "test_user1";
+    email = "azwbdj@hotmail.com";
+    password = "dummy1234!";
+    user_desc = "This user is also here for testing purposes";
+    first_login_date = "25-04-1997 20:45:30";
+  }
+
+let user_test3 =
+  {
+    username = "test_user3";
+    email = "example@gmail.com";
+    password = "dummydedada1234!";
+    user_desc = "This user is also here for testing purposes";
+    first_login_date = "25-04-1997 20:45:30";
+  }
+
+let test_user4 =
+  {
+    username = "test_user2";
+    email = "elias.ben@gmail.com";
+    password = "Testing123%!";
+    user_desc = "User added from postman";
+    first_login_date = "irrelevant";
+  }
+
+let user_test_tyler =
+  {
+    username = "tyler";
+    email = "tyler_durden@gmail.com";
+    password = "2ndRulerefRule1$!";
+    user_desc = "3rd user for testing only";
+    first_login_date = "2022-08-07 14:45:52.523274";
+  }
+
+let user_test_marla =
+  {
+    username = "marla";
+    email = "marla1991@hotmail.fr";
+    password = "Rule1$!%";
+    user_desc = "Here for testing only";
+    first_login_date = "2022-08-07 14:45:52.523274";
+  }
+
+let user_test_james =
+  {
+    username = "james";
+    email = "james.dean@gmail.com";
+    password = "examPlePass1!";
+    user_desc = "test user 1";
+    first_login_date = "2022-08-07 14:45:52.523274";
+  }
+
+let default_users_list = [ user_test1; user_test2; user_test3 ]
+
+(** Default error handler *)
+let default_error_handler err =
+  (match err with
+  | Invalid_request -> print_endline "Client got : Invalid request"
+  | No_sources_config -> print_endline "Client got : No config for sources"
+  | Unknown -> print_endline "Client got : Unknown error");
+  Lwt.return_unit
+
+(** [send_generic_request ~request ~callback ~error] executes function that sends request [request] to search-api
+    and execute continuations according to the request result. When request is succesfull [callback] is applied 
+    on response. Otherwise, [error] is applied on an [Data_types.server_error]. If no [error] argument was specified -
+    [default_error_handler] is used.*)
+let send_generic_request :
+      'res.
+      request:(unit -> 'res response Lwt.t) ->
+      callback:('res -> unit Lwt.t) ->
+      ?error:(server_error_type -> unit Lwt.t) ->
+      unit ->
+      unit Lwt.t =
+ fun ~request ~callback ?(error = default_error_handler) () ->
+  let%lwt resp = request () in
+  match resp with Ok res -> callback res | Error err -> error err
+
+let error test n =
+  Printf.eprintf "Error: request %s returned code %d\n%!" test n;
+  exit 2
+
+let basic api =
   begin_request ();
-  Session.connect
-    api
-    (function
-    |Error _ ->
-      Printf.eprintf "Error in connect\n%!";
-      exit 2
-    | Ok (Some _u) -> assert false
-    | Ok None ->
-      Session.login
-        api
-        ~login:user1_login ~password:user1_password
-        (function
-          | Error _ ->
-            (* Printf.eprintf "%s\n%!" @@ Printexc.raw_backtrace_to_string @@ Printexc.get_callstack 100; *)
-            Printf.eprintf "Error in login\n%!";
-            exit 2
-          | Ok u ->
-            Printf.eprintf "auth login = %S\n%!" u.auth_login;
-            Printf.eprintf "auth token = %S\n%!" u.auth_token;
-            assert (u.auth_login = user1_login);
-            assert (u.auth_user_info = user1_info);
-            EzRequest.ANY.get0 ~msg:"version"
-              api
-              Services.version
-              (* ~input:arg *)
-              ~headers:(
-                ("X-Another-Header2:", "x2") ::
-                Session.auth_headers ~token:u.auth_token)
-              (function
-              |Ok r -> Printf.eprintf "test request to signup new user ... : return value --> %s\n%!"
-                (version_test_to_string r);
-                Session.logout
-                  api
-                  ~token:u.auth_token
-                  (function
-                    | Error _ ->
-                      Printf.eprintf "Error in logout\n%!";
-                      exit 2
-                    | Ok bool ->
-                      Printf.eprintf "logout OK %b\n%!" bool;
-                      end_request ()
-                  )
-              | Error e ->
-              Printf.eprintf "%s\n%!" @@ "This is an error from server, custom stuff";
-              end_request ()
-            )
-        )
-    )
-    
+  EzRequest.ANY.get0 (* EzReq_lwt.get0 *)
+    ~msg:"simplest req possible" api Services.version
+    (* ~error:(error "even on the dummiest") *) (function
+    | Ok r ->
+        Printf.eprintf "Result for Simple req : %s\n%!"
+          (Utils.version_test_to_string r);
+        (* handle_response r *)
+        end_request ()
+    | Error e ->
+        Printf.eprintf "%s\n%!" @@ "very bad error even in basic req";
+        (* handle_error e *)
+        end_request ())
 
-let proofbox_session_test_json arg api =
-  print_endline "trying to connect";
-  let open EzSession.TYPES in
+let base_req arg api =
+  print_endline "sending req ==> base req";
+  EzRequest_lwt.ANY.post0 ~msg:"trying simple req" ~input:arg api
+    Services.version_test_json_body
+  >>= (* ~error:(error "base_req")  *)
+  function
+  | Ok e ->
+      (* print_endline "ok got res"; *)
+      Printf.eprintf "getting db version %s\n%!"
+        (Utils.version_test_to_string e);
+      (* handle_response e  *)
+      Lwt.return_unit
+  | Error e ->
+      print_endline "bad error";
+      (* Printf.eprintf "%s\n%!" @@ Printexc.to_string (proofbox_api_error e); *)
+      (* handle_error e *)
+      Lwt.return_unit
+
+let base_req2 arg api =
   begin_request ();
-  Session.connect
-    api
-    (function
-    |Error _ ->
-      Printf.eprintf "Error in connect\n%!";
-      exit 2
-    | Ok (Some _u) -> assert false
-    | Ok None ->
-      Session.login
-        api
-        ~login:user1_login ~password:user1_password
-        (function
-          | Error _ ->
-            (* Printf.eprintf "%s\n%!" @@ Printexc.raw_backtrace_to_string @@ Printexc.get_callstack 100; *)
-            Printf.eprintf "Error in login\n%!";
-            exit 2
-          | Ok u ->
-            Printf.eprintf "auth login = %S \nauth token = %S\n%!" u.auth_login u.auth_token;
-            assert (u.auth_login = user1_login);
-            assert (u.auth_user_info = user1_info);
-            EzRequest.ANY.post0 ~msg:"version"
-              api
-              Services.version_test_json_body
-              ~input:arg
-              ~headers:(
-                ("X-Another-Header2:", "x2") ::
-                Session.auth_headers ~token:u.auth_token)
-              (function
-                |Ok r -> 
-                  print_endline "In service rn";
-                  Printf.eprintf "test request to get version using json body ... :\nreturn value --> %s\n%!"
-                  (version_test_to_string r);
-                  Session.logout
-                    api
-                    ~token:u.auth_token
-                    (function
-                      | Error _ ->
-                        Printf.eprintf "Error in logout\n%!";
-                        exit 2
-                      | Ok bool ->
-                        Printf.eprintf "logout OK %b\n%!" bool;
-                        end_request ()
-                    )
-                | Error e ->
-                  print_endline "no result returned";
-                  Printf.eprintf "%s\n%!" @@ "This is an error from server, custom stuff";
-                  end_request ()
-            )
-        )
-    )
-    
+  print_endline "sending ==> base_req2";
+  EzRequest.ANY.post0 ~msg:"test3" api Services.version_test_json_body
+    ~error:(error "error classic req; no lwt //") ~input:arg (function
+    | Ok r ->
+        Printf.eprintf "Test test3 returned %s\n%!"
+          (Utils.version_test_to_string r);
+        end_request ()
+    | Error e ->
+        Printf.eprintf "%s\n%!" @@ Printexc.to_string (proofbox_api_error e);
+        end_request ())
 
 let () =
   Printexc.record_backtrace true;
   let api = Printf.sprintf "http://localhost:%d" !api_port in
+  print_endline ("sending req 0 to " ^ api);
   let api = BASE api in
-  let requests = [
-    (* proofbox_session_test {username = "test_ouser"; email = "azwbdklo@gmail.com"; password = "dummy1234!"; description = "This user is here for testing purposes"; first_login_date = "25-04-1997 20:45:30"}; *)
-    (* proofbox_session_test {username = "test_user1"; email = "azwbdj@gmail.com"; password = "dummy1234!"; description = "This user is also here for testing purposes"; first_login_date = "25-04-1997 20:45:30"}; *)
-    proofbox_session_test {username = "test_user60"; email = "azwbdjefegdsdaqdzar@gmail.com"; password = "dummydedada1234!"; user_desc = "This user is also here for testing purposes"; first_login_date = "25-04-1997 20:45:30"};
-    proofbox_session_test_json {basic = "okok"};
-    ]
-  in
-  print_endline "Launching request Tests";
-  List.iter (fun test -> test api) requests;
-  if !nrequests > 0 then begin
-    waiting := true;
-    EzLwtSys.run (fun () -> waiter)
-  end
+  let requests =
+       [ (* base_req2 { basic = "okok" }; base_req2 { basic = "okok" } *) basic; ]
+     in
+     List.iter (fun test -> test api) requests;
+     if !nrequests > 0 then (
+       waiting := true;
+       EzLwtSys.run (fun () -> waiter));
+  (* Lwt.async
+  @@ send_generic_request
+       ~request:(fun () -> basic api)
+       ~callback:(fun res ->
+         print_endline (Utils.version_test_to_string res);
+         Lwt.return_unit); *)
+
+  Lwt.async @@ fun () -> base_req { basic = "okok" } api

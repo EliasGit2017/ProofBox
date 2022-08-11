@@ -48,9 +48,11 @@ let to_api p =
 let hash_bcrypt pre_hashed_password =
   Bcrypt.string_of_hash @@ Bcrypt.hash ~count:8 pre_hashed_password
 
+let hash_user_desc ud = { ud with password = hash_bcrypt ud.password }
+
 (** [Registered_Users.create_user] wrapper for server side session management 
     (not used consistently)*)
-let register_users user_d =
+let register_user user_d =
   Registered_Users.create_user ~login:user_d.username
     ~password:(hash_bcrypt user_d.password)
     user_d.user_desc
@@ -85,6 +87,7 @@ let version _params () =
 
 (** Same as previous but with a json body *)
 let version_test_json_body _params elem =
+  print_endline "calling version_test_json_body";
   to_api
     ( Db.get_version () >|= fun v_db_version ->
       Ok { v_db = PConfig.database; v_db_version } )
@@ -130,33 +133,29 @@ let sign_up_new_user _params user =
         ^ user.email ^ " ; " ^ user.password ^ " ; " ^ user.user_desc ^ " ; "
         ^ user.first_login_date ^ " ; " ;
      *)
-     if not (Utils.check_email_validity user.email) then
-      begin
-        print_endline "email invalid : regex invalid"; 
-        raise (Proofbox_api_error Invalid_request)
-      end;
-     if not (Utils.check_password_validity user.password) then
-      begin
-        print_endline "password invalid : regex invalid";
-        raise (Proofbox_api_error Invalid_request)
-      end;
+     print_endline "called handler signup_new_user";
+     if Utils.check_email_validity user.email then (
+       print_endline
+       @@ Printf.sprintf "email invalid : regex invalid : %S" user.email;
+       raise (Proofbox_api_error Invalid_request));
+     if Utils.check_password_validity user.password then (
+       print_endline "password invalid : regex invalid";
+       raise (Proofbox_api_error Invalid_request));
+
+     let user = hash_user_desc user in
      let _ = Db.add_user_to_db user in
      try
        Registered_Users.create_user ~password:user.password ~login:user.username
          user.user_desc;
-       Db.get_user user >|= fun user_res ->
-       Ok (List.hd user_res)
-       
+       Db.get_user user >|= fun user_res -> Ok (List.hd user_res)
      with
      | EzSessionServer.UserAlreadyDefined ->
          print_endline "User already defined";
          (* dummy_response () *)
-         Db.get_user user >|= fun user_res ->
-          Ok (List.hd user_res)
+         Db.get_user user >|= fun user_res -> Ok (List.hd user_res)
      | EzSessionServer.NoPasswordProvided ->
          print_endline "Please provide a decent password";
          (* dummy_response () *)
-         Db.get_user user >|= fun user_res ->
-          Ok (List.hd user_res)
-    )
+         Db.get_user user >|= fun user_res -> Ok (List.hd user_res))
+
 
