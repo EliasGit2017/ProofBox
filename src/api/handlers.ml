@@ -137,44 +137,33 @@ let sign_up_new_user _params user =
         ^ user.first_login_date ^ " ; " ;
      *)
      print_endline "calling handler signup_new_user";
-     if Utils.check_email_validity user.email then
+     if not @@ Utils.check_email_validity user.email then (
        print_endline
        @@ Printf.sprintf "email invalid : regex invalid : %S" user.email;
-     (* let _ = dummy_response () in *)
-     let _ =
        default_serv_response "attempt to create user"
          "client infos to be added here" "Error"
-         "Signup Error : Bad email address"
-     in
-     if Utils.check_password_validity user.password then
-       print_endline "password invalid : regex invalid";
-
-     (* let _ = dummy_response () in *)
-     let _ =
+         "Signup Error : Bad email address")
+     else if not @@ Utils.check_password_validity user.password then (
+       print_endline
+       @@ Printf.sprintf "password invalid : %s regex invalid" user.password;
        default_serv_response "attempt to create user"
-         "client infos to be added here" "Error" "Signup Error : Bad password"
-     in
-     let user = hash_user_desc user in
-     let _ = Db.add_user_to_db user in
-     try
-       Registered_Users.create_user ~password:user.password ~login:user.username
-         user.user_desc;
-       (* Db.get_user user >|= fun user_res -> Ok (List.hd user_res) *)
-       (* dummy_response () *)
-       default_serv_response "attempt to create user"
-         "client infos to be added here" "Ok" "Go check Db / verification"
-     with
-     | EzSessionServer.UserAlreadyDefined ->
-         print_endline "User already defined";
-         (* Db.get_user user >|= fun user_res -> Ok (List.hd user_res) *)
-         (* dummy_response () *)
+         "client infos to be added here" "Error" "Signup Error : Bad password")
+     else
+       let user = hash_user_desc user in
+       let _ = Db.add_user_to_db user in
+       try
+         Registered_Users.create_user ~password:user.password
+           ~login:user.username user.user_desc;
          default_serv_response "attempt to create user"
-           "client infos to be added here" "Error"
-           "Signup Error : EzSessionServer.UserAlreadyDefined"
-     | EzSessionServer.NoPasswordProvided ->
-         print_endline "Please provide a decent password";
-         (* Db.get_user user >|= fun user_res -> Ok (List.hd user_res)) *)
-         (* dummy_response () *)
-         default_serv_response "attempt to create user"
-           "client infos to be added here" "Error"
-           "Signup Error : EzSessionServer.NoPasswordProvided")
+           "client infos to be added here" "Ok" "Go check Db / verification"
+       with
+       | EzSessionServer.UserAlreadyDefined ->
+           print_endline "User already defined";
+           default_serv_response "attempt to create user"
+             "client infos to be added here" "Error"
+             "Signup Error : EzSessionServer.UserAlreadyDefined"
+       | EzSessionServer.NoPasswordProvided ->
+           print_endline "Please provide a decent password";
+           default_serv_response "attempt to create user"
+             "client infos to be added here" "Error"
+             "Signup Error : EzSessionServer.NoPasswordProvided")
