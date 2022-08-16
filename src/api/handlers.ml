@@ -139,13 +139,13 @@ let sign_up_new_user _params user =
      print_endline "calling handler signup_new_user";
      if not @@ Utils.check_email_validity user.email then (
        print_endline
-       @@ Printf.sprintf "email invalid : regex invalid : %S" user.email;
+       @@ Printf.sprintf "email invalid : regex invalid : {%S}" user.email;
        default_serv_response "attempt to create user"
          "client infos to be added here" "Error"
          "Signup Error : Bad email address")
      else if not @@ Utils.check_password_validity user.password then (
        print_endline
-       @@ Printf.sprintf "password invalid : %s regex invalid" user.password;
+       @@ Printf.sprintf "password invalid : {%s} regex invalid" user.password;
        default_serv_response "attempt to create user"
          "client infos to be added here" "Error" "Signup Error : Bad password")
      else

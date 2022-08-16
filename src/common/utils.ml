@@ -48,7 +48,7 @@ let default_server_response_from_string _comm_des _client_infos _infos
 
 let default_server_response_to_string elem =
   Printf.sprintf
-    "comm_desc = %s; client_infos = %s; infos = %s; error_desc = %s"
+    "{\ncomm_desc = %s;\nclient_infos = %s;\ninfos = %s;\nerror_desc = %s\n}"
     elem.comm_desc elem.client_infos elem.infos elem.error_desc
 
 (*****************************************************************************)
