@@ -71,3 +71,10 @@ type nonrec user_description = Data_types.user_description = {
 } [@@deriving json_encoding]
 
 let all_users = list user_description_enc
+
+type nonrec general_comm = Data_types.general_comm = {
+  comm_desc : string;
+  client_infos : string;
+  infos : string;
+  error_desc : string;
+} [@@deriving json_encoding]

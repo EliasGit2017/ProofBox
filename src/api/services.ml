@@ -52,7 +52,7 @@ let version_test_json_body : (request_v, version, server_error_type, no_security
     ~params:[]
     ~input:request_v_enc
     ~output:version_enc
-    (* ~errors:Errors.server_errors *)
+    ~errors:Errors.server_errors
     Path.(root // "version_json_body")
 
 let sr_job_desc : (job_desc_req, jobs, server_error_type, no_security) post_service0 =
@@ -90,14 +90,14 @@ let test_session : (string, request_v, version, server_error_type, no_security) 
     Path.(root // "version_session" /: arg_test)
 
 
-let sign_up_new_user : (user_description, user_description, server_error_type, no_security) post_service0 =
+let sign_up_new_user : (user_description, general_comm, server_error_type, no_security) post_service0 =
   post_service
     ~section:section_main
     ~name:"Sign Up"
     ~descr:"Trying EzApi Session and sign up"
     ~params:[]
     ~input:user_description_enc
-    ~output:user_description_enc
+    ~output:general_comm_enc
     ~errors:Errors.server_errors
     Path.(root // "signup_return_auth_info")
 

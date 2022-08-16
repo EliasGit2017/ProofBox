@@ -1,7 +1,6 @@
 open Data_types
 open Str
 
-
 (* Conversion & data printing : ( *_to_string, *_of_string, etc) *)
 
 (** [to_result str ~convf] encapsulates application of [convf] on [str] within [result] type *)
@@ -11,7 +10,7 @@ let to_result :
   try Ok (convf str)
   with Failure str -> Error ("Not recognized data_type : " ^ str)
 
-(* ********* Might not be so usefull *********** *)
+(* ****** Convert / Create some records to / from string(s) for printing/debug *********** *)
 
 (** Create [Data_types.version] from string where record field are separated by '+'
     (to generalize) *)
@@ -38,14 +37,30 @@ let users_to_string { username; email; password; user_desc; first_login_date } =
      first_login_date = %s\n"
     username email password user_desc first_login_date
 
-(* Utilities *)
+let default_server_response_from_string _comm_des _client_infos _infos
+    error_desc =
+  {
+    comm_desc = _comm_des;
+    client_infos = _client_infos;
+    infos = _infos;
+    error_desc;
+  }
 
-(* Check regex patterns ... => *)
+let default_server_response_to_string elem =
+  Printf.sprintf
+    "comm_desc = %s; client_infos = %s; infos = %s; error_desc = %s"
+    elem.comm_desc elem.client_infos elem.infos elem.error_desc
+
+(*****************************************************************************)
+
+(* Utilities : regex, data manipulation & transformation *)
 
 (** Regex check on email : pattern identical to domain attempt in
     [db/versions.ml] *)
 let check_email_validity email =
-  let right_email = Str.regexp {|^([a-zA-Z0-9_-.]+)@([a-zA-Z0-9_-.]+)\.([a-zA-Z]{2,5})$|} in
+  let right_email =
+    Str.regexp {|^([a-zA-Z0-9_-.]+)@([a-zA-Z0-9_-.]+)\.([a-zA-Z]{2,5})$|}
+  in
   Str.string_match right_email email 0
 
 (** Regex check on password rules :
@@ -55,7 +70,8 @@ let check_email_validity email =
     At least one special character [\[*.!@#$%^&(){}[]:;<>,.?/~_+-=|\]]
     At least 8 characters in length, but no more than 32.*)
 let check_password_validity password =
-  let right_password = Str.regexp {|^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$|} in
+  let right_password =
+    Str.regexp
+      {|^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$|}
+  in
   Str.string_match right_password password 0
-
-
