@@ -131,39 +131,33 @@ let test_session (req, _arg) r =
     Register (active) session for newly signed up user *)
 let sign_up_new_user _params user =
   to_api
-    ((* Check data type and content : debug TO REMOVE *)
-     (* print_endline @@ "These are the details of the signup : " ^ user.username ^ " ; "
-        ^ user.email ^ " ; " ^ user.password ^ " ; " ^ user.user_desc ^ " ; "
-        ^ user.first_login_date ^ " ; " ;
-     *)
-     print_endline "calling handler signup_new_user";
-     if not @@ Utils.check_email_validity user.email then (
-       print_endline
-       @@ Printf.sprintf "email invalid : regex invalid : {%S}" user.email;
-       default_serv_response "attempt to create user"
-         "client infos to be added here" "Error"
-         "Signup Error : Bad email address")
-     else if not @@ Utils.check_password_validity user.password then (
-       print_endline
-       @@ Printf.sprintf "password invalid : {%s} regex invalid" user.password;
-       default_serv_response "attempt to create user"
-         "client infos to be added here" "Error" "Signup Error : Bad password")
-     else
-       let user = hash_user_desc user in
-       let _ = Db.add_user_to_db user in
-       try
-         Registered_Users.create_user ~password:user.password
-           ~login:user.username user.user_desc;
-         default_serv_response "attempt to create user"
-           "client infos to be added here" "Ok" "Go check Db / verification"
-       with
-       | EzSessionServer.UserAlreadyDefined ->
-           print_endline "User already defined";
-           default_serv_response "attempt to create user"
-             "client infos to be added here" "Error"
-             "Signup Error : EzSessionServer.UserAlreadyDefined"
-       | EzSessionServer.NoPasswordProvided ->
-           print_endline "Please provide a decent password";
-           default_serv_response "attempt to create user"
-             "client infos to be added here" "Error"
-             "Signup Error : EzSessionServer.NoPasswordProvided")
+    (if not @@ Utils.check_email_validity user.email then (
+     print_endline
+     @@ Printf.sprintf "email invalid : regex invalid : {%s}" user.email;
+     default_serv_response "attempt to create user"
+       "client infos to be added here" "Error"
+       "Signup Error : Bad email address")
+    else if not @@ Utils.check_password_validity user.password then (
+      print_endline
+      @@ Printf.sprintf "password invalid : {%s} regex invalid" user.password;
+      default_serv_response "attempt to create user"
+        "client infos to be added here" "Error" "Signup Error : Bad password")
+    else
+      let user = hash_user_desc user in
+      let _ = Db.add_user_to_db user in
+      try
+        Registered_Users.create_user ~password:user.password
+          ~login:user.username user.user_desc;
+        default_serv_response "attempt to create user"
+          "client infos to be added here" "Ok" "Go check Db / verification"
+      with
+      | EzSessionServer.UserAlreadyDefined ->
+          print_endline "User already defined";
+          default_serv_response "attempt to create user"
+            "client infos to be added here" "Error"
+            "Signup Error : EzSessionServer.UserAlreadyDefined"
+      | EzSessionServer.NoPasswordProvided ->
+          print_endline "Please provide a decent password";
+          default_serv_response "attempt to create user"
+            "client infos to be added here" "Error"
+            "Signup Error : EzSessionServer.NoPasswordProvided")
