@@ -57,5 +57,3 @@ type general_comm = {
   infos : string;
   error_desc : string;
 }
-
-

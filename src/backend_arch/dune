@@ -1,4 +1,10 @@
+(library
+ (name read_write_toml)
+ (modules utils)
+ (libraries toml))
+
 (executable
- (name )
- (public_name )
- (libraries ))
+ (name config_verif)
+ (modules config_verif)
+ (libraries toml read_write_toml))
+
