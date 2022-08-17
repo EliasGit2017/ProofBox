@@ -1,10 +1,13 @@
-open Toml
+open Otoml
 
-(* let error_printer  *)
-
-let main () =
-  print_endline "Running toml parsing/reading tests"
-  let parse_exp = Toml.Parser.from_string "key = [1,2]";;
-  match parse_exp with
-  | `Ok e -> print_endline @@ Toml.Printer.string_of_table e
-  | `Error _ -> print_endline "error in parsing; to do elaborate"
+let () =
+  let test =
+    Otoml.Parser.from_file
+      "/home/elias/OCP/ez_proofbox/src/backend_arch/job.toml"
+  in
+  test
+  |> Otoml.Printer.to_channel ~indent_width:4 ~indent_subtables:true
+       ~collapse_tables:false stdout;
+  print_endline "\n ==> getting access to nested +/- values\n =>";
+  Otoml.find test Otoml.get_value ["owner"; "email"] |> Otoml.Printer.to_channel stdout
+  

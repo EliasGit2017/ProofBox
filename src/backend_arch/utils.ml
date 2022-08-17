@@ -1,29 +1,23 @@
-open Toml
+open Otoml
 
-let force_opt opt =
-  match opt with
-  | Some value -> value
-  | None -> failwith "No value"
+(* Utils to get / set values and acces toml files simply &
+   Wrappers over some functions *)
 
-let get_string k toml_table =
-  Toml.Lenses.(get toml_table (key k |-- string)) |> force_opt
+let stringl_to_str s_l = 
+  List.fold_left ( ^ ) "" s_l
 
-let get_int k toml_table =
-  Toml.Lenses.(get toml_table (key k |-- int)) |> force_opt
 
-let get_float k toml_table =
-  Toml.Lenses.(get toml_table (key k |-- float)) |> force_opt
+let get_value_wrap parsed_toml path_toval =
+  try Otoml.find parsed_toml path_toval with
+  | Otoml.Type_error e -> 
+  | Otoml.Key_error e -> 
 
-let get_bool k toml_table =
-  Toml.Lenses.(get toml_table (key k |-- bool)) |> force_opt
-
-let get_bool_array k toml_table =
-  Toml.Lenses.(get toml_table (key k |-- array |-- bools)) |> force_opt
-
-let get_table k toml_table =
-  Toml.Lenses.(get toml_table (key k |-- table)) |> force_opt
-
-let get_table_array k toml_table =
-  Toml.Lenses.(get toml_table (key k |-- array |-- tables)) |> force_opt
-
-let unsafe_from_string s = Toml.Parser.from_string s |> Toml.Parser.unsafe
+let get_owner_username = ()
+let get_owner_bio = ()
+let get_owner_bio = ()
+let get_owner_password = ()
+let get_job_description_job_id = ()
+let get_job_description_solver = ()
+let get_job_description_solver_version = ()
+let get_job_description_job_synopsis = ()
+let get_job_description_path_tof = ()

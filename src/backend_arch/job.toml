@@ -1,0 +1,21 @@
+# Job TOML draft
+
+title = "ProofBox SMT solving platform : Job description"
+
+[owner]
+username = "OCP-ocamlpro"
+email = "elias.bendjaballah@gmail.com"
+bio = "User from toml file"
+password = "Opple!/32"
+
+#Prepare multi job toml description file
+
+[job_description]
+# Solvers available : Z3, CVC4, Alt-ergo
+job_id = 0
+solver = "alt-ergo"
+solver_version = "2.4.2"
+synopsis = "Sample AE jobs for testing purposes"
+path_to_client_repo = "/home/elias/OCP/PROOFBOX_TestJobs/job_example1/"
+
+
