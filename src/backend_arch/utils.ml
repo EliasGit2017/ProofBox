@@ -4,6 +4,7 @@ open Str
 (* Otoml : Utils to get / set values and acces toml files simply &
    Wrappers over some functions *)
 
+let title_toml = ["title";]
 let owner_username = [ "owner"; "username" ]
 let owner_email = [ "owner"; "email" ]
 let owner_bio = [ "owner"; "bio" ]
@@ -35,7 +36,10 @@ let get_str parsed_toml path_toval =
 let get_int parsed_toml path_toval =
   Otoml.find parsed_toml (Otoml.get_integer ~strict:true) path_toval
 
+let get_title parsed_toml =
+  get_str parsed_toml title_toml
 let get_owner_username parsed_toml = get_str parsed_toml owner_username
+let get_owner_email parsed_toml = get_str parsed_toml owner_email
 let get_owner_bio parsed_toml = get_str parsed_toml owner_bio
 let get_owner_password parsed_toml = get_str parsed_toml owner_password
 let get_jd_job_id parsed_toml = get_int parsed_toml job_description_id
