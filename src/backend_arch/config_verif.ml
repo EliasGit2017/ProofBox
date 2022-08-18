@@ -2,6 +2,25 @@ open Otoml
 open Read_write_toml.Utils
 
 let path_to_toml = "/home/elias/OCP/ez_proofbox/src/backend_arch"
+let testunix = Unix.getcwd
+
+let get_all_files_w_ext wd =
+  Sys.readdir wd |> Array.to_list
+  |> List.filter (fun x -> Filename.extension x = ".smt2")
+
+(** [dir_contents] returns the paths of all regular files that are
+ * contained in [dir]. Each file is a path starting with [dir].
+  *)
+let dir_contents dir =
+  let rec loop result = function
+    | f :: fs when Sys.is_directory f ->
+        Sys.readdir f |> Array.to_list
+        |> List.map (Filename.concat f)
+        |> List.append fs |> loop result
+    | f :: fs -> loop (f :: result) fs
+    | [] -> result
+  in
+  loop [] [ dir ]
 
 let retrieve_toml_files base_dir =
   let ((ocaml_stdout, ocaml_stdin, ocaml_stderr) as p) =
@@ -11,7 +30,7 @@ let retrieve_toml_files base_dir =
   in
   let l_res = ref [] in
   (* print_endline @@ Printf.sprintf "%d" @@ List.length @@ chan_to_stringlist ocaml_stdout;
-  print_endline @@ Printf.sprintf "%d" @@ List.length @@ chan_to_stringlist ocaml_stderr; *)
+     print_endline @@ Printf.sprintf "%d" @@ List.length @@ chan_to_stringlist ocaml_stderr; *)
   stringlist_printer @@ chan_to_stringlist ocaml_stdout;
   stringlist_printer @@ chan_to_stringlist ocaml_stderr;
 
@@ -40,4 +59,12 @@ let () =
   get_owner_bio test |> Otoml.Printer.to_string |> print_endline;
 
   print_endline " list files";
-  retrieve_toml_files path_to_toml
+  retrieve_toml_files path_to_toml;
+  let jdptof =
+    get_str test [ "job_description"; "path_to_client_repo" ]
+    (* |> Otoml.Printer.to_string *)
+  in
+  stringlist_printer
+  @@ get_all_files_w_ext
+       "/home/elias/OCP/PROOFBOX_TestJobs/job_example1/ALIA/piVC";
+  stringlist_printer @@ dir_contents jdptof

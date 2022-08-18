@@ -28,6 +28,12 @@ let get_value_wrap parsed_toml path_toval =
       @@ Printf.sprintf "Otoml.Type_error from get_value_wrap : %s" e;
       Otoml.TomlBoolean false
 
+let get_str parsed_toml path_toval =
+  Otoml.find parsed_toml (Otoml.get_string ~strict:true) path_toval
+
+let get_int parsed_toml path_toval =
+  Otoml.find parsed_toml (Otoml.get_integer ~strict:true) path_toval
+
 let get_owner_username parsed_toml = get_value_wrap parsed_toml owner_username
 let get_owner_bio parsed_toml = get_value_wrap parsed_toml owner_bio
 let get_owner_bio parsed_toml = get_value_wrap parsed_toml owner_bio

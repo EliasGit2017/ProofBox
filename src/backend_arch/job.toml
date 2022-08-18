@@ -16,6 +16,6 @@ job_id = 0
 solver = "alt-ergo"
 solver_version = "2.4.2"
 synopsis = "Sample AE jobs for testing purposes"
-path_to_client_repo = "/home/elias/OCP/PROOFBOX_TestJobs/job_example1/"
+path_to_client_repo =  "/home/elias/OCP/PROOFBOX_TestJobs/job_example1"
 
 
