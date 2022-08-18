@@ -74,7 +74,7 @@ let print_chan channel =
   try loop () with End_of_file -> close_in channel
 
 (** Search for no ref version ? *)
-let chan_to_stringlist channel =
+(* let chan_to_stringlist channel =
   let l_res = ref List.[] in
   let rec loop () =
     l_res := input_line channel :: !l_res;
@@ -84,7 +84,16 @@ let chan_to_stringlist channel =
   with End_of_file ->
     (* close_in channel; *)
     (* Closed by [Unix.close_process_full] *)
-    !l_res
+    !l_res *)
+
+let chan_to_stringlist channel =
+  let rec loop acc =
+    try
+      loop (input_line channel :: acc)
+    with End_of_file ->
+      List.rev acc
+    in
+    loop []
 
 (** Print string list with [print_endline] for each element *)
 let rec stringlist_printer = function

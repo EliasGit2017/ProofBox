@@ -53,14 +53,14 @@ let () =
   print_endline "\n=> job_description table : ";
   get_owner_bio test (* |> Otoml.Printer.to_string *) |> print_endline;
 
-  (* print_endline "=> list files ==> :";
-     retrieve_toml_files path_to_toml;
-     let jdptof = get_str test [ "job_description"; "path_to_client_repo" ] in
-     stringlist_printer
-     @@ get_all_files_w_ext_smts
-          "/home/elias/OCP/PROOFBOX_TestJobs/job_example1/ALIA/piVC";
-     stringlist_printer @@ dir_contents jdptof;
-     print_endline @@ Printf.sprintf "Unix.getcwd : %s" (testunix ()) *)
+  print_endline "=> list files ==> :";
+  retrieve_toml_files path_to_toml;
+  let jdptof = get_str test [ "job_description"; "path_to_client_repo" ] in
+  (* stringlist_printer
+  @@ get_all_files_w_ext_smts
+       "/home/elias/OCP/PROOFBOX_TestJobs/job_example1/ALIA/piVC"; *)
+  stringlist_printer @@ dir_contents jdptof;
+  print_endline @@ Printf.sprintf "\nUnix.getcwd : %s" (testunix ());
   print_endline "==> Main TOML : =>";
   print_endline get_main_toml;
   if Hashtbl.length retrieve_toml_values = 0 then
