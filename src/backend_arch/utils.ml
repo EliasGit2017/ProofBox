@@ -4,7 +4,7 @@ open Str
 (* Otoml : Utils to get / set values and acces toml files simply &
    Wrappers over some functions *)
 
-let title_toml = ["title";]
+let title_toml = [ "title" ]
 let owner_username = [ "owner"; "username" ]
 let owner_email = [ "owner"; "email" ]
 let owner_bio = [ "owner"; "bio" ]
@@ -36,8 +36,7 @@ let get_str parsed_toml path_toval =
 let get_int parsed_toml path_toval =
   Otoml.find parsed_toml (Otoml.get_integer ~strict:true) path_toval
 
-let get_title parsed_toml =
-  get_str parsed_toml title_toml
+let get_title parsed_toml = get_str parsed_toml title_toml
 let get_owner_username parsed_toml = get_str parsed_toml owner_username
 let get_owner_email parsed_toml = get_str parsed_toml owner_email
 let get_owner_bio parsed_toml = get_str parsed_toml owner_bio
@@ -75,25 +74,22 @@ let print_chan channel =
 
 (** Search for no ref version ? *)
 (* let chan_to_stringlist channel =
-  let l_res = ref List.[] in
-  let rec loop () =
-    l_res := input_line channel :: !l_res;
-    loop ()
-  in
-  try loop ()
-  with End_of_file ->
-    (* close_in channel; *)
-    (* Closed by [Unix.close_process_full] *)
-    !l_res *)
+   let l_res = ref List.[] in
+   let rec loop () =
+     l_res := input_line channel :: !l_res;
+     loop ()
+   in
+   try loop ()
+   with End_of_file ->
+     (* close_in channel; *)
+     (* Closed by [Unix.close_process_full] *)
+     !l_res *)
 
 let chan_to_stringlist channel =
   let rec loop acc =
-    try
-      loop (input_line channel :: acc)
-    with End_of_file ->
-      List.rev acc
-    in
-    loop []
+    try loop (input_line channel :: acc) with End_of_file -> List.rev acc
+  in
+  loop []
 
 (** Print string list with [print_endline] for each element *)
 let rec stringlist_printer = function
@@ -146,7 +142,7 @@ let dir_contents dir =
   loop [] [ dir ]
 
 (** Exploration && tests *)
-let retrieve_toml_files base_dir =
+let launch_process base_dir =
   let ((ocaml_stdout, ocaml_stdin, ocaml_stderr) as p) =
     Unix.open_process_args_full "/usr/bin/ls"
       [| "/usr/bin/ls"; path_to_toml |]

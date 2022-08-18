@@ -54,7 +54,7 @@ let () =
   get_owner_bio test (* |> Otoml.Printer.to_string *) |> print_endline;
 
   print_endline "=> list files ==> :";
-  retrieve_toml_files path_to_toml;
+  launch_process path_to_toml;
   let jdptof = get_str test [ "job_description"; "path_to_client_repo" ] in
   (* stringlist_printer
   @@ get_all_files_w_ext_smts

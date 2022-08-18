@@ -1,7 +1,7 @@
 (library
  (name read_write_toml)
  (modules utils)
- (libraries otoml unix stdlib-shims str))
+ (libraries otoml data_common unix stdlib-shims str))
 
 (executable
  (name config_verif)
