@@ -1,4 +1,5 @@
 open Otoml
+open Str
 
 (* Otoml : Utils to get / set values and acces toml files simply &
    Wrappers over some functions *)
@@ -56,6 +57,8 @@ let get_job_description_path_tof parsed_toml =
 
 (* Unix : tools *)
 
+let accepted_formats = [".smt2"; ".ae"]
+
 let stat_code status =
   match status with
   | Unix.WEXITED e -> Printf.sprintf "WEXITED : code = %d" e
@@ -74,12 +77,13 @@ let print_chan channel =
 let chan_to_stringlist channel =
   let l_res = ref List.[] in
   let rec loop () =
-    l_res := List.append !l_res [(input_line channel)];
+    l_res := List.append !l_res [ input_line channel ];
     loop ()
   in
   try loop ()
   with End_of_file ->
-    (* close_in channel; *) (* Closed by [Unix.close_process_full] *)
+    (* close_in channel; *)
+    (* Closed by [Unix.close_process_full] *)
     !l_res
 
 (** Print string list *)
@@ -98,3 +102,27 @@ let rec sringlist_tostring sep = function
 (* Alternatives *)
 (* let join l = List.filter (fun s -> s <> "") l |> String.concat "" *)
 (* let join2 sep l = String.concat sep l *)
+
+let get_all_files_w_ext wd =
+  Sys.readdir wd |> Array.to_list
+  |> List.filter (fun x -> Filename.extension x = ".smt2")
+
+(** [dir_contents] returns the paths of all regular files that are
+ * contained in [dir]. Each file is a path starting with [dir].
+  *)
+let dir_contents dir =
+  let rec loop result = function
+    | f :: fs when Sys.is_directory f ->
+        Sys.readdir f |> Array.to_list
+        (* |> List.filter (fun x ->
+               let x_bis = List.hd (List.rev (String.split_on_char '/' x)) in
+               print_endline x_bis;
+               Filename.extension x_bis = ".smt2") *)
+        (* |> List.filter (fun x -> Str.string_match (Str.regexp {|.*\.smt2|}) x 0) *)
+        (* |> List.filter (fun x -> Filename.extension x = ".smt2") *)
+        |> List.map (Filename.concat f)
+        |> List.append fs |> loop result
+    | f :: fs -> loop (f :: result) fs
+    | [] -> result |> List.filter (fun x -> Str.string_match (Str.regexp {|\(.*\.smt2\)\|(.*\.ae)|}) x 0) (* not optimized *)
+  in
+  loop [] [ dir ]
