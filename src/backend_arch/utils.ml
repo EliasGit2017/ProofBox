@@ -57,7 +57,11 @@ let get_job_description_path_tof parsed_toml =
 
 (* Unix : tools *)
 
-let accepted_formats = [".smt2"; ".ae"]
+let path_to_toml = "/home/elias/OCP/ez_proofbox/src/backend_arch"
+
+let testunix = Unix.getcwd
+
+let accepted_formats = [ ".smt2"; ".ae" ]
 
 let stat_code status =
   match status with
@@ -86,7 +90,7 @@ let chan_to_stringlist channel =
     (* Closed by [Unix.close_process_full] *)
     !l_res
 
-(** Print string list *)
+(** Print string list with [print_endline] for each elem *)
 let rec stringlist_printer = function
   | [] -> ()
   | e :: l ->
@@ -105,11 +109,11 @@ let rec sringlist_tostring sep = function
 
 let get_all_files_w_ext wd =
   Sys.readdir wd |> Array.to_list
-  |> List.filter (fun x -> Filename.extension x = ".smt2")
+  |> List.filter (fun x ->
+         Filename.extension x = ".smt2" || Filename.extension x = ".ae")
 
-(** [dir_contents] returns the paths of all regular files that are
- * contained in [dir]. Each file is a path starting with [dir].
-  *)
+(** [dir_contents] returns the paths of all regular files ([.smt2] && [.ae]) that are
+  contained in [dir]. Each file is a path starting with [dir].*)
 let dir_contents dir =
   let rec loop result = function
     | f :: fs when Sys.is_directory f ->
@@ -123,6 +127,29 @@ let dir_contents dir =
         |> List.map (Filename.concat f)
         |> List.append fs |> loop result
     | f :: fs -> loop (f :: result) fs
-    | [] -> result |> List.filter (fun x -> Str.string_match (Str.regexp {|\(.*\.smt2\)\|(.*\.ae)|}) x 0) (* not optimized *)
+    | [] ->
+        result
+        |> List.filter (fun x ->
+               Str.string_match (Str.regexp {|\(.*\.smt2\)\|(.*\.ae)|}) x 0)
+    (* not optimized *)
   in
   loop [] [ dir ]
+
+(** Exploration && tests *)
+let retrieve_toml_files base_dir =
+  let ((ocaml_stdout, ocaml_stdin, ocaml_stderr) as p) =
+    Unix.open_process_args_full "/usr/bin/ls"
+      [| "/usr/bin/ls"; "/home/elias/OCP/ez_proofbox/src/backend_arch" |]
+      (Unix.environment ())
+  in
+  let l_res = ref [] in
+  (* print_endline @@ Printf.sprintf "%d" @@ List.length @@ chan_to_stringlist ocaml_stdout;
+     print_endline @@ Printf.sprintf "%d" @@ List.length @@ chan_to_stringlist ocaml_stderr; *)
+  stringlist_printer @@ chan_to_stringlist ocaml_stdout;
+  stringlist_printer @@ chan_to_stringlist ocaml_stderr;
+
+  print_endline "printing my list";
+  stringlist_printer !l_res;
+
+  let stat = Unix.close_process_full p in
+  print_endline @@ stat_code stat
