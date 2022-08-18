@@ -1,7 +1,7 @@
 (library
  (name read_write_toml)
  (modules utils)
- (libraries otoml))
+ (libraries otoml unix))
 
 (executable
  (name config_verif)

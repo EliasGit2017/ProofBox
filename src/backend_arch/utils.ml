@@ -47,3 +47,12 @@ let get_job_description_job_synopsis parsed_toml =
 
 let get_job_description_path_tof parsed_toml =
   get_value_wrap parsed_toml job_description_path_tof
+
+
+(* Unix tools *)
+
+let stat_code status =
+  match status with
+  | Unix.WEXITED e -> Printf.sprintf "WEXITED : code = %s" (string_of_int e)
+  | Unix.WSIGNALED s -> Printf.sprintf "WSIGNALED : code = %s" (string_of_int s)
+  | Unix.WSTOPPED st -> Printf.sprintf "WSTOPPED : code = %s" (string_of_int st)
