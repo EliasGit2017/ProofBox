@@ -35,32 +35,24 @@ let get_str parsed_toml path_toval =
 let get_int parsed_toml path_toval =
   Otoml.find parsed_toml (Otoml.get_integer ~strict:true) path_toval
 
-let get_owner_username parsed_toml = get_value_wrap parsed_toml owner_username
-let get_owner_bio parsed_toml = get_value_wrap parsed_toml owner_bio
-let get_owner_bio parsed_toml = get_value_wrap parsed_toml owner_bio
-let get_owner_password parsed_toml = get_value_wrap parsed_toml owner_password
+let get_owner_username parsed_toml = get_str parsed_toml owner_username
+let get_owner_bio parsed_toml = get_str parsed_toml owner_bio
+let get_owner_password parsed_toml = get_str parsed_toml owner_password
+let get_jd_job_id parsed_toml = get_int parsed_toml job_description_id
+let get_jd_solver parsed_toml = get_str parsed_toml job_description_solver
 
-let get_job_description_job_id parsed_toml =
-  get_value_wrap parsed_toml job_description_id
+let get_jd_solver_version parsed_toml =
+  get_str parsed_toml job_description_solver_version
 
-let get_job_description_solver parsed_toml =
-  get_value_wrap parsed_toml job_description_solver
+let get_jd_job_synopsis parsed_toml =
+  get_str parsed_toml job_description_synopsis
 
-let get_job_description_solver_version parsed_toml =
-  get_value_wrap parsed_toml job_description_solver_version
-
-let get_job_description_job_synopsis parsed_toml =
-  get_value_wrap parsed_toml job_description_synopsis
-
-let get_job_description_path_tof parsed_toml =
-  get_value_wrap parsed_toml job_description_path_tof
+let get_jd_path_tof parsed_toml = get_str parsed_toml job_description_path_tof
 
 (* Unix : tools *)
 
 let path_to_toml = "/home/elias/OCP/ez_proofbox/src/backend_arch"
-
 let testunix = Unix.getcwd
-
 let accepted_formats = [ ".smt2"; ".ae" ]
 
 let stat_code status =
@@ -81,7 +73,7 @@ let print_chan channel =
 let chan_to_stringlist channel =
   let l_res = ref List.[] in
   let rec loop () =
-    l_res := List.append !l_res [ input_line channel ];
+    l_res := input_line channel :: !l_res;
     loop ()
   in
   try loop ()
@@ -90,7 +82,7 @@ let chan_to_stringlist channel =
     (* Closed by [Unix.close_process_full] *)
     !l_res
 
-(** Print string list with [print_endline] for each elem *)
+(** Print string list with [print_endline] for each element *)
 let rec stringlist_printer = function
   | [] -> ()
   | e :: l ->
@@ -107,10 +99,14 @@ let rec sringlist_tostring sep = function
 (* let join l = List.filter (fun s -> s <> "") l |> String.concat "" *)
 (* let join2 sep l = String.concat sep l *)
 
-let get_all_files_w_ext wd =
+let get_all_files_w_ext_smts wd =
   Sys.readdir wd |> Array.to_list
   |> List.filter (fun x ->
          Filename.extension x = ".smt2" || Filename.extension x = ".ae")
+
+let get_all_files_w_ext wd ext =
+  Sys.readdir wd |> Array.to_list
+  |> List.filter (fun x -> Filename.extension x = ext)
 
 (** [dir_contents] returns the paths of all regular files ([.smt2] && [.ae]) that are
   contained in [dir]. Each file is a path starting with [dir].*)
@@ -124,6 +120,7 @@ let dir_contents dir =
                Filename.extension x_bis = ".smt2") *)
         (* |> List.filter (fun x -> Str.string_match (Str.regexp {|.*\.smt2|}) x 0) *)
         (* |> List.filter (fun x -> Filename.extension x = ".smt2") *)
+        (* exploration : here as (brouillon) *)
         |> List.map (Filename.concat f)
         |> List.append fs |> loop result
     | f :: fs -> loop (f :: result) fs
@@ -139,7 +136,7 @@ let dir_contents dir =
 let retrieve_toml_files base_dir =
   let ((ocaml_stdout, ocaml_stdin, ocaml_stderr) as p) =
     Unix.open_process_args_full "/usr/bin/ls"
-      [| "/usr/bin/ls"; "/home/elias/OCP/ez_proofbox/src/backend_arch" |]
+      [| "/usr/bin/ls"; path_to_toml |]
       (Unix.environment ())
   in
   let l_res = ref [] in
@@ -148,7 +145,7 @@ let retrieve_toml_files base_dir =
   stringlist_printer @@ chan_to_stringlist ocaml_stdout;
   stringlist_printer @@ chan_to_stringlist ocaml_stderr;
 
-  print_endline "printing my list";
+  print_endline " => printing my list";
   stringlist_printer !l_res;
 
   let stat = Unix.close_process_full p in
