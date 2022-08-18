@@ -1,22 +1,25 @@
 open Otoml
 open Read_write_toml.Utils
 
-let print_chan channel =
-  let rec loop () =
-    let () = print_endline (input_line channel) in
-    loop ()
-  in
-  try loop () with End_of_file -> close_in channel
+let path_to_toml = "/home/elias/OCP/ez_proofbox/src/backend_arch"
 
 let retrieve_toml_files base_dir =
-  let (ocaml_stdout, ocaml_stdin, ocaml_stderr) =
-    Unix.open_process_args_full "ls"
-      [| "/usr/bin/ls"; base_dir; (* "|"; "grep"; "*.toml" *) |]
+  let ((ocaml_stdout, ocaml_stdin, ocaml_stderr) as p) =
+    Unix.open_process_args_full "/usr/bin/ls"
+      [| "/usr/bin/ls"; "/home/elias/OCP/ez_proofbox/src/backend_arch" |]
       (Unix.environment ())
   in
-  close_out ocaml_stdin;
-  print_chan ocaml_stdout;
-  print_chan ocaml_stderr
+  let l_res = ref [] in
+  (* print_endline @@ Printf.sprintf "%d" @@ List.length @@ chan_to_stringlist ocaml_stdout;
+  print_endline @@ Printf.sprintf "%d" @@ List.length @@ chan_to_stringlist ocaml_stderr; *)
+  stringlist_printer @@ chan_to_stringlist ocaml_stdout;
+  stringlist_printer @@ chan_to_stringlist ocaml_stderr;
+
+  print_endline "printing my list";
+  stringlist_printer !l_res;
+
+  let stat = Unix.close_process_full p in
+  print_endline @@ stat_code stat
 
 let () =
   Printexc.record_backtrace true;
@@ -35,14 +38,6 @@ let () =
 
   print_endline "\n=> job_description table : ";
   get_owner_bio test |> Otoml.Printer.to_string |> print_endline;
+
   print_endline " list files";
-  (* retrieve_toml_files "/home/elias/OCP/ez_proofbox/src/backend_arch" *)
-  let (ocaml_stdout, ocaml_stdin, ocaml_stderr) as p =
-    Unix.open_process_args_full "ls"
-      [| "/usr/bin/ls"; "/home/elias/OCP/ez_proofbox/src/backend_arch"; (* "|"; "grep"; "*.toml" *) |]
-      (Unix.environment ())
-  in
-  print_chan ocaml_stdout;
-  print_chan ocaml_stderr;
-  let stat = Unix.close_process_full p in
-  print_endline @@ stat_code stat
+  retrieve_toml_files path_to_toml
