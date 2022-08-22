@@ -20,6 +20,9 @@ let version_test =
     ()
 
 
+let mime = [Option.get @@ Mime.parse (Mime.content_type_of_file "/home/elias/OCP/ez_pb_client/example.zip")]
+
+
 module Errors = struct
   let server_errors = [
     (* Generic error, for testing purposes *)
@@ -100,6 +103,19 @@ let sign_up_new_user : (user_description, general_comm, server_error_type, no_se
     ~output:general_comm_enc
     ~errors:Errors.server_errors
     Path.(root // "signup_return_auth_info")
+
+
+
+let zip_tranfer : ( string, string, server_error_type, no_security) ws_service0 =
+  ws_service
+  (* ~section:section_main *)
+  ~name:"tranfer zip"
+  ~descr:"Sending ZIP archive"
+  ~params:[]
+  ~input:(Raw data_transfer)
+  ~output:(Raw mime)
+  ~errors:Errors.server_errors
+  Path.(root // "zip_send")
 
 
 

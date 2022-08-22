@@ -57,3 +57,7 @@ type general_comm = {
   infos : string;
   error_desc : string;
 }
+
+
+type data_transfer = EzAPI.Mime.t list
+

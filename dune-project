@@ -21,5 +21,6 @@
   (pgocaml_ppx (= 4.3.0+ocp))
   (ez_pgocaml (= 1.0.0))
   (ppx_deriving_encoding ( >= 0.3.0 ))
-  (configuration (= 0.4.1))
+  (otoml (= 1.0.1))
+  (camlzip (= 1.11))
   ))
