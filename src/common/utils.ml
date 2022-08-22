@@ -1,5 +1,6 @@
 open Data_types
 open Str
+open EzAPI
 
 (* Conversion & data printing : ( *_to_string, *_of_string, etc) *)
 
@@ -72,3 +73,13 @@ let check_password_validity password =
     Str.regexp {|^\(.{0,7}\|[^0-9]*\|[^A-Z]*\|[^a-z]*\|[a-zA-Z0-9]*\)$|}
   in
   not @@ Str.string_match right_password password 0
+
+
+(*****************************************************************************)
+
+(* websocket handling *) (* Think about ws extra protocol to retrieve filename *)
+
+let mime_getter =
+  [Option.get @@ Mime.parse "application/zip"]
+
+
