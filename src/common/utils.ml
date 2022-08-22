@@ -74,12 +74,18 @@ let check_password_validity password =
   in
   not @@ Str.string_match right_password password 0
 
-
 (*****************************************************************************)
 
-(* websocket handling *) (* Think about ws extra protocol to retrieve filename *)
+(* websocket handling *)
+(* Think about ws extra protocol to retrieve filename *)
 
-let mime_getter =
-  [Option.get @@ Mime.parse "application/zip"]
+let mime_getter = [ Option.get @@ Mime.parse "application/zip" ]
 
-
+(*
+  - changé un peu le parsing du toml
+  - fix les bugs côté client, (pas de fichier vide, check syntax)
+  - ajouté les services correspondants
+  - Coté serveur : essayer de faire un job scheduler plus correct
+  - ==> nettoyer les échanges client - serveur
+  ==> V0
+*)

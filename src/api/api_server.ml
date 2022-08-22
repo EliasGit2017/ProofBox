@@ -24,7 +24,7 @@ let server services =
   Printexc.record_backtrace true;
   
   (* EzCohttp.init (); *) (* ??? TO INVESTIGATE *)
-
+  (* Debug instructions *)
   let _ = Server.load_testing_users in
   let _ = Handlers.load_predefined_users in
 

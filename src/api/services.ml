@@ -102,7 +102,7 @@ let sign_up_new_user : (user_description, general_comm, server_error_type, no_se
 
 
 
-let zip_tranfer : ( string, general_comm, server_error_type, no_security) ws_service0 =
+let zip_tranfer : (string, general_comm, server_error_type, no_security) ws_service0 =
   ws_service
   ~section:section_main
   ~name:"tranfer zip"
@@ -114,4 +114,9 @@ let zip_tranfer : ( string, general_comm, server_error_type, no_security) ws_ser
   Path.(root // "zip_send")
 
 
-
+(* test ws *)
+let service : (string, string, exn, no_security) ws_service0 =
+  ws_service
+    ~input:(Json Json_encoding.string)
+    ~output:(Json Json_encoding.string)
+    Path.root

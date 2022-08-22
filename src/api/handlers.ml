@@ -161,3 +161,14 @@ let sign_up_new_user _params user =
           default_serv_response "attempt to create user"
             "client infos to be added here" "Error"
             "Signup Error : EzSessionServer.NoPasswordProvided")
+
+let react _req _sec s =
+  EzDebug.printf "server react: %s" s;
+  Lwt.return_ok @@ "server echo: " ^ s
+
+let bg _req _sec send =
+  let rec aux i =
+    EzDebug.printf "server loop step %d" i;
+    send @@ Ok ("server send " ^ string_of_int i);
+    EzLwtSys.sleep 10. >>= fun () -> aux (i+1) in
+  aux 0
