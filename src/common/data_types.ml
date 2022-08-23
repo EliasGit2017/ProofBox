@@ -61,10 +61,16 @@ type general_comm = {
 
 type data_transfer = EzAPI.Mime.t list
 
-(* type general_comm_2 = {
-  comm_desc : string;
-  client_infos : string;
-  infos : string;
-  error_desc : string;
-  archive : string;
-} *)
+
+
+type meta_payload = {
+  archive_name : string;
+  client_id : string;
+  comment : string;
+  priority : int;
+  checksum_type : string;
+  checksum : string;
+  info : string;
+  error : string;
+  code : int;
+}

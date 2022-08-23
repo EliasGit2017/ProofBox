@@ -52,6 +52,26 @@ let default_server_response_to_string elem =
     "{\ncomm_desc = %s;\nclient_infos = %s;\ninfos = %s;\nerror_desc = %s\n}"
     elem.comm_desc elem.client_infos elem.infos elem.error_desc
 
+let meta_payload_to_string (meta : Data_types.meta_payload) =
+  Printf.sprintf
+    "archive_name = %s; client_id = %s; comment = %s; priority = %d; checksum_type = %s; \
+     checksum = %s; info = %s; error = %s; code = %d"
+    meta.archive_name meta.client_id meta.comment meta.priority meta.checksum_type
+    meta.checksum meta.info meta.error meta.code
+
+let meta_payload_from_string archive_name client_id comment priority
+    checksum_type checksum info error code =
+  {
+    archive_name;
+    client_id;
+    comment;
+    priority;
+    checksum_type;
+    checksum;
+    info;
+    error;
+    code;
+  }
 (*****************************************************************************)
 
 (* Utilities : regex, data manipulation & transformation *)
@@ -81,11 +101,4 @@ let check_password_validity password =
 
 let mime_zip = [ Option.get @@ Mime.parse "application/zip" ]
 
-(*
-  - changé un peu le parsing du toml
-  - fix les bugs côté client, (pas de fichier vide, check syntax)
-  - ajouté les services correspondants
-  - Coté serveur : essayer de faire un job scheduler plus correct
-  - ==> nettoyer les échanges client - serveur
-  ==> V0
-*)
+
