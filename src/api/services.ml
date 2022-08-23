@@ -101,22 +101,24 @@ let sign_up_new_user : (user_description, general_comm, server_error_type, no_se
     Path.(root // "signup_return_auth_info")
 
 
-
-let zip_tranfer : (string, general_comm, server_error_type, no_security) ws_service0 =
-  ws_service
-  ~section:section_main
-  ~name:"tranfer zip"
-  ~descr:"Sending ZIP archive"
-  ~params:[]
-  ~input:(Raw mime_getter)
-  ~output:(Json general_comm_enc)
-  ~errors:Errors.server_errors
-  Path.(root // "zip_send")
-
-
 (* test ws *)
 let service : (string, string, exn, no_security) ws_service0 =
   ws_service
     ~input:(Json Json_encoding.string)
     ~output:(Json Json_encoding.string)
     Path.root
+
+(** Service to transfer zip archive from client to server *)
+let zip_tranfer : (general_comm (* string *), general_comm, server_error_type, no_security) ws_service0 =
+  ws_service
+  ~section:section_main
+  ~name:"tranfer zip"
+  ~descr:"Sending ZIP archive"
+  ~params:[]
+  ~input:(Json general_comm_enc) (* (Raw mime_zip) *)
+  ~output:(Json general_comm_enc)
+  ~errors:Errors.server_errors
+  Path.(root // "zip_send")
+
+
+

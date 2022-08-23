@@ -1,4 +1,5 @@
 (** Module [Data_type] defines all the types (input, queries, server errors ...) used by server and client *)
+open EzAPI
 
 type www_server_info = { www_apis : string list }
 (** Type that lists all server host names *)
@@ -58,6 +59,12 @@ type general_comm = {
   error_desc : string;
 }
 
-
 type data_transfer = EzAPI.Mime.t list
 
+(* type general_comm_2 = {
+  comm_desc : string;
+  client_infos : string;
+  infos : string;
+  error_desc : string;
+  archive : string;
+} *)

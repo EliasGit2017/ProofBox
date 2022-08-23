@@ -2,6 +2,7 @@ open Lwt.Infix
 open Data_types
 open Db
 open Bcrypt
+open Utils
 
 (* ****************************************************************** *)
 
@@ -162,6 +163,36 @@ let sign_up_new_user _params user =
             "client infos to be added here" "Error"
             "Signup Error : EzSessionServer.NoPasswordProvided")
 
+(* ****************************************************************** *)
+
+(* Websocket for zip transfer *)
+
+let zip_react _req _sec zip_archive =
+  print_endline @@ default_server_response_to_string zip_archive;
+  Lwt.return_ok
+    {
+      comm_desc = "server echo from gen_comm";
+      client_infos = "i am the server";
+      infos = "duplex connection between server and client [server]";
+      error_desc = "Should be no error";
+    }
+
+let zip_bg _req _sec send =
+  let rec response () =
+    send
+    @@ Ok
+         {
+           comm_desc = "server bg task with gen_comm";
+           client_infos = "i am the server";
+           infos = "duplex connection between server and client [server]";
+           error_desc = "Should be no error";
+         };
+    EzLwtSys.sleep 0. >>= fun () -> response ()
+  in
+  response ()
+
+(* Websocket exploration *)
+
 let react _req _sec s =
   EzDebug.printf "server react: %s" s;
   Lwt.return_ok @@ "server echo: " ^ s
@@ -170,5 +201,6 @@ let bg _req _sec send =
   let rec aux i =
     EzDebug.printf "server loop step %d" i;
     send @@ Ok ("server send " ^ string_of_int i);
-    EzLwtSys.sleep 10. >>= fun () -> aux (i+1) in
+    EzLwtSys.sleep 10. >>= fun () -> aux (i + 1)
+  in
   aux 0
