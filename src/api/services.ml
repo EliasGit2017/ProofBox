@@ -121,4 +121,14 @@ let zip_tranfer : (general_comm (* string *), general_comm, server_error_type, n
   Path.(root // "zip_send")
 
 
+let send_job_metadata : (meta_payload, jobs, server_error_type, no_security) post_service0 =
+  post_service
+  ~section:section_main
+  ~name:"send_job_metadata"
+  ~descr:"send metadata associated to a job (and ask for server availability)"
+  ~params:[]
+  ~input:meta_payload_enc
+  ~output:jobs
+  ~errors:Errors.server_errors
+  Path.(root // "job_metadata")
 

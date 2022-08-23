@@ -6,6 +6,8 @@ open Utils
 
 (* ****************************************************************** *)
 
+let root_files = "/home/elias/OCP/ez_proofbox/scripts/Containers/storage"
+
 (* Redefine this in its own file when mastered *)
 
 module SessionArg = struct
@@ -162,6 +164,21 @@ let sign_up_new_user _params user =
           default_serv_response "attempt to create user"
             "client infos to be added here" "Error"
             "Signup Error : EzSessionServer.NoPasswordProvided")
+
+(* ****************************************************************** *)
+
+let job_metadata _params meta_payload =
+  to_api (
+    let job_desc = {
+      job_client = meta_payload.client_id;
+      job_ref_tag = 0;
+      order_ts = "fixed at insertion";
+      path_to_f = root_files ^ meta_payload.archive_name;
+      priority = meta_payload.priority;
+      status = "scheduled"
+    } in
+    Db.insert_job job_desc >|= fun jobs -> Ok jobs
+  )
 
 (* ****************************************************************** *)
 

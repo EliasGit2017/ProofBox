@@ -30,6 +30,15 @@ let get_all_jobs_from_user {job_client_req} =
                           where job_client = $job_client_req"]
       >|= jobs_of_rows
 
+let get_all_jobs_from_userstring (job_client_req : string) =
+  with_dbh >>> fun dbh -> catch_db_error @@
+    fun () ->
+      [%pgsql.object dbh "select *
+                          from jobs_description
+                          where job_client = $job_client_req"]
+      >|= jobs_of_rows
+
+
 (** Add [Data_types.user_description] user to DB table [users] with
     [first_login_date] field set to current timestamp (current_timestamp in
     psql) *)
@@ -56,3 +65,14 @@ let get_user {username; _} =
                         where username = $username"] 
 
     >|= users_of_rows
+
+(** insert job from metadata and retrieve all jobs in db from the client who
+  initiated the zip transfer *)
+let insert_job {job_client; path_to_f; priority; status; _} =
+  let fld_to_caltype = CalendarLib.Calendar.now () in
+  with_dbh >>> fun dbh -> catch_db_error @@
+  fun () ->
+    [%pgsql dbh "insert INTO jobs_description
+    (job_client, order_ts, path_to_f, priority, status) 
+    VALUES ($job_client, $fld_to_caltype, $path_to_f, ${Int32.of_int priority}, $status)"];
+  get_all_jobs_from_userstring job_client
