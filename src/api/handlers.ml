@@ -6,7 +6,7 @@ open Utils
 
 (* ****************************************************************** *)
 
-let root_files = "/home/elias/OCP/ez_proofbox/scripts/Containers/storage"
+let root_files = "/home/elias/OCP/ez_proofbox/scripts/Containers/storage/"
 
 (* Redefine this in its own file when mastered *)
 
@@ -168,24 +168,42 @@ let sign_up_new_user _params user =
 (* ****************************************************************** *)
 
 let job_metadata _params meta_payload =
-  to_api (
-    let job_desc = {
-      job_client = meta_payload.client_id;
-      job_ref_tag = 0;
-      order_ts = "fixed at insertion";
-      path_to_f = root_files ^ meta_payload.archive_name;
-      priority = meta_payload.priority;
-      status = "scheduled"
-    } in
-    Db.insert_job job_desc >|= fun jobs -> Ok jobs
-  )
+  to_api
+    (let job_desc =
+       {
+         job_client = meta_payload.client_id;
+         job_ref_tag = 0;
+         order_ts = "fixed at insertion";
+         path_to_f = root_files ^ Filename.basename meta_payload.archive_name;
+         (* add uuid && || client username *)
+         priority = meta_payload.priority;
+         status = "scheduled";
+       }
+     in
+     Db.insert_job job_desc >|= fun jobs -> Ok jobs)
 
 (* ****************************************************************** *)
 
 (* Websocket for zip transfer *)
 
+let react_server_zip_ws0 _req _sec zip_archive =
+  (* put zip archive to corresponding directory server-side // simple string test atm *)
+  EzDebug.printf "server react : %s" zip_archive;
+  Lwt.return_ok
+    "echo from server"
+
+let background_zip_ws0 _req _sec send =
+  let bg =
+    EzDebug.printf "server saying ok for receiving ZIP";
+    send @@ Ok "send me a zip";
+    EzLwtSys.sleep 1. >>= fun () -> Lwt.return_unit
+  in
+  bg
+
+(* ****************************************************************** *)
+
 let zip_react _req _sec zip_archive =
-  print_endline @@ default_server_response_to_string zip_archive;
+  (* print_endline @@ default_server_response_to_string zip_archive; *)
   Lwt.return_ok
     {
       comm_desc = "server echo from gen_comm";
@@ -209,7 +227,6 @@ let zip_bg _req _sec send =
   response ()
 
 (* Websocket exploration *)
-
 let react _req _sec s =
   EzDebug.printf "server react: %s" s;
   Lwt.return_ok @@ "server echo: " ^ s
