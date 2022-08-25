@@ -101,4 +101,8 @@ let check_password_validity password =
 
 let mime_zip = [ Option.get @@ Mime.parse "application/zip" ]
 
-
+(** Receive zip from websocket and place it in the adequate directory *)
+let retrieve_zip_from_string dest_filename contents =
+  let w_to_f = open_out dest_filename in
+  Printf.fprintf w_to_f "%s\n" contents;
+  close_out w_to_f
