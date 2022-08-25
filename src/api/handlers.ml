@@ -189,6 +189,9 @@ let job_metadata _params meta_payload =
 let react_server_zip_ws0 _req _sec zip_archive =
   (* put zip archive to corresponding directory server-side // simple string test atm *)
   EzDebug.printf "server react : %s" zip_archive;
+  let w_to_file = open_out "/home/elias/Desktop/received_file.zip" in
+  Printf.fprintf w_to_file "%s\n" zip_archive;
+  close_out w_to_file;
   Lwt.return_ok
     "echo from server"
 
@@ -199,44 +202,5 @@ let background_zip_ws0 _req _sec send =
     EzLwtSys.sleep 1. >>= fun () -> Lwt.return_unit
   in
   bg
-
-(* ****************************************************************** *)
-
-let zip_react _req _sec zip_archive =
-  (* print_endline @@ default_server_response_to_string zip_archive; *)
-  Lwt.return_ok
-    {
-      comm_desc = "server echo from gen_comm";
-      client_infos = "i am the server";
-      infos = "duplex connection between server and client [server]";
-      error_desc = "Should be no error";
-    }
-
-let zip_bg _req _sec send =
-  let rec response () =
-    send
-    @@ Ok
-         {
-           comm_desc = "server bg task with gen_comm";
-           client_infos = "i am the server";
-           infos = "duplex connection between server and client [server]";
-           error_desc = "Should be no error";
-         };
-    EzLwtSys.sleep 0. >>= fun () -> response ()
-  in
-  response ()
-
-(* Websocket exploration *)
-let react _req _sec s =
-  EzDebug.printf "server react: %s" s;
-  Lwt.return_ok @@ "server echo: " ^ s
-
-let bg _req _sec send =
-  let rec aux i =
-    EzDebug.printf "server loop step %d" i;
-    send @@ Ok ("server send " ^ string_of_int i);
-    EzLwtSys.sleep 10. >>= fun () -> aux (i + 1)
-  in
-  aux 0
 
 (* ****************************************************************** *)
