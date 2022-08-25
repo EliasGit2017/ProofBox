@@ -106,8 +106,8 @@ let zip_tranfer : (string, string (* general_comm *), server_error_type, no_secu
   ~name:"tranfer zip"
   ~descr:"Sending ZIP archive"
   ~params:[]
-  ~input: (Raw mime_zip)
-  ~output:(* (Json general_comm_enc) *) (Json Json_encoding.string)
+  ~input:(Raw mime_zip)
+  ~output:(Json Json_encoding.string)
   ~errors:Errors.server_errors
   Path.(root // "zip_send")
 

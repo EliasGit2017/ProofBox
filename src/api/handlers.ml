@@ -186,68 +186,14 @@ let job_metadata _params meta_payload =
 
 (* Websocket for zip transfer *)
 
-(* let react_server_zip_ws1 _req _sec meta_payload =
-  ignore (Sys.command "echo \"okok > tmp.txt");
-  EzDebug.printf "server react : %s" meta_payload.content;
-  EzDebug.printf "%s" (root_files ^ meta_payload.archive_name);
-  retrieve_zip_from_string
-    (root_files ^ meta_payload.archive_name)
-    meta_payload.content;
-  let job_desc =
-    {
-      job_client = meta_payload.client_id;
-      job_ref_tag = 0;
-      order_ts = "fixed at insertion";
-      path_to_f = root_files ^ Filename.basename meta_payload.archive_name;
-      (* add uuid && || client username *)
-      priority = meta_payload.priority;
-      status = "scheduled";
-    }
-  in
-  let _ =
-    Db.insert_job job_desc >|= fun jobs ->
-    print_endline @@ job_list_to_string jobs
-  in
-  Lwt.return_ok
-    {
-      archive_name = meta_payload.archive_name;
-      client_id = meta_payload.client_id;
-      comment = "echo from server + verify checksum";
-      priority = meta_payload.priority;
-      checksum_type = meta_payload.checksum_type;
-      checksum = meta_payload.checksum;
-      info = md5_checksum (root_files ^ meta_payload.archive_name);
-      content = "";
-      error = "None";
-      code = 0;
-    }
-
-let background_zip_ws1 _req _sec send =
-  let bg =
-    send
-    @@ Ok
-         {
-           archive_name = "";
-           client_id = "ProofBox";
-           comment = "Send me a zip";
-           priority = 0;
-           checksum_type = "";
-           checksum = "";
-           info = "first msg to client to allow zip";
-           content = "";
-           error = "None";
-           code = 0;
-         };
-    Lwt.return_unit
-  in
-  bg
-
 (** Handles zip tranfert by retrieving the corresponding string
-    sent through websocket : ws0 *) *)
+    sent through websocket : ws0 *)
 let react_server_zip_ws0 _req _sec zip_archive =
   (* EzDebug.printf "server react : %s" zip_archive; *)
   retrieve_zip_from_string
     "/home/elias/OCP/ez_proofbox/scripts/Containers/storage/example.zip"
+    (* uuid for custom zip place
+       according to previous metadata exchange *)
     zip_archive;
   Lwt.return_ok "echo from server"
 

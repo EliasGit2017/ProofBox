@@ -41,24 +41,6 @@ obj1
 (req "apis" (list string))
 
 (*****************************************************************************)
-(* Unused data structures, variables ... TO CLEAN*)
-
-(* let main_jobs =
-  let cases =
-    [case
-    ~title:"Jobs"
-    jobs
-    (function | Jobs s -> Some s )
-    (function s -> Jobs s);
-    ]
-  in union cases *)
-
-(* let version = conv
-  (fun {v_db; v_db_version} -> (v_db, v_db_version))
-  (fun (v_db, v_db_version) -> {v_db; v_db_version}) @@
-  obj2
-    (req "db" string)
-    (req "db_version" int) *)
 
 let user_info = string
 
