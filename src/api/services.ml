@@ -31,7 +31,6 @@ module Errors = struct
   ]
 end
 
-
 let version : (version, server_error_type, no_security) service0 =
   service
     ~section:section_main
@@ -112,6 +111,7 @@ let zip_tranfer : (string, string (* general_comm *), server_error_type, no_secu
   ~errors:Errors.server_errors
   Path.(root // "zip_send")
 
+(** deprecated : remove asap *)
 let send_job_metadata : (meta_payload, jobs, server_error_type, no_security) post_service0 =
   post_service
   ~section:section_main
@@ -122,4 +122,15 @@ let send_job_metadata : (meta_payload, jobs, server_error_type, no_security) pos
   ~output:jobs
   ~errors:Errors.server_errors
   Path.(root // "job_metadata")
+
+(* let send_job_metadata_and_payload : (meta_payload, meta_payload, server_error_type, no_security) ws_service0 =
+  ws_service
+  ~section:section_main
+  ~name:"send_job_metadata"
+  ~descr:"send metadata associated to a job (and ask for server availability)"
+  ~params:[]
+  ~input:(Json meta_payload_enc)
+  ~output:(Json meta_payload_enc)
+  ~errors:Errors.server_errors
+  Path.(root // "job_metadata_and_payload") *)
 

@@ -1,5 +1,5 @@
-(** Module [Data_type] defines all the types (input, queries, server errors ...) used by server and client *)
 open EzAPI
+(** Module [Data_type] defines all the types (input, queries, server errors ...) used by server and client *)
 
 type www_server_info = { www_apis : string list }
 (** Type that lists all server host names *)
@@ -61,7 +61,6 @@ type general_comm = {
 
 type data_transfer = EzAPI.Mime.t list
 
-
 type meta_payload = {
   archive_name : string;
   client_id : string;
@@ -70,6 +69,7 @@ type meta_payload = {
   checksum_type : string;
   checksum : string;
   info : string;
+  content : string;
   error : string;
   code : int;
 }

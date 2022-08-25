@@ -18,7 +18,7 @@ module MakeRegisterer(S: module type of Services)(H:module type of Handlers) = s
   
   (* websocket for zip tranfert *)
   |> register_ws S.zip_tranfer ~react:H.react_server_zip_ws0 ~bg:H.background_zip_ws0
-  
+
   |> Handlers.My_Session.register_handlers
 
 end

@@ -38,6 +38,16 @@ let users_to_string { username; email; password; user_desc; first_login_date } =
      first_login_date = %s\n"
     username email password user_desc first_login_date
 
+let job_list_to_string job_l =
+  List.fold_left
+    (fun res { job_client; job_ref_tag; order_ts; path_to_f; priority; status } ->
+      res
+      ^ Printf.sprintf
+          "{ job_client = %s; job_ref_tag = %d; order_ts = %s; path_to_f =%s ; \
+           priority = %d; status = %s }\n"
+          job_client job_ref_tag order_ts path_to_f priority status)
+    "" job_l
+
 let default_server_response_from_string _comm_des _client_infos _infos
     error_desc =
   {
@@ -60,7 +70,7 @@ let meta_payload_to_string (meta : Data_types.meta_payload) =
     meta.checksum meta.info meta.error meta.code
 
 let meta_payload_from_string archive_name client_id comment priority
-    checksum_type checksum info error code =
+    checksum_type checksum info content error code =
   {
     archive_name;
     client_id;
@@ -69,6 +79,7 @@ let meta_payload_from_string archive_name client_id comment priority
     checksum_type;
     checksum;
     info;
+    content;
     error;
     code;
   }
@@ -106,3 +117,6 @@ let retrieve_zip_from_string dest_filename contents =
   let w_to_f = open_out dest_filename in
   Printf.fprintf w_to_f "%s\n" contents;
   close_out w_to_f
+
+(** Returns the human readable MD5 string associated to [file_name] *)
+let md5_checksum file_name = Digest.file file_name |> Digest.to_hex

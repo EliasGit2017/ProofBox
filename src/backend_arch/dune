@@ -1,10 +1,10 @@
 (library
- (name read_write_toml)
+ (name job_scheduler)
  (modules utils)
- (libraries otoml data_common unix stdlib-shims str))
+ (libraries data_common unix stdlib-shims str))
 
 (executable
- (name config_verif)
- (modules config_verif)
- (libraries otoml read_write_toml))
+ (name manager)
+ (modules manager)
+ (libraries job_scheduler))
 
