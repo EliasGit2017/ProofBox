@@ -15,10 +15,10 @@ module MakeRegisterer(S: module type of Services)(H:module type of Handlers) = s
   |> register S.test_session H.test_session
   |> register S.sign_up_new_user H.sign_up_new_user
   |> register S.send_job_metadata H.job_metadata
-  |> register_ws S.zip_tranfer ~react:H.react_server_zip_ws0 ~bg:H.background_zip_ws0
-  (* |> register_ws S.zip_tranfer ~react:H.zip_react ~bg:H.zip_bg *)
   
-  |> register_ws S.service ~react:H.react ~bg:H.bg
+  (* websocket for zip tranfert *)
+  |> register_ws S.zip_tranfer ~react:H.react_server_zip_ws0 ~bg:H.background_zip_ws0
+  
   |> Handlers.My_Session.register_handlers
 
 end

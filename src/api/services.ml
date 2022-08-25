@@ -100,14 +100,6 @@ let sign_up_new_user : (user_description, general_comm, server_error_type, no_se
     ~errors:Errors.server_errors
     Path.(root // "signup_return_auth_info")
 
-
-(* test ws *)
-let service : (string, string, exn, no_security) ws_service0 =
-  ws_service
-    ~input:(Json Json_encoding.string)
-    ~output:(Json Json_encoding.string)
-    Path.root
-
 (** Service to transfer zip archive from client to server *)
 let zip_tranfer : (string, string (* general_comm *), server_error_type, no_security) ws_service0 =
   ws_service
