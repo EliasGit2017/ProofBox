@@ -6,7 +6,7 @@ open Utils
 
 (* ****************************************************************** *)
 
-let root_files = "/home/elias/OCP/ez_proofbox/scripts/Containers/storage"
+let root_files = "/home/elias/OCP/ez_proofbox/scripts/Containers/storage/"
 
 (* Redefine this in its own file when mastered *)
 
@@ -190,17 +190,15 @@ let job_metadata _params meta_payload =
     sent through websocket : ws0 *)
 let react_server_zip_ws0 _req _sec zip_archive =
   (* EzDebug.printf "server react : %s" zip_archive; *)
-  retrieve_zip_from_string
-    "/home/elias/OCP/ez_proofbox/scripts/Containers/storage/example.zip"
-    (* uuid for custom zip place
-       according to previous metadata exchange *)
-    zip_archive;
+  (* uuid for custom zip place
+     according to previous metadata exchange *)
+  retrieve_zip_from_string (root_files ^ "test.zip") zip_archive;
   Lwt.return_ok "echo from server"
 
 (** Allows client to send zip through websocket : ws0 *)
 let background_zip_ws0 _req _sec send =
   let bg =
-    (* EzDebug.printf "server saying ok for receiving ZIP"; *)
+    EzDebug.printf "server saying ok for receiving ZIP";
     send @@ Ok "send me a zip";
     Lwt.return_unit
   in

@@ -69,7 +69,6 @@ type nonrec meta_payload = Data_types.meta_payload = {
   checksum_type : string;
   checksum : string;
   info : string;
-  content : string;
   error : string;
   code : int;
 } [@@deriving json_encoding]

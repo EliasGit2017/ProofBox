@@ -48,6 +48,7 @@ let job_list_to_string job_l =
           job_client job_ref_tag order_ts path_to_f priority status)
     "" job_l
 
+(** Default server response from args : TO REDEFINE *)
 let default_server_response_from_string _comm_des _client_infos _infos
     error_desc =
   {
@@ -57,11 +58,13 @@ let default_server_response_from_string _comm_des _client_infos _infos
     error_desc;
   }
 
+(** Default server response to string : TO REDEFINE *)
 let default_server_response_to_string elem =
   Printf.sprintf
     "{\ncomm_desc = %s;\nclient_infos = %s;\ninfos = %s;\nerror_desc = %s\n}"
     elem.comm_desc elem.client_infos elem.infos elem.error_desc
 
+(** [Data_types.meta_payload] to string *)
 let meta_payload_to_string (meta : Data_types.meta_payload) =
   Printf.sprintf
     "archive_name = %s; client_id = %s; comment = %s; priority = %d; checksum_type = %s; \
@@ -69,8 +72,9 @@ let meta_payload_to_string (meta : Data_types.meta_payload) =
     meta.archive_name meta.client_id meta.comment meta.priority meta.checksum_type
     meta.checksum meta.info meta.error meta.code
 
+(** string args to [Data_types.meta_payload] *)
 let meta_payload_from_string archive_name client_id comment priority
-    checksum_type checksum info content error code =
+    checksum_type checksum info error code =
   {
     archive_name;
     client_id;
@@ -79,7 +83,6 @@ let meta_payload_from_string archive_name client_id comment priority
     checksum_type;
     checksum;
     info;
-    content;
     error;
     code;
   }
@@ -108,8 +111,6 @@ let check_password_validity password =
 (*****************************************************************************)
 
 (* websocket handling *)
-(* Think about ws extra protocol to retrieve filename *)
-
 let mime_zip = [ Option.get @@ Mime.parse "application/zip" ]
 
 (** Receive zip from websocket and place it in the adequate directory *)

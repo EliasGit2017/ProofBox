@@ -69,7 +69,6 @@ type meta_payload = {
   checksum_type : string;
   checksum : string;
   info : string;
-  content : string;
   error : string;
   code : int;
 }
