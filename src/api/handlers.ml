@@ -186,22 +186,30 @@ let job_metadata _params meta_payload =
 
 (* Websocket for zip transfer *)
 
+(* let last_call = ref false *)
+
 (** Handles zip tranfert by retrieving the corresponding string
     sent through websocket : ws0 *)
 let react_server_zip_ws0 _req _sec zip_archive =
-  (* EzDebug.printf "server react : %s" zip_archive; *)
+  EzDebug.printf "react server ";
   (* uuid for custom zip place
      according to previous metadata exchange *)
   retrieve_zip_from_string (root_files ^ "test.zip") zip_archive;
-  Lwt.return_ok "echo from server"
+  EzDebug.printf "zip retrieved and stored";
+  Lwt.return_ok
+  @@ Printf.sprintf "echo from server md5 = %s"
+       (md5_checksum (root_files ^ "test.zip"))
 
 (** Allows client to send zip through websocket : ws0 *)
 let background_zip_ws0 _req _sec send =
-  let bg =
-    EzDebug.printf "server saying ok for receiving ZIP";
-    send @@ Ok "send me a zip";
-    Lwt.return_unit
+  let rec bg last_call =
+    if last_call then Lwt.return_unit
+    else (
+      (* last_call := true; *)
+      EzDebug.printf "server saying ok for receiving ZIP";
+      send @@ Ok "send me a zip";
+      EzLwtSys.sleep 10. >>= fun () -> bg true)
   in
-  bg
+  bg false
 
 (* ****************************************************************** *)
