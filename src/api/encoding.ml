@@ -61,6 +61,13 @@ type nonrec general_comm = Data_types.general_comm = {
   error_desc : string;
 } [@@deriving json_encoding]
 
+type nonrec general_comm2 = Data_types.general_comm2 = {
+  comm_desc_2 : string;
+  client_infos : string;
+  infos_b : int list;
+  error_desc : string;
+} [@@deriving json_encoding {remove_prefix = false}]
+
 type nonrec meta_payload = Data_types.meta_payload = {
   archive_name : string;
   client_id : string;

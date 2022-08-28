@@ -59,6 +59,13 @@ type general_comm = {
   error_desc : string;
 }
 
+type general_comm2 = {
+  comm_desc_2 : string;
+  client_infos : string;
+  infos_b : int list;
+  error_desc : string;
+}
+
 type data_transfer = EzAPI.Mime.t list
 
 type meta_payload = {

@@ -67,10 +67,10 @@ let default_server_response_to_string elem =
 (** [Data_types.meta_payload] to string *)
 let meta_payload_to_string (meta : Data_types.meta_payload) =
   Printf.sprintf
-    "archive_name = %s; client_id = %s; comment = %s; priority = %d; checksum_type = %s; \
-     checksum = %s; info = %s; error = %s; code = %d"
-    meta.archive_name meta.client_id meta.comment meta.priority meta.checksum_type
-    meta.checksum meta.info meta.error meta.code
+    "archive_name = %s; client_id = %s; comment = %s; priority = %d; \
+     checksum_type = %s; checksum = %s; info = %s; error = %s; code = %d"
+    meta.archive_name meta.client_id meta.comment meta.priority
+    meta.checksum_type meta.checksum meta.info meta.error meta.code
 
 (** string args to [Data_types.meta_payload] *)
 let meta_payload_from_string archive_name client_id comment priority
@@ -110,13 +110,40 @@ let check_password_validity password =
 
 (*****************************************************************************)
 
+(** Retrieve bytes from source file [fn] and send it to server (used by client only) *)
+let get_bytes fn =
+  let inc = open_in_bin fn in
+  let rec lect acc =
+    match input_char inc with
+    | b -> lect (Char.code b :: acc)
+    | exception End_of_file -> List.rev acc
+  in
+  let res = lect [] in
+  close_in inc;
+  res
+
+(** Write the bytes read by [get_bytes] to file destination *)
+let write_to_dest fn ints =
+  let outc = open_out_bin fn in
+  List.iter (fun b -> output_char outc (Char.chr b)) ints;
+  close_out outc
+
+(** unused TO REMOVE *)
+let copy_file infn outfn = write_to_dest outfn (get_bytes infn)
+
 (* websocket handling *)
 let mime_zip = [ Option.get @@ Mime.parse "application/zip" ]
+let oct_stream = [ Option.get @@ Mime.parse "application/octet-stream" ]
 
 (** Receive zip from websocket and place it in the adequate directory *)
 let retrieve_zip_from_string dest_filename contents =
   let w_to_f = open_out dest_filename in
   Printf.fprintf w_to_f "%s\n" contents;
+  close_out w_to_f
+
+let retrieve_zip_from_bin_string dest_filename contents =
+  let w_to_f = open_out_bin dest_filename in
+  output_bytes w_to_f contents;
   close_out w_to_f
 
 (** Returns the human readable MD5 string associated to [file_name] *)

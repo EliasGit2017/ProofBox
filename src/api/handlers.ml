@@ -186,8 +186,6 @@ let job_metadata _params meta_payload =
 
 (* Websocket for zip transfer *)
 
-(* let last_call = ref false *)
-
 (** Handles zip tranfert by retrieving the corresponding string
     sent through websocket : ws0 *)
 let react_server_zip_ws0 _req _sec zip_archive =
@@ -213,3 +211,10 @@ let background_zip_ws0 _req _sec send =
   bg false
 
 (* ****************************************************************** *)
+
+let post_z_send _params g_com =
+  to_api
+    (EzDebug.printf "getting zip from post glob";
+     put_bytes (root_files ^ "post.zip") g_com.infos_b;
+     Lwt.return_ok
+     @@ { comm_desc_2 = ""; client_infos = ""; infos_b = []; error_desc = "" })
