@@ -40,12 +40,23 @@ let users_to_string { username; email; password; user_desc; first_login_date } =
 
 let job_list_to_string job_l =
   List.fold_left
-    (fun res { job_client; job_ref_tag; order_ts; path_to_f; priority; status } ->
+    (fun res
+         {
+           job_client;
+           job_ref_tag;
+           order_ts;
+           path_to_f;
+           checksum_type;
+           checksum;
+           priority;
+           status;
+         } ->
       res
       ^ Printf.sprintf
           "{ job_client = %s; job_ref_tag = %d; order_ts = %s; path_to_f =%s ; \
-           priority = %d; status = %s }\n"
-          job_client job_ref_tag order_ts path_to_f priority status)
+           checksum_type = %s; checksum = %s; priority = %d; status = %s }\n"
+          job_client job_ref_tag order_ts path_to_f checksum_type checksum
+          priority status)
     "" job_l
 
 (** Default server response from args : TO REDEFINE *)
@@ -108,6 +119,11 @@ let check_password_validity password =
   in
   not @@ Str.string_match right_password password 0
 
+
+let rand_uuid_gen () =
+  Random.init (Random.int 29000); (* this is bad ... really bad *)
+  Uuidm.v4_gen (Random.get_state ()) () |> Uuidm.to_string
+
 (*****************************************************************************)
 
 (** Retrieve bytes from source file [fn] and send it to server (used by client only) *)
@@ -128,9 +144,6 @@ let write_to_dest fn ints =
   List.iter (fun b -> output_char outc (Char.chr b)) ints;
   close_out outc
 
-(** unused TO REMOVE *)
-let copy_file infn outfn = write_to_dest outfn (get_bytes infn)
-
 (* websocket handling *)
 let mime_zip = [ Option.get @@ Mime.parse "application/zip" ]
 let oct_stream = [ Option.get @@ Mime.parse "application/octet-stream" ]
@@ -141,7 +154,7 @@ let retrieve_zip_from_string dest_filename contents =
   Printf.fprintf w_to_f "%s\n" contents;
   close_out w_to_f
 
-let retrieve_zip_from_bin_string dest_filename contents =
+let retrieve_zip_from_bytes dest_filename contents =
   let w_to_f = open_out_bin dest_filename in
   output_bytes w_to_f contents;
   close_out w_to_f

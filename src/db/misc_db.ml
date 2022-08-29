@@ -30,6 +30,8 @@ let jobs_of_rows rows =
             job_ref_tag = Int32.to_int row#job_id;
             order_ts = CalendarLib.Printer.Calendar.to_string row#order_ts;
             path_to_f = row#path_to_f;
+            checksum_type = row#checksum_type;
+            checksum = row#checksum;
             priority = Int32.to_int row#priority;
             status = row#status;
           })

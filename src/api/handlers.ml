@@ -167,6 +167,8 @@ let sign_up_new_user _params user =
 
 (* ****************************************************************** *)
 
+(* User Filesystem + prepare for backend *)
+
 let job_metadata _params meta_payload =
   to_api
     (let job_desc =
@@ -174,14 +176,39 @@ let job_metadata _params meta_payload =
          job_client = meta_payload.client_id;
          job_ref_tag = 0;
          order_ts = "fixed at insertion";
-         path_to_f = root_files ^ Filename.basename meta_payload.archive_name;
+         path_to_f =
+           root_files ^ rand_uuid_gen ()
+           ^ Filename.basename meta_payload.archive_name;
          (* add uuid && || client username *)
+         checksum_type = "MD5";
+         checksum = "None";
          priority = meta_payload.priority;
          status = "scheduled";
        }
      in
      Db.insert_job job_desc >|= fun jobs -> Ok jobs)
 
+let post_z_send _params g_com =
+  to_api
+    (EzDebug.printf "getting zip from post glob";
+     write_to_dest (root_files ^ "post.zip") g_com.infos_b;
+     let uni = rand_uuid_gen () in
+     let _ = Sys.command (Printf.sprintf "mkdir -p %s ;" (root_files ^ uni)) in
+     let _ =
+       Sys.command
+         (Printf.sprintf "cp %s %s ;" (root_files ^ "post.zip")
+            (root_files ^ uni ^ "/post.zip"))
+     in
+     let _ = Sys.command (Printf.sprintf "rm %s" (root_files ^ "post.zip")) in
+     Lwt.return_ok
+     @@ {
+          comm_desc_2 = "checksum verification";
+          client_infos = g_com.client_infos;
+          infos_b = [];
+          checksum_type = "MD5";
+          checksum = md5_checksum (root_files ^ "post.zip");
+          error_desc = "No Error";
+        })
 (* ****************************************************************** *)
 
 (* Websocket for zip transfer *)
@@ -211,10 +238,3 @@ let background_zip_ws0 _req _sec send =
   bg false
 
 (* ****************************************************************** *)
-
-let post_z_send _params g_com =
-  to_api
-    (EzDebug.printf "getting zip from post glob";
-     put_bytes (root_files ^ "post.zip") g_com.infos_b;
-     Lwt.return_ok
-     @@ { comm_desc_2 = ""; client_infos = ""; infos_b = []; error_desc = "" })

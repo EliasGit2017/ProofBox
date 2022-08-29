@@ -68,13 +68,13 @@ let get_user {username; _} =
 
 (** insert job from metadata and retrieve all jobs in db from the client who
   initiated the zip transfer *)
-let insert_job {job_client; path_to_f; priority; status; _} =
+let insert_job {job_client; path_to_f; priority; status; checksum_type; checksum; _} =
   let fld_to_caltype = CalendarLib.Calendar.now () in
   with_dbh >>> fun dbh -> catch_db_error @@
   fun () ->
     [%pgsql dbh "insert INTO jobs_description
-    (job_client, order_ts, path_to_f, priority, status) 
-    VALUES ($job_client, $fld_to_caltype, $path_to_f, ${Int32.of_int priority}, $status)"];
+    (job_client, order_ts, path_to_f, checksum_type, checksum, priority, status) 
+    VALUES ($job_client, $fld_to_caltype, $path_to_f, $checksum_type, $checksum, ${Int32.of_int priority}, $status)"];
   get_all_jobs_from_userstring job_client
 
   

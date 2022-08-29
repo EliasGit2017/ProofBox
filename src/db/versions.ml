@@ -51,6 +51,8 @@ let init () =
        job_client VARCHAR NOT NULL,
        order_ts TIMESTAMP NOT NULL,
        path_to_f VARCHAR NOT NULL,
+       checksum_type VARCHAR NOT NULL,
+       checksum VARCHAR NOT NULL,
        priority INTEGER NOT NULL,
        status VARCHAR NOT NULL
     )
@@ -75,12 +77,12 @@ let init () =
     (* Dummy values to populate db for testing purposes *)
     {|INSERT INTO users (username, email, password, user_desc, first_login_date)
       values ('ocamlpro', 'azwbdj@gmail.com', 'this_will_be_hashed', 'Real OG, first proofbox user', current_timestamp); |};
-    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, priority, status) 
-      values ('ocamlpro', current_timestamp, 'root', 100, 'scheduled'); |};
-    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, priority, status)
-      values ('ocamlpro', current_timestamp, 'root', 200, 'scheduled'); |};
-    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, priority, status) 
-      values ('ocamlpro', current_timestamp, 'root', 300, 'scheduled'); |}
+    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, checksum_type, checksum, priority, status) 
+      values ('ocamlpro', current_timestamp, 'root', 'MD5', 'None',100, 'scheduled'); |};
+    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, checksum_type, checksum, priority, status)
+      values ('ocamlpro', current_timestamp, 'root', 'MD5', 'None', 200, 'scheduled'); |};
+    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, checksum_type, checksum, priority, status) 
+      values ('ocamlpro', current_timestamp, 'root', 'MD5', 'None', 300, 'scheduled'); |}
   ]
   ~downgrade:[
     {|DROP TABLE jobs_description CASCADE|};
