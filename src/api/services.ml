@@ -145,3 +145,13 @@ let send_job_metadata : (meta_payload, jobs, server_error_type, no_security) pos
   ~errors:Errors.server_errors
   Path.(root // "job_metadata_and_payload") *)
 
+let send_job_main_service : (job_payload, job_payload, server_error_type, no_security) post_service0 =
+  post_service
+  ~section:section_main
+  ~name:"Job submission through post0 service containing blob zip archive in "
+  ~descr:"Sending ZIP archive & associated metadata"
+  ~params:[]
+  ~input:job_payload_enc
+  ~output:job_payload_enc
+  ~errors:Errors.server_errors
+  Path.(root // "main_job_send")

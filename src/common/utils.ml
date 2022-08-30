@@ -4,6 +4,11 @@ open EzAPI
 
 (* Conversion & data printing : ( *_to_string, *_of_string, etc) *)
 
+let rec stringlist_tostring sep = function
+  | [] -> ""
+  | "" :: l -> stringlist_tostring sep l
+  | e :: l -> e ^ sep ^ stringlist_tostring sep l
+
 (** [to_result str ~convf] encapsulates application of [convf] on [str] within [result] type *)
 let to_result :
     type conv. string -> convf:(string -> conv) -> (conv, string) result =
@@ -119,10 +124,16 @@ let check_password_validity password =
   in
   not @@ Str.string_match right_password password 0
 
-
+(** Returns a random uuid like string which is the directory name in which
+    the server will store client zip + results *)
 let rand_uuid_gen () =
-  Random.init (Random.int 29000); (* this is bad ... really bad *)
-  Uuidm.v4_gen (Random.get_state ()) () |> Uuidm.to_string
+  Random.init (Random.int 29000);
+  (* this is bad ... really bad -> replaced with root + timestamp + client-name  *)
+  (Uuidm.v4_gen (Random.get_state ()) () |> Uuidm.to_string) ^ "/"
+
+(** Generates parent directory ... choose between parent_d_name & rand_uuid_gen *)
+let parent_d_name root_fname client_name =
+  root_fname ^ string_of_float (Unix.gettimeofday ()) ^ "-" ^ client_name ^ "/"
 
 (*****************************************************************************)
 

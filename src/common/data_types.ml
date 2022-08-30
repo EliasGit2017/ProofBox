@@ -83,3 +83,15 @@ type meta_payload = {
   error : string;
   code : int;
 }
+
+type job_payload = {
+  job_archive_name : string;
+  job_client_id : string;
+  desc : string;
+  infos_pb : int list;
+  checksum_type : string;
+  checksum : string;
+  priority : int;
+  job_return : jobs_descr list;
+  code : int;
+}

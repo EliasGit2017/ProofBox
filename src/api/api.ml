@@ -15,7 +15,8 @@ module MakeRegisterer(S: module type of Services)(H:module type of Handlers) = s
   |> register S.test_session H.test_session
   |> register S.sign_up_new_user H.sign_up_new_user
   |> register S.send_job_metadata H.job_metadata
-  
+    
+  |> register S.send_job_main_service H.handler_job_main_service
   |> register S.post_zip_send H.post_z_send
   (* websocket for zip tranfert *)
   

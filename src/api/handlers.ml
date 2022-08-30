@@ -191,24 +191,67 @@ let job_metadata _params meta_payload =
 let post_z_send _params g_com =
   to_api
     (EzDebug.printf "getting zip from post glob";
-     write_to_dest (root_files ^ "post.zip") g_com.infos_b;
-     let uni = rand_uuid_gen () in
-     let _ = Sys.command (Printf.sprintf "mkdir -p %s ;" (root_files ^ uni)) in
-     let _ =
-       Sys.command
-         (Printf.sprintf "cp %s %s ;" (root_files ^ "post.zip")
-            (root_files ^ uni ^ "/post.zip"))
-     in
-     let _ = Sys.command (Printf.sprintf "rm %s" (root_files ^ "post.zip")) in
+     let work_dest = root_files ^ g_com.client_infos ^ "-" ^ rand_uuid_gen () in
+     let _ = Sys.command (Printf.sprintf "mkdir -p %s ;" work_dest) in
+     write_to_dest (work_dest ^ "/post.zip") g_com.infos_b;
      Lwt.return_ok
      @@ {
           comm_desc_2 = "checksum verification";
           client_infos = g_com.client_infos;
           infos_b = [];
           checksum_type = "MD5";
-          checksum = md5_checksum (root_files ^ "post.zip");
+          checksum = md5_checksum (work_dest ^ "/post.zip");
           error_desc = "No Error";
         })
+(* ****************************************************************** *)
+
+let handler_job_main_service _params (job_payload : Data_types.job_payload) =
+  to_api
+    (EzDebug.printf "Handling send_job_main_service";
+     let storage_dest =
+       root_files ^ job_payload.job_client_id ^ "-" ^ rand_uuid_gen ()
+     in
+     let _ = Sys.command (Printf.sprintf "mkdir -p %s" storage_dest) in
+     write_to_dest
+       (storage_dest ^ job_payload.job_archive_name)
+       job_payload.infos_pb;
+     let new_job_desc =
+       {
+         job_client = job_payload.job_client_id;
+         job_ref_tag = 0;
+         order_ts = "fixed at insertion";
+         path_to_f =
+           storage_dest ^ Filename.basename job_payload.job_archive_name;
+         checksum_type = "MD5";
+         checksum =
+           md5_checksum
+             (storage_dest ^ Filename.basename job_payload.job_archive_name);
+         priority = job_payload.priority;
+         status = "scheduled";
+       }
+     in
+     let all_jobs_atm = ref [] in
+     let%lwt x =
+       Db.insert_job new_job_desc >>= fun elem ->
+       all_jobs_atm := !all_jobs_atm @ elem;
+       Lwt.return elem
+     in
+     Lwt.return_ok
+     @@ {
+          job_archive_name = "None";
+          job_client_id = "ProofBox";
+          desc =
+            "send_job_main_service response : consult checksum + inserted jobs";
+          infos_pb = [];
+          checksum_type = "MD5";
+          checksum =
+            md5_checksum
+              (storage_dest ^ Filename.basename job_payload.job_archive_name);
+          priority = job_payload.priority;
+          job_return = x;
+          code = 200;
+        })
+
 (* ****************************************************************** *)
 
 (* Websocket for zip transfer *)
