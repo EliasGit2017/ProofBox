@@ -205,6 +205,8 @@ let post_z_send _params g_com =
         })
 (* ****************************************************************** *)
 
+(** [send_job_main_service] handler : insert job in db + retrieve zip + return
+    confirmation response *)
 let handler_job_main_service _params (job_payload : Data_types.job_payload) =
   to_api
     (EzDebug.printf "Handling send_job_main_service";
@@ -230,25 +232,20 @@ let handler_job_main_service _params (job_payload : Data_types.job_payload) =
          status = "scheduled";
        }
      in
-     let all_jobs_atm = ref [] in
-     let%lwt x =
-       Db.insert_job new_job_desc >>= fun elem ->
-       all_jobs_atm := !all_jobs_atm @ elem;
-       Lwt.return elem
-     in
+     let%lwt inserted_jobs = Db.insert_job new_job_desc in
      Lwt.return_ok
      @@ {
           job_archive_name = "None";
           job_client_id = "ProofBox";
           desc =
-            "send_job_main_service response : consult checksum + inserted jobs";
+            "send_job_main_service response : verify checksum + inserted jobs";
           infos_pb = [];
           checksum_type = "MD5";
           checksum =
             md5_checksum
               (storage_dest ^ Filename.basename job_payload.job_archive_name);
           priority = job_payload.priority;
-          job_return = x;
+          job_return = inserted_jobs;
           code = 200;
         })
 

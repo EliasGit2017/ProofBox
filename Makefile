@@ -15,6 +15,9 @@ PGDATABASE=$(DATABASE)
 
 all: build website api-server openapi
 
+build_dock_arch :
+	docker-compose -f ./scripts/Containers/Docker_arch/docker-compose.yml up
+
 db-updater:
 	@dune build src/db/db-update
 
