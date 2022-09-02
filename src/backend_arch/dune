@@ -1,7 +1,7 @@
 (library
  (name job_scheduler)
  (modules utils)
- (libraries data_common unix stdlib-shims str))
+ (libraries data_common unix stdlib-shims str parmap))
 
 (executable
  (name manager)
@@ -11,4 +11,4 @@
 (executable
  (name docker_comm)
  (modules docker_comm)
- (libraries docker-api dockerfile-cmd dockerfile dockerfile-opam))
+ (libraries docker-api dockerfile-cmd dockerfile dockerfile-opam unix))

@@ -1,0 +1,64 @@
+1000
+[{"Id":"0499bd87d416eb36c392dfefa07a57569f3903244a313ba2fb66ef9df0c98286","Names":["/sad_lehmann"],"Image":"elias2049/ae_mono:alt-ergo.2.4.1-slim","ImageID":"sha256:c509274cbe2abb9926723dd4d9606a8e7d9477e8e27a65e4c69d066bc393d281","Command":"/bin/sh","Created":1662121492,"Ports":[],"SizeRw":55,"SizeRootFs":24744916,"Labels":{},"State":"running","Status":"Up 29 minutes","HostConfig":{"NetworkMode":"default"},"NetworkSettings":{"Networks":{"bridge":{"IPAMConfig":null,"Links":null,"Aliases":null,"NetworkID":"00157a607026b79c9fcb02761561e65e8b5da7b9e0a050db27e345c76de555af","EndpointID":"0a3a296deaf048ff153930f1ce3bf5206cc1781c8f617bc7cde9c5e8e62648ee","Gateway":"172.17.0.1","IPAddress":"172.17.0.2","IPPrefixLen":16,"IPv6Gateway":"","GlobalIPv6Address":"","GlobalIPv6PrefixLen":0,"MacAddress":"02:42:ac:11:00:02","DriverOpts":null}}},"Mounts":[{"Type":"bind","Source":"/home/elias/OCP/PROOFBOX_TestJobs/job_example1","Destination":"/home/ocaml","Mode":"","RW":true,"Propagation":"rprivate"}]}]
+
+{ id = 0499bd87d416eb36c392dfefa07a57569f3903244a313ba2fb66ef9df0c98286;
+names = /sad_lehmann;
+image = elias2049/ae_mono:alt-ergo.2.4.1-slim;
+imageid = sha256:c509274cbe2abb9926723dd4d9606a8e7d9477e8e27a65e4c69d066bc393d281;
+command = /bin/sh;
+created = 1662121492.;
+state = running;
+status = Up 29 minutes;
+ports = ok;
+size_rw = 55;
+size_root_fs = 24744916;
+labels = none 
+ }
+Printing ids of running container : 
+/sad_lehmann :: 
+
+Printing ids of running container : 
+0499bd87d416eb36c392dfefa07a57569f3903244a313ba2fb66ef9df0c98286 :: 
+
+0499bd87d416eb36c392dfefa07a57569f3903244a313ba2fb66ef9df0c98286
+Exec in the container returned:
+err> [34m[1m[Debug][Sat_solver][22m[0m
+use CDCL solver
+[34m[1m[Debug][Parsers][parse_input_file][22m[0m
+parsing file "ALIA/piVC/piVC_030ee9.smt2"
+
+err> ;[Warning] (set-info not yet supported)
+;[Warning] (set-info not yet supported)
+;[Warning] (set-info not yet supported)
+;[Warning] (set-info not yet supported)
+
+err> 
+; [33m[1m[Warning][22m[0m "set-info" : Not yet supported
+[33m[1m[Warning][22m[0m "set-info" : Not yet supported
+[33m[1m[Warning][22m[0m "set-info" : Not yet supported
+[33m[1m[Warning][22m[0m "set-logic" : Not yet supported
+[33m[1m[Warning][22m[0m "set-info" : Not yet supported
+
+err> 
+; [34m[1m[Debug][22m[0m
+8 clauses
+0 learnts
+
+err> [34m[1m[Debug][22m[0m
+8 clauses
+0 learnts
+
+err> [34m[1m[Debug][22m[0m
+8 clauses
+0 learnts
+
+err> [34m[1m[Debug][22m[0m
+3 clauses
+0 learnts
+
+err> 
+; File "ALIA/piVC/piVC_030ee9.smt2", line 12, characters 1-12: [32m[1mValid[22m[39m (0.0066) (36 steps) (goal g_1)
+
+out> 
+[32m[1munsat[22m[39m
+

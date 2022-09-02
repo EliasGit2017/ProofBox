@@ -2,16 +2,6 @@ version: '3'
 
 services:
 
-  # web:
-  #   build: .
-  #   ports:
-  #     - "8080:8080"
-  #   depends_on:
-  #     - postgres
-  #   restart: always
-  #   logging:
-  #     driver: ${LOGGING_DRIVER:-json-file}
-
   # postgres:
   #   # No need to specify port info as networkig will be handled by compose.
   #   # Those lines are kept as comments as the web server is tested locally before 
@@ -36,42 +26,45 @@ services:
   # services for alt-ergo job queries
   alt-ergo-2.4.1:
     image: elias2049/ae_mono:alt-ergo.2.4.1-slim
-    restart: always
+    command: tail -f /dev/null 
+    
+    
     # volumes:
     #   - job_stock:/home/ocaml/job_stock
 
   alt-ergo-2.4.0:
     image: elias2049/ae_mono:alt-ergo.2.4.0-slim
-    restart: always
+    command: tail -f /dev/null
     # volumes:
     #   - job_stock:/home/ocaml/job_stock
   
   alt-ergo-2.3.3:
     image: elias2049/ae_mono:alt-ergo.2.3.3-slim
-    restart: always
+    command: tail -f /dev/null
     # volumes:
     #   - job_stock:/home/ocaml/job_stock
   
   alt-ergo-2.3.2:
     image: elias2049/ae_mono:alt-ergo.2.3.2-slim
-    restart: always
+    command: tail -f /dev/null
     # volumes:
     #   - job_stock:/home/ocaml/job_stock
 
   alt-ergo-2.3.1:
     image: elias2049/ae_mono:alt-ergo.2.3.1-slim
-    restart: always
+    command: tail -f /dev/null
     # volumes:
     #   - job_stock:/home/ocaml/job_stock
 
   alt-ergo-2.3.0:
     image: elias2049/ae_mono:alt-ergo.2.3.0-slim
-    restart: always
+    command: tail -f /dev/null
     # volumes:
     #   - job_stock:/home/ocaml/job_stock
 
 volumes:
-  db_data:
+  jobs_data:
+
     # driver: flocker
     # driver_opts:
     #   size: "5GiB"

@@ -18,6 +18,12 @@ all: build website api-server openapi
 build_dock_arch :
 	docker-compose -f ./scripts/Containers/Docker_arch/docker-compose.yml up
 
+tear_down_dock_arch :
+	docker-compose -f ./scripts/Containers/Docker_arch/docker-compose.yml down
+
+test_dock :
+	./_build/default/backend_arch/docker_comm.exe 
+
 db-updater:
 	@dune build src/db/db-update
 
