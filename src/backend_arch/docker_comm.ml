@@ -3,6 +3,23 @@ open Docker
 module C = Docker.Container
 module T = Docker.Tools
 
+let run_cmd cmd opts =
+  let dlc = C.list ~all:false ~size:true () in
+  let e =
+    C.Exec.create
+      (T.ids_from_containers_list_wname "/docker_arch_alt-ergo-2.4.1_1" dlc)
+      [ "alt-ergo-2.4.1"; "-vp"; "ALIA/piVC/piVC_030ee9.smt2" ]
+  in
+  let st = C.Exec.start e in
+  let s = Docker.Stream.read_all st in
+  let identify (ty, s) =
+    match ty with
+    | Docker.Stream.Stdout -> "out> " ^ s
+    | Docker.Stream.Stderr -> "err> " ^ s
+  in
+  printf "Exec in the container returned:\n%s\n"
+    (String.concat "\n" (List.map identify s))
+
 let () =
   Printexc.record_backtrace true;
   (* Common.install_image "debian" ~tag:"latest"; *)

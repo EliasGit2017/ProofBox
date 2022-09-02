@@ -1,12 +1,12 @@
 (library
- (name job_scheduler)
- (modules utils)
- (libraries data_common unix stdlib-shims str parmap))
+ (name tools)
+ (modules tools)
+ (libraries data_common unix stdlib-shims str parmap docker-api))
 
 (executable
- (name manager)
- (modules manager)
- (libraries job_scheduler))
+ (name main)
+ (modules main)
+ (libraries tools))
 
 (executable
  (name docker_comm)
