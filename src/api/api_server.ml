@@ -39,6 +39,7 @@ let server services =
           EzAPIServer.server ~catch servers);
          (* Lwt_unix.sleep 10. *)
          Manager.consult_jobs ~verbose:true ();
+         Manager.scheduler_main_loop ()
        ]
 
 let () = server Api.services

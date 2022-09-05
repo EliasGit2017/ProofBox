@@ -4,6 +4,8 @@ open Db
 open EzPG
 open PGOCaml
 
+let server_job_manager_status = ref "Idle"
+
 let job_list_to_string job_l =
   List.fold_left
     (fun res { job_client; job_ref_tag; order_ts; path_to_f; priority; status } ->
@@ -26,6 +28,7 @@ let empty_job_desc =
     status = "";
   }
 
+(** Sample function for debug/testing purposes only *)
 let consult_jobs ?(verbose = false) () =
   let%lwt res = Db.get_jobs () in
   if verbose then
@@ -33,6 +36,28 @@ let consult_jobs ?(verbose = false) () =
       (Printf.sprintf "Printing job in second promise : %s"
          (job_list_to_string res));
   Lwt.return_unit
+
+(** Retrieve all the jobs available in db when called *)
+let jobs_todo () =
+  let res = Db.get_jobs () in
+  res
+
+let rec scheduler_main_loop () =
+  let%lwt todo_list = jobs_todo () in
+  if List.length todo_list <= 2 then (
+    server_job_manager_status := "Idle";
+    Lwt_unix.sleep 5.)
+  else
+    let task_to_solve = List.hd @@ todo_list in
+    print_endline
+      (Printf.sprintf "In scheduler main loop : \n %s"
+         (job_list_to_string [ task_to_solve ]));
+    (* deflate *)
+    Tools.deflate_zip_archive task_to_solve.path_to_f
+      (Filename.dirname task_to_solve.path_to_f);
+    (* parse / read toml *)
+    (* send to docker arch *)
+    scheduler_main_loop ()
 
 (* let () =
    Lwt_main.run
