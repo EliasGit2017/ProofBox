@@ -19,6 +19,14 @@ let get_job_desc {job_client; job_ref_tag_v} =
                           where job_client = $job_client and job_id = ${Int32.of_int job_ref_tag_v}"]
       >|= jobs_of_rows
 
+let get_jobs () =
+  with_dbh >>> fun dbh -> catch_db_error @@
+  fun () ->
+    [%pgsql.object dbh "select * from jobs_description
+                 where status = 'scheduled'
+                 order by order_ts DESC, priority DESC"]
+    >|= jobs_of_rows
+
 
 (** Retrieve all jobs from user having username specified in
     [Data_types.all_jobs_get.job_client_req] . (TO DO) *)

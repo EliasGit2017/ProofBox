@@ -233,6 +233,7 @@ let handler_job_main_service _params (job_payload : Data_types.job_payload) =
        }
      in
      let%lwt inserted_jobs = Db.insert_job new_job_desc in
+     (* lwt handle job in loop *)
      Lwt.return_ok
      @@ {
           job_archive_name = "None";

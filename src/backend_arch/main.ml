@@ -8,12 +8,12 @@ type opt_l = { cmd : string; opts : string list }
 
 let l =
   [
-    { cmd = "docker_arch_alt-ergo-2.3.3_1"; opts = [ "pwd" ] };
-    { cmd = "docker_arch_alt-ergo-2.3.2_1"; opts = [ "pwd" ] };
-    { cmd = "docker_arch_alt-ergo-2.3.0_1"; opts = [ "pwd" ] };
-    { cmd = "docker_arch_alt-ergo-2.3.1_1"; opts = [ "pwd" ] };
-    { cmd = "docker_arch_alt-ergo-2.4.1_1"; opts = [ "pwd" ] };
-    { cmd = "docker_arch_alt-ergo-2.4.0_1"; opts = [ "pwd" ] };
+    { cmd = "docker_arch_alt-ergo-2.3.3_1"; opts = [ "ls"; "-a" ] };
+    { cmd = "docker_arch_alt-ergo-2.3.2_1"; opts = [ "ls"; "-a" ] };
+    { cmd = "docker_arch_alt-ergo-2.3.0_1"; opts = [ "ls"; "-a" ] };
+    { cmd = "docker_arch_alt-ergo-2.3.1_1"; opts = [ "ls"; "-a" ] };
+    { cmd = "docker_arch_alt-ergo-2.4.1_1"; opts = [ "ls"; "-a" ] };
+    { cmd = "docker_arch_alt-ergo-2.4.0_1"; opts = [ "ls"; "-a" ] };
   ]
 
 let run_cmd (cmds : opt_l) =
