@@ -30,10 +30,15 @@ let server services =
 
   Arg.parse [] (fun config_file -> load_config config_file) "API server";
   let servers = [ (!api_port, EzAPIServerUtils.API services) ] in
-  Lwt_main.run @@ Lwt.join [
-    (Printf.eprintf "Starting servers on ports [%s]\n%!"
-       (String.concat ","
-          (List.map (fun (port, _) -> string_of_int port) servers));
-     EzAPIServer.server ~catch servers); Lwt_unix.sleep 10.]
+  Lwt_main.run
+  @@ Lwt.join
+       [
+         (Printf.eprintf "Starting servers on ports [%s]\n%!"
+            (String.concat ","
+               (List.map (fun (port, _) -> string_of_int port) servers));
+          EzAPIServer.server ~catch servers);
+         (* Lwt_unix.sleep 10. *)
+         Manager.consult_jobs ~verbose:true ();
+       ]
 
 let () = server Api.services

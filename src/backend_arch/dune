@@ -3,16 +3,24 @@
  (modules tools)
  (libraries data_common unix stdlib-shims str parmap docker-api))
 
-(executable
+(library
  (name manager)
  (modules manager)
  (libraries data_common unix stdlib-shims str parmap docker-api db_lwt)
- (preprocess (pps lwt_ppx)))
+ (preprocess
+  (pps lwt_ppx)))
 
 (executable ; executable for tests
  (name main)
  (modules main)
  (libraries tools))
+
+(executable
+ (name playground)
+ (modules playground)
+ (libraries data_common unix stdlib-shims str parmap docker-api db_lwt)
+ (preprocess
+  (pps lwt_ppx)))
 
 (executable
  (name docker_comm)

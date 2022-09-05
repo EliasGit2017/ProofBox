@@ -26,16 +26,17 @@ let empty_job_desc =
     status = "";
   }
 
-let consult_jobs ?(verbose = false) () =
+let consult_jobs () =
   let%lwt res = Db.get_jobs () in
-  if verbose then
-    print_endline
-      (Printf.sprintf "Printing job in second promise : %s"
-         (job_list_to_string res));
+  Lwt.return res
+
+
+let () =
+  Lwt_main.run @@ 
+  let%lwt res = consult_jobs () in
+  print_endline "printing current jobs to be done";
+  print_endline (Printf.sprintf "%s" (job_list_to_string @@ res));
   Lwt.return_unit
 
-(* let () =
-   Lwt_main.run
-   @@
-   let _ = consult_jobs () in
-   Lwt.return_unit *)
+
+
