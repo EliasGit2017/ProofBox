@@ -148,6 +148,8 @@ let get_main_toml working_dir =
   else working_dir ^ List.hd res
 (* get absolute path through Sys ? instead of working_dir arg ? *)
 
+(** Retrieve toml values specified in [.toml] file available in 
+    directory [toml_dir] *)
 let retrieve_toml_values toml_dir =
   let parsed_toml = Otoml.Parser.from_file (get_main_toml toml_dir) in
   let htab_toml_values = Hashtbl.create 10 in
@@ -172,6 +174,9 @@ let retrieve_toml_values toml_dir =
     print_endline @@ Printf.sprintf "Badly formatted TOML at : %s" (get_main_toml toml_dir) ;
     raise (Toml_error Bad_toml_format)
 
+(** Print toml values of Hashtable [ht] *)
+let ht_printer ht =
+  Hashtbl.iter (fun key value -> print_endline (Printf.sprintf "%s --> %s" key value)) ht
 
 (** [dir_contents] returns the paths of all regular files ([.smt2] && [.ae])
     that are contained in [dir]. Each file is a path starting with [dir].*)

@@ -6,7 +6,7 @@
 (library
  (name manager)
  (modules manager)
- (libraries data_common tools unix stdlib-shims str parmap docker-api db_lwt)
+ (libraries data_common tools toml_reader unix stdlib-shims str parmap docker-api db_lwt)
  (preprocess
   (pps lwt_ppx)))
 

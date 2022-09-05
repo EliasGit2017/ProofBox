@@ -1,8 +1,7 @@
 open Lwt.Infix
 open Data_types
 open Db
-open EzPG
-open PGOCaml
+open Toml_reader.Utils
 
 let server_job_manager_status = ref "Idle"
 
@@ -52,11 +51,17 @@ let rec scheduler_main_loop () =
     print_endline
       (Printf.sprintf "In scheduler main loop : \n %s"
          (job_list_to_string [ task_to_solve ]));
-    (* deflate *)
+    (* deflate  ---> check if not already deflated*)
     Tools.deflate_zip_archive task_to_solve.path_to_f
       (Filename.dirname task_to_solve.path_to_f);
-    (* parse / read toml *)
-    (* send to docker arch *)
+    print_endline (Printf.sprintf "%s" (Filename.dirname task_to_solve.path_to_f ^ "/results/"));
+      (* parse / read toml *)
+    let toml_spec =
+      retrieve_toml_values
+        (Filename.dirname task_to_solve.path_to_f ^ "/results/")
+    in
+    ht_printer toml_spec;
+    (* send to docker arch *) (* Timeout is needed *)
     scheduler_main_loop ()
 
 (* let () =
