@@ -24,19 +24,20 @@ let l =
   ]
 
 let cmds_builder (toml_ht : (string, string) Stdlib__hashtbl.t)
-    (files_l : string list) =
+    (files_l : string list) (max_containers_available : int) =
   let all_cmds = ref [] in
   let solver = Hashtbl.find toml_ht "jd_solver" in
   let solver_version = Hashtbl.find toml_ht "jd_solver_version" in
   List.iter
     (fun x ->
       (* acc *)
-      (* think about scaling :: unscale with uptime & container status *)
+      (* think about scaling :: unscale with uptime & container status ? list management *)
       all_cmds :=
         {
           cmd =
             "docker_arch_" ^ solver ^ "-" ^ solver_version ^ "_"
-            ^ string_of_int (* rand int *);
+            ^ string_of_int (Random.int max_containers_available + 1)
+            (* rand int -> switch to list managment *);
           opts = [ solver ^ "-" ^ solver_version; "-vp"; x ];
         }
         :: !all_cmds)

@@ -7,6 +7,9 @@ open Toml_reader.Utils
 
 let server_job_manager_status = ref "Idle"
 
+let available_c_of_sol =
+  ref 5 (* nb of available containers for one solver style *)
+
 (** Sample function for debug/testing purposes only *)
 let consult_jobs ?(verbose = false) () =
   let%lwt res = Db.get_jobs () in
@@ -38,10 +41,10 @@ let rec scheduler_main_loop () =
     (* parse / read toml *)
     let toml_spec = retrieve_toml_values working_dir in
     ht_printer toml_spec;
-    (* send to docker arch *)
+    (* Manage docker arch (scale if > 10) & send to docker arch --> delete scaled containers ? *)
     let files = dir_contents working_dir in
     List.iter
       (fun x -> print_endline (Printf.sprintf "%s" (Tools.opt_l_tostring x)))
-      (cmds_builder toml_spec files);
+      (cmds_builder toml_spec files !available_c_of_sol);
     (* Timeout is needed *)
     scheduler_main_loop ()

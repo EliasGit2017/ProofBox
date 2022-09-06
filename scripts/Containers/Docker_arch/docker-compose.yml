@@ -24,9 +24,32 @@ services:
   #     - db_data:/var/lib/postgresql/data
 
   # services for alt-ergo job queries
+  
+  alt-ergo-2.4.2:
+    image: elias2049/ae_mono:alt-ergo.2.4.2-slim
+    command: tail -f /dev/null
+    # cpus: "0.6"
+    # mem_limit: "600M"
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 600M
+    volumes:
+      - ~/OCP/PROOFBOX_TestJobs/job_example1/:/home/ocaml
+      
   alt-ergo-2.4.1:
     image: elias2049/ae_mono:alt-ergo.2.4.1-slim
     command: tail -f /dev/null
+    # cpus: "0.6"
+    # mem_limit: "600M"
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 600M
     volumes:
       - ~/OCP/PROOFBOX_TestJobs/job_example1/:/home/ocaml
 

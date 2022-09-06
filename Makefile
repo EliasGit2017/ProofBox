@@ -16,7 +16,7 @@ PGDATABASE=$(DATABASE)
 all: build website api-server openapi
 
 build_dock_arch :
-	docker-compose -f ./scripts/Containers/Docker_arch/docker-compose.yml up
+	docker-compose -f ./scripts/Containers/Docker_arch/docker-compose.yml --compatibility up
 
 tear_down_dock_arch :
 	docker-compose -f ./scripts/Containers/Docker_arch/docker-compose.yml down
