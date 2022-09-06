@@ -64,6 +64,20 @@ let job_list_to_string job_l =
           priority status)
     "" job_l
 
+(** Generate empty job_descr record *)
+let empty_job_desc =
+  {
+    job_client = "";
+    job_ref_tag = 0;
+    order_ts = "";
+    path_to_f = "";
+    checksum_type = "";
+    checksum = "";
+    priority = 0;
+    status = "";
+  }
+
+
 (** Default server response from args : TO REDEFINE *)
 let default_server_response_from_string _comm_des _client_infos _infos
     error_desc =

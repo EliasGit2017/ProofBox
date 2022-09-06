@@ -1,12 +1,12 @@
 (library
  (name tools)
  (modules tools)
- (libraries camlzip data_common unix stdlib-shims str docker-api))
+ (libraries camlzip data_common unix stdlib-shims str docker-api parmap))
 
 (library
  (name manager)
  (modules manager)
- (libraries data_common tools toml_reader unix stdlib-shims str parmap docker-api db_lwt)
+ (libraries tools toml_reader db_lwt)
  (preprocess
   (pps lwt_ppx)))
 
