@@ -30,8 +30,8 @@ let cmds_builder (toml_ht : (string, string) Stdlib__hashtbl.t)
   let solver_version = Hashtbl.find toml_ht "jd_solver_version" in
   List.iter
     (fun x ->
-      (* acc *)
-      (* think about scaling :: unscale with uptime & container status ? list management *)
+      (* acc no ref *)
+      (* think about scaling :: unscale with uptime & container status ? *)
       all_cmds :=
         {
           cmd =

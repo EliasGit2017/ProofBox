@@ -41,7 +41,7 @@ let () =
   Printexc.record_backtrace true;
   print_endline
     (Printf.sprintf
-       "default ncores : %d\ncores being used durint // execution : %d\n"
+       "default ncores : %d\ncores being used during // execution : %d\n"
        (get_default_ncores ()) (get_ncores ()));
   (* run_cmd @@ List.hd l; *)
   pariter ~ncores:5 run_cmd (L l)

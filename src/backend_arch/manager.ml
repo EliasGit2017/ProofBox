@@ -24,7 +24,7 @@ let jobs_todo () =
   let res = Db.get_jobs () in
   res
 
-(** Main job solving event loop -> to optimize *)
+(** Main job solving event loop -> to optimize base conditions + make sure rec iterations *)
 let rec scheduler_main_loop () =
   let%lwt todo_list = jobs_todo () in
   if List.length todo_list <= 2 then (
