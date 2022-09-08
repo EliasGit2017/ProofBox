@@ -1,0 +1,657 @@
+err> [Debug][Sat_solver]
+use CDCL solver
+[Debug][Parsers][parse_input_file]
+parsing file "ocamlpro-fb95ac08-9e13-4ade-bb8b-b16246a2d0e9/unzipped/smt4345645998815667664.smt2"
+
+err> ;[Warning] (set-info not yet supported)
+;[Warning] (set-info not yet supported)
+;[Warning] (set-info not yet supported)
+;[Warning] (set-info not yet supported)
+;[Warning] (set-info not yet supported)
+
+err> 
+; [Warning] "set-info" : Not yet supported
+[Warning] "set-info" : Not yet supported
+[Warning] "set-info" : Not yet supported
+[Warning] "set-info" : Not yet supported
+[Warning] "set-logic" : Not yet supported
+[Warning] "set-info" : Not yet supported
+
+err> 
+; [Debug]
+0 clauses
+0 learnts
+
+err> [Debug]
+0 clauses
+0 learnts
+
+err> [Debug]
+0 clauses
+0 learnts
+
+err> [Debug]
+1 clauses
+0 learnts
+
+err> [Debug]
+18 clauses
+0 learnts
+
+err> [Debug]
+18 clauses
+0 learnts
+
+err> [Debug]
+30 clauses
+1 learnts
+
+err> [Debug]
+30 clauses
+2 learnts
+
+err> [Debug]
+43 clauses
+2 learnts
+
+err> [Debug]
+43 clauses
+2 learnts
+
+err> [Debug]
+46 clauses
+2 learnts
+
+err> [Debug]
+60 clauses
+2 learnts
+
+err> [Debug]
+65 clauses
+2 learnts
+
+err> [Debug]
+124 clauses
+2 learnts
+
+err> [Debug]
+132 clauses
+2 learnts
+
+err> [Debug]
+157 clauses
+2 learnts
+
+err> [Debug]
+470 clauses
+7 learnts
+
+err> [Debug]
+470 clauses
+7 learnts
+
+err> [Debug]
+454 clauses
+6 learnts
+
+err> [Debug]
+478 clauses
+6 learnts
+
+err> [Debug]
+478 clauses
+6 learnts
+
+err> [Debug]
+470 clauses
+6 learnts
+
+err> [Debug]
+527 clauses
+11 learnts
+
+err> [Debug]
+538 clauses
+11 learnts
+
+err> [Debug]
+1550 clauses
+12 learnts
+
+err> [Debug]
+1550 clauses
+12 learnts
+
+err> [Debug]
+1518 clauses
+13 learnts
+
+err> [Debug]
+1525 clauses
+13 learnts
+
+err> [Debug]
+1555 clauses
+13 learnts
+
+err> [Debug]
+1559 clauses
+13 learnts
+
+err> [Debug]
+1601 clauses
+14 learnts
+
+err> [Debug]
+1617 clauses
+14 learnts
+
+err> [Debug]
+1629 clauses
+14 learnts
+
+err> [Debug]
+1897 clauses
+15 learnts
+
+err> [Debug]
+1897 clauses
+15 learnts
+
+err> [Debug]
+1895 clauses
+15 learnts
+
+err> [Debug]
+1928 clauses
+15 learnts
+
+err> [Debug]
+2004 clauses
+17 learnts
+
+err> [Debug]
+2024 clauses
+17 learnts
+
+err> [Debug]
+2028 clauses
+17 learnts
+
+err> [Debug]
+2313 clauses
+17 learnts
+
+err> [Debug]
+2313 clauses
+17 learnts
+
+err> [Debug]
+2315 clauses
+17 learnts
+
+err> [Debug]
+2328 clauses
+17 learnts
+
+err> [Debug]
+2332 clauses
+17 learnts
+
+err> [Debug]
+2528 clauses
+17 learnts
+
+err> [Debug]
+2543 clauses
+17 learnts
+
+err> [Debug]
+2576 clauses
+17 learnts
+
+err> [Debug]
+4061 clauses
+25 learnts
+
+err> [Debug]
+4061 clauses
+25 learnts
+
+err> [Debug]
+4050 clauses
+27 learnts
+
+err> [Debug]
+4065 clauses
+27 learnts
+
+err> [Debug]
+4065 clauses
+27 learnts
+
+err> [Debug]
+4066 clauses
+28 learnts
+
+err> [Debug]
+4128 clauses
+28 learnts
+
+err> [Debug]
+4128 clauses
+28 learnts
+
+err> [Debug]
+4129 clauses
+28 learnts
+
+err> [Debug]
+4193 clauses
+28 learnts
+
+err> [Debug]
+4198 clauses
+28 learnts
+
+err> [Debug]
+6712 clauses
+29 learnts
+
+err> [Debug]
+6712 clauses
+29 learnts
+
+err> [Debug]
+6689 clauses
+30 learnts
+
+err> [Debug]
+6755 clauses
+30 learnts
+
+err> [Debug]
+6755 clauses
+30 learnts
+
+err> [Debug]
+6810 clauses
+31 learnts
+
+err> [Debug]
+6836 clauses
+32 learnts
+
+err> [Debug]
+7496 clauses
+48 learnts
+
+err> [Debug]
+7507 clauses
+48 learnts
+
+err> [Debug]
+7458 clauses
+48 learnts
+
+err> [Debug]
+7453 clauses
+48 learnts
+
+err> [Debug]
+7459 clauses
+48 learnts
+
+err> [Debug]
+7533 clauses
+48 learnts
+
+err> [Debug]
+7533 clauses
+48 learnts
+
+err> [Debug]
+7533 clauses
+48 learnts
+
+err> [Debug]
+7498 clauses
+48 learnts
+
+err> [Debug]
+7713 clauses
+48 learnts
+
+err> [Debug]
+7713 clauses
+48 learnts
+
+err> [Debug]
+7721 clauses
+48 learnts
+
+err> [Debug]
+7733 clauses
+48 learnts
+
+err> [Debug]
+8111 clauses
+48 learnts
+
+err> [Debug]
+8121 clauses
+48 learnts
+
+err> [Debug]
+8117 clauses
+48 learnts
+
+err> [Debug]
+8123 clauses
+48 learnts
+
+err> [Debug]
+8204 clauses
+48 learnts
+
+err> [Debug]
+8209 clauses
+48 learnts
+
+err> [Debug]
+13137 clauses
+71 learnts
+
+err> [Debug]
+13269 clauses
+71 learnts
+
+err> [Debug]
+13154 clauses
+71 learnts
+
+err> [Debug]
+13217 clauses
+72 learnts
+
+err> [Debug]
+13210 clauses
+72 learnts
+
+err> [Debug]
+13157 clauses
+72 learnts
+
+err> [Debug]
+13161 clauses
+72 learnts
+
+err> [Debug]
+13216 clauses
+72 learnts
+
+err> [Debug]
+13221 clauses
+72 learnts
+
+err> [Debug]
+13081 clauses
+72 learnts
+
+err> [Debug]
+13480 clauses
+74 learnts
+
+err> [Debug]
+13480 clauses
+74 learnts
+
+err> [Debug]
+13892 clauses
+74 learnts
+
+err> [Debug]
+13903 clauses
+75 learnts
+
+err> [Debug]
+13862 clauses
+75 learnts
+
+err> [Debug]
+13870 clauses
+76 learnts
+
+err> [Debug]
+13883 clauses
+76 learnts
+
+err> [Debug]
+13884 clauses
+77 learnts
+
+err> [Debug]
+16101 clauses
+93 learnts
+
+err> [Debug]
+16134 clauses
+93 learnts
+
+err> [Debug]
+16092 clauses
+100 learnts
+
+err> [Debug]
+16104 clauses
+100 learnts
+
+err> [Debug]
+16674 clauses
+100 learnts
+
+err> [Debug]
+16679 clauses
+105 learnts
+
+err> [Debug]
+16675 clauses
+106 learnts
+
+err> [Debug]
+16690 clauses
+106 learnts
+
+err> [Debug]
+16690 clauses
+106 learnts
+
+err> [Debug]
+16783 clauses
+108 learnts
+
+err> [Debug]
+17634 clauses
+108 learnts
+
+err> [Debug]
+17634 clauses
+108 learnts
+
+err> [Debug]
+17630 clauses
+109 learnts
+
+err> [Debug]
+17631 clauses
+109 learnts
+
+err> [Debug]
+17659 clauses
+109 learnts
+
+err> [Debug]
+17659 clauses
+109 learnts
+
+err> [Debug]
+17660 clauses
+109 learnts
+
+err> [Debug]
+17649 clauses
+109 learnts
+
+err> [Debug]
+17661 clauses
+109 learnts
+
+err> [Debug]
+17662 clauses
+109 learnts
+
+err> [Debug]
+17678 clauses
+109 learnts
+
+err> [Debug]
+17678 clauses
+109 learnts
+
+err> [Debug]
+17713 clauses
+109 learnts
+
+err> [Debug]
+18305 clauses
+109 learnts
+
+err> [Debug]
+18305 clauses
+109 learnts
+
+err> [Debug]
+18306 clauses
+111 learnts
+
+err> [Debug]
+18321 clauses
+111 learnts
+
+err> [Debug]
+18321 clauses
+115 learnts
+
+err> [Debug]
+33523 clauses
+129 learnts
+
+err> [Debug]
+33523 clauses
+129 learnts
+
+err> [Debug]
+32951 clauses
+128 learnts
+
+err> [Debug]
+32951 clauses
+128 learnts
+
+err> [Debug]
+32931 clauses
+129 learnts
+
+err> [Debug]
+32931 clauses
+129 learnts
+
+err> [Debug]
+33024 clauses
+136 learnts
+
+err> [Debug]
+33035 clauses
+136 learnts
+
+err> [Debug]
+32578 clauses
+144 learnts
+
+err> [Debug]
+32578 clauses
+145 learnts
+
+err> [Debug]
+33779 clauses
+167 learnts
+
+err> [Debug]
+33801 clauses
+167 learnts
+
+err> [Debug]
+33817 clauses
+173 learnts
+
+err> [Debug]
+33871 clauses
+174 learnts
+
+err> [Debug]
+33871 clauses
+175 learnts
+
+err> [Debug]
+39937 clauses
+189 learnts
+
+err> [Debug]
+39992 clauses
+189 learnts
+
+err> [Debug]
+39945 clauses
+213 learnts
+
+err> [Debug]
+40197 clauses
+214 learnts
+
+err> [Debug]
+40197 clauses
+214 learnts
+
+err> [Debug]
+40260 clauses
+214 learnts
+
+err> [Debug]
+40260 clauses
+218 learnts
+
+err> [Debug]
+40262 clauses
+218 learnts
+
+err> [Debug]
+40262 clauses
+218 learnts
+
+err> [Debug]
+40331 clauses
+218 learnts
+
+err> [Debug]
+40335 clauses
+229 learnts
+
+err> [Debug]
+40332 clauses
+229 learnts
+
+err> 
+; File "ocamlpro-fb95ac08-9e13-4ade-bb8b-b16246a2d0e9/unzipped/smt4345645998815667664.smt2", line 433, characters 1-12: Timeout (20.0082) (133183 steps) (goal g_1)
+
+out> 
+timeout

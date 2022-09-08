@@ -1,0 +1,245 @@
+err> [Debug][Sat_solver]
+use CDCL solver
+[Debug][Parsers][parse_input_file]
+parsing file "ocamlpro-fb95ac08-9e13-4ade-bb8b-b16246a2d0e9/unzipped/smt2526256450839932815.smt2"
+
+err> ;[Warning] (set-info not yet supported)
+;[Warning] (set-info not yet supported)
+;[Warning] (set-info not yet supported)
+;[Warning] (set-info not yet supported)
+;[Warning] (set-info not yet supported)
+
+err> 
+; [Warning] "set-info" : Not yet supported
+[Warning] "set-info" : Not yet supported
+[Warning] "set-info" : Not yet supported
+[Warning] "set-info" : Not yet supported
+[Warning] "set-logic" : Not yet supported
+[Warning] "set-info" : Not yet supported
+
+err> 
+; [Debug]
+0 clauses
+0 learnts
+
+err> [Debug]
+0 clauses
+0 learnts
+
+err> [Debug]
+0 clauses
+0 learnts
+
+err> [Debug]
+0 clauses
+0 learnts
+
+err> [Debug]
+0 clauses
+0 learnts
+
+err> [Debug]
+1 clauses
+0 learnts
+
+err> [Debug]
+1 clauses
+0 learnts
+
+err> [Debug]
+1 clauses
+0 learnts
+
+err> [Debug]
+1 clauses
+0 learnts
+
+err> [Debug]
+1 clauses
+0 learnts
+
+err> [Debug]
+1 clauses
+0 learnts
+
+err> [Debug]
+2 clauses
+0 learnts
+[Debug]
+3 clauses
+0 learnts
+
+err> [Debug]
+4 clauses
+0 learnts
+
+err> [Debug]
+5 clauses
+0 learnts
+
+err> [Debug]
+6 clauses
+0 learnts
+
+err> [Debug]
+7 clauses
+0 learnts
+
+err> [Debug]
+8 clauses
+0 learnts
+
+err> [Debug]
+9 clauses
+0 learnts
+
+err> [Debug]
+10 clauses
+0 learnts
+
+err> [Debug]
+11 clauses
+0 learnts
+
+err> [Debug]
+12 clauses
+0 learnts
+
+err> [Debug]
+13 clauses
+0 learnts
+
+err> [Debug]
+14 clauses
+0 learnts
+
+err> [Debug]
+15 clauses
+0 learnts
+
+err> [Debug]
+16 clauses
+0 learnts
+
+err> [Debug]
+17 clauses
+0 learnts
+
+err> [Debug]
+18 clauses
+0 learnts
+
+err> [Debug]
+19 clauses
+0 learnts
+
+err> [Debug]
+20 clauses
+0 learnts
+
+err> [Debug]
+21 clauses
+0 learnts
+
+err> [Debug]
+22 clauses
+0 learnts
+
+err> [Debug]
+23 clauses
+0 learnts
+
+err> [Debug]
+24 clauses
+0 learnts
+
+err> [Debug]
+25 clauses
+0 learnts
+
+err> [Debug]
+25 clauses
+0 learnts
+
+err> [Debug]
+25 clauses
+0 learnts
+
+err> [Debug]
+25 clauses
+0 learnts
+
+err> [Debug]
+25 clauses
+0 learnts
+
+err> [Debug]
+25 clauses
+0 learnts
+
+err> [Debug]
+25 clauses
+0 learnts
+
+err> [Debug]
+25 clauses
+0 learnts
+
+err> [Debug]
+26 clauses
+0 learnts
+
+err> [Debug]
+26 clauses
+0 learnts
+
+err> [Debug]
+26 clauses
+0 learnts
+
+err> [Debug]
+26 clauses
+0 learnts
+[Debug]
+26 clauses
+0 learnts
+[Debug]
+27 clauses
+0 learnts
+
+err> [Debug]
+28 clauses
+0 learnts
+
+err> [Debug]
+29 clauses
+0 learnts
+
+err> [Debug]
+44 clauses
+0 learnts
+
+err> [Debug]
+45 clauses
+0 learnts
+[Debug]
+45 clauses
+0 learnts
+
+err> [Debug]
+45 clauses
+0 learnts
+
+err> [Debug]
+46 clauses
+0 learnts
+
+err> [Debug]
+58 clauses
+0 learnts
+
+err> 
+; File "ocamlpro-fb95ac08-9e13-4ade-bb8b-b16246a2d0e9/unzipped/smt2526256450839932815.smt2", line 300, characters 1-12: Valid (0.0134) (56 steps) (goal g_1)
+
+out> 
+unsat

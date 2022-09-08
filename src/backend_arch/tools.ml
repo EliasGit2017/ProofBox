@@ -13,6 +13,13 @@ let opt_l_maker command options = { cmd = command; opts = options }
 let opt_l_tostring (o : opt_l) =
   sprintf "{ cmd = %s; opts = %s }" o.cmd (stringlist_tostring " " o.opts)
 
+let rec sublist b e l =
+  match l with
+  | [] -> failwith "sublist"
+  | h :: t ->
+      let tail = if e = 0 then [] else sublist (b - 1) (e - 1) t in
+      if b > 0 then tail else h :: tail
+
 let l =
   [
     { cmd = "docker_arch_alt-ergo-2.3.3_1"; opts = [ "ls"; "-a" ] };
@@ -38,7 +45,7 @@ let cmds_builder (toml_ht : (string, string) Stdlib__hashtbl.t)
             "docker_arch_" ^ solver ^ "-" ^ solver_version ^ "_"
             ^ string_of_int (Random.int max_containers_available + 1)
             (* rand int -> switch to list managment *);
-          opts = [ solver ^ "-" ^ solver_version; "-vp"; x ];
+          opts = [ solver ^ "-" ^ solver_version; "-v"; "-t 20"; x ];
         }
         :: !all_cmds)
     files_l;
@@ -59,11 +66,11 @@ let run_cmd (cmds : opt_l) =
     | Docker.Stream.Stdout -> "out> " ^ s
     | Docker.Stream.Stderr -> "err> " ^ s
   in
-  (* printf "Exec in the container returned:\n%s\n"
-     (String.concat "\n" (List.map identify s)); *)
   let oc =
     Stdlib.open_out
-      ("/home/elias/OCP/ez_proofbox/writters_draft/res" ^ cmds.cmd ^ ".txt")
+      ("/home/elias/OCP/ez_proofbox/writters_draft/res" ^ cmds.cmd ^ "-"
+      ^ (Filename.basename @@  List.nth (List.rev cmds.opts) 0)
+      ^ ".txt")
   in
   output_string oc (String.concat "\n" (List.map identify s));
   Stdlib.close_out oc

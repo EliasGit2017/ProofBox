@@ -37,8 +37,8 @@ services:
           cpus: "2"
           memory: 600M
     volumes:
-      - ~/OCP/PROOFBOX_TestJobs/job_example1/:/home/ocaml
-      
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+
   alt-ergo-2.4.1:
     image: elias2049/ae_mono:alt-ergo.2.4.1-slim
     command: tail -f /dev/null
