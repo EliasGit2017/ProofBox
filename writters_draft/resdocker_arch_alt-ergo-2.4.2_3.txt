@@ -1,5 +1,0 @@
-err> [Debug][Sat_solver]
-use CDCL solver
-[Debug][Parsers][parse_input_file]
-parsing file "/ocamlpro-fb95ac08-9e13-4ade-bb8b-b16246a2d0e9/unzipped/smt3926937364471465169.smt2"
-Fatal error: exception Sys_error("/ocamlpro-fb95ac08-9e13-4ade-bb8b-b16246a2d0e9/unzipped/smt3926937364471465169.smt2: No such file or directory")

@@ -51,37 +51,37 @@ services:
           cpus: "2"
           memory: 600M
     volumes:
-      - ~/OCP/PROOFBOX_TestJobs/job_example1/:/home/ocaml
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
 
   alt-ergo-2.4.0:
     image: elias2049/ae_mono:alt-ergo.2.4.0-slim
     command: tail -f /dev/null
     volumes:
-      - ~/OCP/PROOFBOX_TestJobs/job_example1/:/home/ocaml
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
 
   alt-ergo-2.3.3:
     image: elias2049/ae_mono:alt-ergo.2.3.3-slim
     command: tail -f /dev/null
     volumes:
-      - ~/OCP/PROOFBOX_TestJobs/job_example1/:/home/ocaml
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
 
   alt-ergo-2.3.2:
     image: elias2049/ae_mono:alt-ergo.2.3.2-slim
     command: tail -f /dev/null
     volumes:
-      - ~/OCP/PROOFBOX_TestJobs/job_example1/:/home/ocaml
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
 
   alt-ergo-2.3.1:
     image: elias2049/ae_mono:alt-ergo.2.3.1-slim
     command: tail -f /dev/null
     volumes:
-      - ~/OCP/PROOFBOX_TestJobs/job_example1/:/home/ocaml
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
 
   alt-ergo-2.3.0:
     image: elias2049/ae_mono:alt-ergo.2.3.0-slim
     command: tail -f /dev/null
     volumes:
-      - ~/OCP/PROOFBOX_TestJobs/job_example1/:/home/ocaml
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
 
 volumes:
   jobs_data:

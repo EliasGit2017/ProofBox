@@ -13,6 +13,7 @@ let opt_l_maker command options = { cmd = command; opts = options }
 let opt_l_tostring (o : opt_l) =
   sprintf "{ cmd = %s; opts = %s }" o.cmd (stringlist_tostring " " o.opts)
 
+(* switch to predefined sublist *)
 let rec sublist b e l =
   match l with
   | [] -> failwith "sublist"
@@ -20,6 +21,7 @@ let rec sublist b e l =
       let tail = if e = 0 then [] else sublist (b - 1) (e - 1) t in
       if b > 0 then tail else h :: tail
 
+(** example *)
 let l =
   [
     { cmd = "docker_arch_alt-ergo-2.3.3_1"; opts = [ "ls"; "-a" ] };
@@ -31,33 +33,30 @@ let l =
   ]
 
 let cmds_builder (toml_ht : (string, string) Stdlib__hashtbl.t)
-    (files_l : string list) (max_containers_available : int) =
-  let all_cmds = ref [] in
+    (files_l : string list) (max_containers_available : int ref) =
+  let all_cmds = [] in
   let solver = Hashtbl.find toml_ht "jd_solver" in
   let solver_version = Hashtbl.find toml_ht "jd_solver_version" in
-  List.iter
-    (fun x ->
-      (* acc no ref *)
+  List.fold_right
+    (fun x l_acc ->
       (* think about scaling :: unscale with uptime & container status ? *)
-      all_cmds :=
-        {
-          cmd =
-            "docker_arch_" ^ solver ^ "-" ^ solver_version ^ "_"
-            ^ string_of_int (Random.int max_containers_available + 1)
-            (* rand int -> switch to list managment *);
-          opts = [ solver ^ "-" ^ solver_version; "-v"; "-t 20"; x ];
-        }
-        :: !all_cmds)
-    files_l;
-  !all_cmds
+      {
+        cmd =
+          "docker_arch_" ^ solver ^ "-" ^ solver_version ^ "_"
+          ^ string_of_int (Random.int !max_containers_available + 1)
+          (* rand int -> switch to list managment *);
+        opts = [ solver ^ "-" ^ solver_version; "-v"; "-t 20"; x ];
+      }
+      :: l_acc)
+    files_l all_cmds
 
 let run_cmd (cmds : opt_l) =
+  print_endline (Printf.sprintf "Executing : %s" (opt_l_tostring cmds));
   let dlc = C.list ~all:false ~size:true () in
   let e =
     C.Exec.create
       (T.ids_from_containers_list_wname ("/" ^ cmds.cmd) dlc)
       cmds.opts
-    (* [ "alt-ergo-2.4.1"; "-vp"; "ALIA/piVC/piVC_030ee9.smt2" ] *)
   in
   let st = C.Exec.start e in
   let s = Docker.Stream.read_all st in
@@ -69,7 +68,7 @@ let run_cmd (cmds : opt_l) =
   let oc =
     Stdlib.open_out
       ("/home/elias/OCP/ez_proofbox/writters_draft/res" ^ cmds.cmd ^ "-"
-      ^ (Filename.basename @@  List.nth (List.rev cmds.opts) 0)
+      ^ (Filename.basename @@ List.nth (List.rev cmds.opts) 0)
       ^ ".txt")
   in
   output_string oc (String.concat "\n" (List.map identify s));

@@ -19,7 +19,7 @@ build_dock_arch :
 	docker-compose -f ./scripts/Containers/Docker_arch/docker-compose.yml --compatibility up
 
 tear_down_dock_arch :
-	docker-compose -f ./scripts/Containers/Docker_arch/docker-compose.yml down
+	docker-compose -f ./scripts/Containers/Docker_arch/docker-compose.yml --compatibility down
 
 test_dock :
 	./_build/default/backend_arch/docker_comm.exe 
@@ -79,6 +79,9 @@ release:
 
 clean:
 	@dune clean
+
+clean-tmp:
+	rm -rf writters_draft/*.txt
 
 install:
 	@dune install
