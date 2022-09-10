@@ -13,14 +13,6 @@ let opt_l_maker command options = { cmd = command; opts = options }
 let opt_l_tostring (o : opt_l) =
   sprintf "{ cmd = %s; opts = %s }" o.cmd (stringlist_tostring " " o.opts)
 
-(* switch to predefined sublist *)
-let rec sublist b e l =
-  match l with
-  | [] -> failwith "sublist"
-  | h :: t ->
-      let tail = if e = 0 then [] else sublist (b - 1) (e - 1) t in
-      if b > 0 then tail else h :: tail
-
 (** example *)
 let l =
   [

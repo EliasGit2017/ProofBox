@@ -5,6 +5,7 @@ open Utils
 open Tools
 open Toml_reader.Utils
 open Parmap
+open Misc
 
 let server_job_manager_status = ref "Idle"
 
@@ -42,7 +43,7 @@ let rec scheduler_main_loop () =
     (* parse / read toml *)
     let toml_spec = retrieve_toml_values working_dir in
     ht_printer toml_spec;
-    (* print Hashtable storing job opts *)
+    (* print Hashtable storing job options *)
     (* Manage docker arch (scale if > 10) & send to docker arch --> delete scaled containers ? *)
     let files = dir_contents working_dir in
     let real_path_for_container =
@@ -50,14 +51,14 @@ let rec scheduler_main_loop () =
         (fun x ->
           let decomp = String.split_on_char '/' x in
           let l_length = List.length decomp in
-          String.concat "/" (sublist (l_length - 3) (l_length - 1) decomp))
+          String.concat "/" (sublist ~start:(l_length - 3) 3(* (l_length - 1) *) decomp))
         files
     in
     (* List.iter
        (fun x -> print_endline (Printf.sprintf "%s" (Tools.opt_l_tostring x)))
        (cmds_builder toml_spec real_path_for_container !available_c_of_sol); *)
     let all_cmds =
-      cmds_builder toml_spec real_path_for_container !available_c_of_sol
+      cmds_builder toml_spec real_path_for_container available_c_of_sol
     in
     pariter ~ncores:4 run_cmd (L all_cmds);
     (* Timeout is needed *)

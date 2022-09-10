@@ -6,7 +6,7 @@
 (library
  (name manager)
  (modules manager)
- (libraries tools toml_reader db_lwt)
+ (libraries tools toml_reader db_lwt misc)
  (preprocess
   (pps lwt_ppx)))
 

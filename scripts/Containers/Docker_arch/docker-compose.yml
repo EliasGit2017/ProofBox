@@ -24,7 +24,137 @@ services:
   #     - db_data:/var/lib/postgresql/data
 
   # services for alt-ergo job queries
-  
+
+  # CVC services :
+
+  z3: # fixed to z3 version 4.11.2 (latest one yet)
+    image: ghcr.io/z3prover/z3:ubuntu-20.04-bare-z3-sha-8e6f17e
+    command: tail -f /dev/null
+    restart: always
+    # deploy:
+    #     resources:
+    #       limits:
+    #         cpus: "2"
+    #         memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+
+  cvc4-1.0:
+    image: elias2049/cvc:cvc4-1.0-base
+    command: tail -f /dev/null
+    restart: always
+    # deploy:
+    #     resources:
+    #       limits:
+    #         cpus: "2"
+    #         memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+
+  cvc4-1.1:
+    image: elias2049/cvc:cvc4-1.1-base
+    command: tail -f /dev/null
+    restart: always
+    # deploy:
+    #     resources:
+    #       limits:
+    #         cpus: "2"
+    #         memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+
+  cvc4-1.2:
+    image: elias2049/cvc:cvc4-1.2-base
+    command: tail -f /dev/null
+    restart: always
+    # deploy:
+    #     resources:
+    #       limits:
+    #         cpus: "2"
+    #         memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+
+  cvc4-1.3:
+    image: elias2049/cvc:cvc4-1.3-base
+    command: tail -f /dev/null
+    restart: always
+    # deploy:
+    #     resources:
+    #       limits:
+    #         cpus: "2"
+    #         memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+
+  cvc4-1.4:
+    image: elias2049/cvc:cvc4-1.4-base
+    command: tail -f /dev/null
+    restart: always
+    # deploy:
+    #     resources:
+    #       limits:
+    #         cpus: "2"
+    #         memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+
+  cvc4-1.5:
+    image: elias2049/cvc:cvc4-1.5-base
+    command: tail -f /dev/null
+    restart: always
+    # deploy:
+    #     resources:
+    #       limits:
+    #         cpus: "2"
+    #         memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+  cvc4-1.6:
+    image: elias2049/cvc:cvc4-1.6-base
+    command: tail -f /dev/null
+    restart: always
+    # deploy:
+    #     resources:
+    #       limits:
+    #         cpus: "2"
+    #         memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+  cvc4-1.7:
+    image: elias2049/cvc:cvc4-1.7-base
+    command: tail -f /dev/null
+    restart: always
+    # deploy:
+    #     resources:
+    #       limits:
+    #         cpus: "2"
+    #         memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+  cvc4-1.8:
+    image: elias2049/cvc:cvc4-1.8-base
+    command: tail -f /dev/null
+    restart: always
+    # deploy:
+    #     resources:
+    #       limits:
+    #         cpus: "2"
+    #         memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+  cvc5:
+    image: elias2049/cvc5-base
+    command: tail -f /dev/null
+    restart: always
+    # deploy:
+    #     resources:
+    #       limits:
+    #         cpus: "2"
+    #         memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+
   alt-ergo-2.4.2:
     image: elias2049/ae_mono:alt-ergo.2.4.2-slim
     command: tail -f /dev/null
