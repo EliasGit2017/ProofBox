@@ -32,6 +32,8 @@ let rec sublist ?(start=0) length = function (* not tail rec *)
   | _ :: t when start > 0 -> sublist ~start:(start-1) length t
   | h :: t -> h :: sublist (length-1) t
 
+let rec list_range i j = if i > j then [] else i :: (list_range (i+1) j)
+
 let unopt_list f l =
   List.rev @@ List.fold_left (fun acc elt -> match elt with
       | None -> acc

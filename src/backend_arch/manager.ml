@@ -7,10 +7,17 @@ open Toml_reader.Utils
 open Parmap
 open Misc
 
+(* server status *)
 let server_job_manager_status = ref "Idle"
 
-let available_c_of_sol =
-  ref 1 (* nb of available containers for one solver style *)
+(* nb of services to duplicate when scaling *)
+let nb_duplicates = ref 5
+
+(* nb of available containers for one type of solver *)
+let available_c_of_sol = ref 1
+
+(* List representing indexes of available containers *)
+let indexes_c_of_sol = ref (list_range 1 !available_c_of_sol)
 
 (** Sample function for debug/testing purposes only *)
 let consult_jobs ?(verbose = false) () =
@@ -25,6 +32,24 @@ let consult_jobs ?(verbose = false) () =
 let jobs_todo () =
   let res = Db.get_jobs () in
   res
+
+let scale_arch (file_l : string list) (solver : string) (version : string)
+    (nb_dup : int) =
+  (* don't count toml file --> don't run solver on toml file *)
+  if List.length file_l > 2 then (
+    let status_code =
+      Sys.command
+        (Printf.sprintf
+           "docker-compose -f \
+            /home/elias/OCP/ez_proofbox/scripts/Containers/Docker_arch/docker-compose.yml \
+            --compatibility  up --scale %s=%d -d"
+           (solver ^ "-" ^ version)
+           nb_dup)
+    in
+    available_c_of_sol := nb_dup;
+    indexes_c_of_sol := list_range 1 !available_c_of_sol;
+    print_endline (Printf.sprintf "Exit status code : %d" status_code))
+  else print_endline "No need to scale; not enough files"
 
 (** Main job solving event loop -> to optimize base conditions + make sure rec iterations *)
 let rec scheduler_main_loop () =
@@ -44,22 +69,26 @@ let rec scheduler_main_loop () =
     let toml_spec = retrieve_toml_values working_dir in
     ht_printer toml_spec;
     (* print Hashtable storing job options *)
-    (* Manage docker arch (scale if > 10) & send to docker arch --> delete scaled containers ? *)
     let files = dir_contents working_dir in
     let real_path_for_container =
       List.map
         (fun x ->
           let decomp = String.split_on_char '/' x in
           let l_length = List.length decomp in
-          String.concat "/" (sublist ~start:(l_length - 3) 3(* (l_length - 1) *) decomp))
+          String.concat "/" (sublist ~start:(l_length - 3) 3 decomp))
         files
     in
-    (* List.iter
-       (fun x -> print_endline (Printf.sprintf "%s" (Tools.opt_l_tostring x)))
-       (cmds_builder toml_spec real_path_for_container !available_c_of_sol); *)
+    List.iter
+      (fun x -> print_endline (Printf.sprintf "%s" (Tools.opt_l_tostring x)))
+      (cmds_builder toml_spec real_path_for_container available_c_of_sol);
+    (* Manage docker arch (scale if > 10) & send to docker arch --> delete scaled containers ? *)
+    scale_arch real_path_for_container
+      (Hashtbl.find toml_spec "jd_solver")
+      (Hashtbl.find toml_spec "jd_solver_version")
+      5;
     let all_cmds =
       cmds_builder toml_spec real_path_for_container available_c_of_sol
     in
-    pariter ~ncores:4 run_cmd (L all_cmds);
+    pariter ~ncores:4 run_cmd (L all_cmds) ;
     (* Timeout is needed *)
     scheduler_main_loop ()

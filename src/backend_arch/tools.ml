@@ -24,6 +24,7 @@ let l =
     { cmd = "docker_arch_alt-ergo-2.4.0_1"; opts = [ "ls"; "-a" ] };
   ]
 
+(** Builds commands that will be given to [docker exec] *)
 let cmds_builder (toml_ht : (string, string) Stdlib__hashtbl.t)
     (files_l : string list) (max_containers_available : int ref) =
   let all_cmds = [] in
@@ -37,17 +38,28 @@ let cmds_builder (toml_ht : (string, string) Stdlib__hashtbl.t)
           "docker_arch_" ^ solver ^ "-" ^ solver_version ^ "_"
           ^ string_of_int (Random.int !max_containers_available + 1)
           (* rand int -> switch to list managment *);
-        opts = [ solver ^ "-" ^ solver_version; "-v"; "-t 20"; x ];
+        opts =
+          [
+            (if solver <> "z3" then solver ^ "-" ^ solver_version else solver);
+            "-v";
+            "-t 20";
+            x;
+          ];
       }
       :: l_acc)
     files_l all_cmds
 
-let run_cmd (cmds : opt_l) =
+let run_cmd (cmds : opt_l)  =
   print_endline (Printf.sprintf "Executing : %s" (opt_l_tostring cmds));
   let dlc = C.list ~all:false ~size:true () in
   let e =
     C.Exec.create
       (T.ids_from_containers_list_wname ("/" ^ cmds.cmd) dlc)
+      (* (T.ids_from_containers_list_wname
+         ("/"
+         ^ String.sub cmds.cmd 0 (String.length cmds.cmd - 1)
+         ^ string_of_int (List.fold_left min 1 [1;2;3;4;5]))
+         dlc) *)
       cmds.opts
   in
   let st = C.Exec.start e in
