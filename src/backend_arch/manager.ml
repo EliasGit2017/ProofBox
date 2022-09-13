@@ -78,9 +78,9 @@ let rec scheduler_main_loop () =
           String.concat "/" (sublist ~start:(l_length - 3) 3 decomp))
         files
     in
-    List.iter
+    (* List.iter
       (fun x -> print_endline (Printf.sprintf "%s" (Tools.opt_l_tostring x)))
-      (cmds_builder toml_spec real_path_for_container available_c_of_sol);
+      (cmds_builder toml_spec real_path_for_container available_c_of_sol); *)
     (* Manage docker arch (scale if > 10) & send to docker arch --> delete scaled containers ? *)
     scale_arch real_path_for_container
       (Hashtbl.find toml_spec "jd_solver")
@@ -89,6 +89,6 @@ let rec scheduler_main_loop () =
     let all_cmds =
       cmds_builder toml_spec real_path_for_container available_c_of_sol
     in
-    pariter ~ncores:4 run_cmd (L all_cmds) ;
+    pariter ~ncores:8 run_cmd (L all_cmds);
     (* Timeout is needed *)
     scheduler_main_loop ()

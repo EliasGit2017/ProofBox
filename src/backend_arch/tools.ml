@@ -49,12 +49,34 @@ let cmds_builder (toml_ht : (string, string) Stdlib__hashtbl.t)
       :: l_acc)
     files_l all_cmds
 
-let run_cmd (cmds : opt_l)  =
+let run_cmd (cmds : opt_l) =
   print_endline (Printf.sprintf "Executing : %s" (opt_l_tostring cmds));
   let dlc = C.list ~all:false ~size:true () in
+  let c_names = Misc.list_range 1 5 in
+  let targets =
+    List.fold_left
+      (fun res (x : int) ->
+        T.ids_from_containers_list_wname
+          ("/"
+          ^ String.sub cmds.cmd 0 (String.length cmds.cmd - 1)
+          ^ string_of_int x)
+          dlc
+        :: res)
+      [] c_names
+  in
+  let available_targets =
+    List.filter (fun x -> List.length (C.l_procs x) = 1) targets
+  in
+  print_endline
+    (Printf.sprintf "targets : %s" (stringlist_tostring "//" available_targets));
+  while List.length available_targets = 0 do
+    print_endline "sleeping : no free containers available";
+    Unix.sleepf 0.2
+  done;
   let e =
     C.Exec.create
-      (T.ids_from_containers_list_wname ("/" ^ cmds.cmd) dlc)
+      (List.nth available_targets (Random.int @@ List.length available_targets))
+      (* (T.ids_from_containers_list_wname ("/" ^ cmds.cmd) dlc) *)
       (* (T.ids_from_containers_list_wname
          ("/"
          ^ String.sub cmds.cmd 0 (String.length cmds.cmd - 1)
