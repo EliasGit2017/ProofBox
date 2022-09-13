@@ -13,7 +13,7 @@ VERSION:=1.0
 
 PGDATABASE=$(DATABASE)
 
-all: build website api-server openapi
+all: clean-tmp build website api-server openapi
 
 build_dock_arch :
 	docker-compose -f ./scripts/Containers/Docker_arch/docker-compose.yml --compatibility up

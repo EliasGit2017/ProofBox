@@ -6,6 +6,9 @@ open Utils
 module C = Docker.Container
 module T = Docker.Tools
 
+(* nb of services to duplicate when scaling *)
+let nb_duplicates = ref 8
+
 type opt_l = { cmd : string; opts : string list }
 
 let opt_l_maker command options = { cmd = command; opts = options }
@@ -52,7 +55,7 @@ let cmds_builder (toml_ht : (string, string) Stdlib__hashtbl.t)
 let run_cmd (cmds : opt_l) =
   print_endline (Printf.sprintf "Executing : %s" (opt_l_tostring cmds));
   let dlc = C.list ~all:false ~size:true () in
-  let c_names = Misc.list_range 1 5 in
+  let c_names = Misc.list_range 1 !nb_duplicates in
   let targets =
     List.fold_left
       (fun res (x : int) ->
@@ -76,12 +79,6 @@ let run_cmd (cmds : opt_l) =
   let e =
     C.Exec.create
       (List.nth available_targets (Random.int @@ List.length available_targets))
-      (* (T.ids_from_containers_list_wname ("/" ^ cmds.cmd) dlc) *)
-      (* (T.ids_from_containers_list_wname
-         ("/"
-         ^ String.sub cmds.cmd 0 (String.length cmds.cmd - 1)
-         ^ string_of_int (List.fold_left min 1 [1;2;3;4;5]))
-         dlc) *)
       cmds.opts
   in
   let st = C.Exec.start e in

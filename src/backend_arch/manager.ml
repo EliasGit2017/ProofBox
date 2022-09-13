@@ -10,9 +10,6 @@ open Misc
 (* server status *)
 let server_job_manager_status = ref "Idle"
 
-(* nb of services to duplicate when scaling *)
-let nb_duplicates = ref 5
-
 (* nb of available containers for one type of solver *)
 let available_c_of_sol = ref 1
 
@@ -36,7 +33,7 @@ let jobs_todo () =
 let scale_arch (file_l : string list) (solver : string) (version : string)
     (nb_dup : int) =
   (* don't count toml file --> don't run solver on toml file *)
-  if List.length file_l > 2 then (
+  if List.length file_l > 10 then (
     let status_code =
       Sys.command
         (Printf.sprintf
@@ -54,7 +51,7 @@ let scale_arch (file_l : string list) (solver : string) (version : string)
 (** Main job solving event loop -> to optimize base conditions + make sure rec iterations *)
 let rec scheduler_main_loop () =
   let%lwt todo_list = jobs_todo () in
-  if List.length todo_list <= 2 then (
+  if List.length todo_list = 0 then (
     server_job_manager_status := "Idle";
     Lwt_unix.sleep 5.)
   else
@@ -62,13 +59,15 @@ let rec scheduler_main_loop () =
     print_endline
       (Printf.sprintf "In scheduler main loop : \n %s"
          (job_list_to_string [ task_to_solve ]));
+    (* set server status to [Working] *)
+    server_job_manager_status := "Working";
     let working_dir = Filename.dirname task_to_solve.path_to_f ^ "/unzipped/" in
     (* deflate  ---> check if not already deflated*)
     deflate_zip_archive task_to_solve.path_to_f working_dir;
     (* parse / read toml *)
     let toml_spec = retrieve_toml_values working_dir in
-    ht_printer toml_spec;
     (* print Hashtable storing job options *)
+    ht_printer toml_spec;
     let files = dir_contents working_dir in
     let real_path_for_container =
       List.map
@@ -79,16 +78,21 @@ let rec scheduler_main_loop () =
         files
     in
     (* List.iter
-      (fun x -> print_endline (Printf.sprintf "%s" (Tools.opt_l_tostring x)))
-      (cmds_builder toml_spec real_path_for_container available_c_of_sol); *)
+       (fun x -> print_endline (Printf.sprintf "%s" (Tools.opt_l_tostring x)))
+       (cmds_builder toml_spec real_path_for_container available_c_of_sol); *)
     (* Manage docker arch (scale if > 10) & send to docker arch --> delete scaled containers ? *)
     scale_arch real_path_for_container
       (Hashtbl.find toml_spec "jd_solver")
       (Hashtbl.find toml_spec "jd_solver_version")
-      5;
+      !Tools.nb_duplicates;
     let all_cmds =
       cmds_builder toml_spec real_path_for_container available_c_of_sol
     in
-    pariter ~ncores:8 run_cmd (L all_cmds);
+    pariter ~ncores:4 run_cmd (L all_cmds);
+    (* scale down *)
+    scale_arch real_path_for_container
+      (Hashtbl.find toml_spec "jd_solver")
+      (Hashtbl.find toml_spec "jd_solver_version")
+      1;
     (* Timeout is needed *)
     scheduler_main_loop ()
