@@ -37,8 +37,6 @@ let server services =
             (String.concat ","
                (List.map (fun (port, _) -> string_of_int port) servers));
           EzAPIServer.server ~catch servers);
-         (* Lwt_unix.sleep 10. *)
-         Manager.consult_jobs ~verbose:true ();
          Manager.scheduler_main_loop ()
        ]
 

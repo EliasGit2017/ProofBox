@@ -53,7 +53,9 @@ let rec scheduler_main_loop () =
   let%lwt todo_list = jobs_todo () in
   if List.length todo_list = 0 then (
     server_job_manager_status := "Idle";
-    Lwt_unix.sleep 5.)
+    print_endline "waiting for a reason to exist";
+    let _ = Lwt_unix.sleep 5. in
+    scheduler_main_loop ())
   else
     let task_to_solve = List.hd @@ todo_list in
     print_endline
@@ -80,7 +82,6 @@ let rec scheduler_main_loop () =
     (* List.iter
        (fun x -> print_endline (Printf.sprintf "%s" (Tools.opt_l_tostring x)))
        (cmds_builder toml_spec real_path_for_container available_c_of_sol); *)
-    (* Manage docker arch (scale if > 10) & send to docker arch --> delete scaled containers ? *)
     scale_arch real_path_for_container
       (Hashtbl.find toml_spec "jd_solver")
       (Hashtbl.find toml_spec "jd_solver_version")
@@ -88,11 +89,38 @@ let rec scheduler_main_loop () =
     let all_cmds =
       cmds_builder toml_spec real_path_for_container available_c_of_sol
     in
-    pariter ~ncores:4 run_cmd (L all_cmds);
+    (* build result dir *)
+    (if
+     not
+       (Sys.file_exists
+       @@ Filename.dirname task_to_solve.path_to_f
+       ^ "/results/")
+    then
+     let _ =
+       Sys.command
+         ("mkdir -p " ^ Filename.dirname task_to_solve.path_to_f ^ "/results/")
+     in
+     ()
+    else
+      let _ =
+        Sys.command
+          ("rm " ^ Filename.dirname task_to_solve.path_to_f ^ "/results/*.txt")
+      in
+      ());
+    (* run jobs *)
+    pariter ~ncores:5 run_cmd (L all_cmds);
+    (* update dbs *)
+    print_endline (Printf.sprintf "%s" task_to_solve.path_to_f);
+    let%lwt _ = Db.job_done task_to_solve.path_to_f in
+    let%lwt _ =
+      Db.update_cache task_to_solve.job_ref_tag
+        (Filename.dirname task_to_solve.path_to_f ^ "/results/")
+        "solved"
+    in
+    (* send mail *)
     (* scale down *)
     scale_arch real_path_for_container
       (Hashtbl.find toml_spec "jd_solver")
       (Hashtbl.find toml_spec "jd_solver_version")
       1;
-    (* Timeout is needed *)
     scheduler_main_loop ()

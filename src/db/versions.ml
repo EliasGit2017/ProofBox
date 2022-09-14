@@ -61,7 +61,7 @@ let init () =
     (
        job_id SERIAL PRIMARY KEY,
        path_to_results VARCHAR NOT NULL UNIQUE,
-       time_taken VARCHAR NOT NULL,
+       time_taken TIMESTAMP NOT NULL,
        status VARCHAR NOT NULL
     )
     |};
@@ -77,12 +77,12 @@ let init () =
     (* Dummy values to populate db for testing purposes *)
     {|INSERT INTO users (username, email, password, user_desc, first_login_date)
       values ('ocamlpro', 'azwbdj@gmail.com', 'this_will_be_hashed', 'Real OG, first proofbox user', current_timestamp); |};
-    {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, checksum_type, checksum, priority, status) 
+    (* {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, checksum_type, checksum, priority, status) 
       values ('ocamlpro', current_timestamp, 'root', 'MD5', 'None',100, 'scheduled'); |};
     {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, checksum_type, checksum, priority, status)
       values ('ocamlpro', current_timestamp, 'root', 'MD5', 'None', 200, 'scheduled'); |};
     {|INSERT INTO jobs_description (job_client, order_ts, path_to_f, checksum_type, checksum, priority, status) 
-      values ('ocamlpro', current_timestamp, 'root', 'MD5', 'None', 300, 'scheduled'); |}
+      values ('ocamlpro', current_timestamp, 'root', 'MD5', 'None', 300, 'scheduled'); |} *)
   ]
   ~downgrade:[
     {|DROP TABLE jobs_description CASCADE|};

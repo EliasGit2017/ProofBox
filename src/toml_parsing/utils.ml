@@ -37,6 +37,9 @@ let owner_bio = [ "owner"; "bio" ]
 let owner_password = [ "owner"; "password" ]
 let job_description_id = [ "job_description"; "job_id" ]
 let job_description_solver = [ "job_description"; "solver" ]
+let job_tl = ["job_description"; "time_limit"]
+let job_verbosity = ["job_description"; "verbosity"]
+let job_stats = ["job_description"; "stats"]
 let job_description_solver_version = [ "job_description"; "solver_version" ]
 let job_description_synopsis = [ "job_description"; "synopsis" ]
 let job_description_path_tof = [ "job_description"; "path_to_client_repo" ]
@@ -62,6 +65,9 @@ let get_str parsed_toml path_toval =
 let get_int parsed_toml path_toval =
   Otoml.find parsed_toml (Otoml.get_integer ~strict:true) path_toval
 
+let get_bool parsed_toml path_toval =
+  Otoml.find parsed_toml (Otoml.get_boolean ~strict:true) path_toval
+
 let get_title parsed_toml = get_str parsed_toml title_toml
 let get_owner_username parsed_toml = get_str parsed_toml owner_username
 let get_owner_email parsed_toml = get_str parsed_toml owner_email
@@ -69,6 +75,10 @@ let get_owner_bio parsed_toml = get_str parsed_toml owner_bio
 let get_owner_password parsed_toml = get_str parsed_toml owner_password
 let get_jd_job_id parsed_toml = get_int parsed_toml job_description_id
 let get_jd_solver parsed_toml = get_str parsed_toml job_description_solver
+let get_jd_tl parsed_toml = get_int parsed_toml job_tl
+let get_jd_v parsed_toml = get_bool parsed_toml job_verbosity
+let get_jd_stats parsed_toml = get_bool parsed_toml job_stats
+
 
 let get_jd_solver_version parsed_toml =
   get_str parsed_toml job_description_solver_version
@@ -166,6 +176,9 @@ let retrieve_toml_values toml_dir =
     Hashtbl.add htab_toml_values "jd_solver" (get_jd_solver parsed_toml) ;
     Hashtbl.add htab_toml_values "jd_solver_version"
       (get_jd_solver_version parsed_toml) ;
+    Hashtbl.add htab_toml_values "jd_time_limit" (string_of_int @@ get_jd_tl parsed_toml);
+    Hashtbl.add htab_toml_values "jd_verbosity" (string_of_bool @@ get_jd_v parsed_toml);
+    Hashtbl.add htab_toml_values "jd_stats" (string_of_bool @@ get_jd_stats parsed_toml);
     Hashtbl.add htab_toml_values "jd_synopsis" (get_jd_job_synopsis parsed_toml) ;
     Hashtbl.add htab_toml_values "jd_path_to_client_repo"
       (get_jd_path_tof parsed_toml) ;

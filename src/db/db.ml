@@ -19,6 +19,7 @@ let get_job_desc {job_client; job_ref_tag_v} =
                           where job_client = $job_client and job_id = ${Int32.of_int job_ref_tag_v}"]
       >|= jobs_of_rows
 
+(** Retrieve all jobs to solve + order by priority & timestamp *)
 let get_jobs () =
   with_dbh >>> fun dbh -> catch_db_error @@
   fun () ->
@@ -27,6 +28,17 @@ let get_jobs () =
                  order by order_ts DESC, priority DESC"]
     >|= jobs_of_rows
 
+let job_done (p_t_f : string) =
+  with_dbh >>> fun dbh -> catch_db_error @@
+  fun () ->
+    [%pgsql dbh "update jobs_description set status = 'done' where path_to_f = $p_t_f"]
+
+let update_cache (job_id : int) (ptf : string) (status : string) =
+  let fld_to_caltype = CalendarLib.Calendar.now () in
+  with_dbh >>> fun dbh -> catch_db_error @@
+    fun () ->
+      [%pgsql dbh "INSERT INTO jobs_cache (job_id, path_to_results, time_taken, status)
+                   VALUES (${Int32.of_int job_id}, $ptf, $fld_to_caltype, $status)"]
 
 (** Retrieve all jobs from user having username specified in
     [Data_types.all_jobs_get.job_client_req] . (TO DO) *)

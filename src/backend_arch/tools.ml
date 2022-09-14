@@ -6,6 +6,9 @@ open Utils
 module C = Docker.Container
 module T = Docker.Tools
 
+(** dest where result files will be written *)
+let storage_dir = "/home/elias/OCP/ez_proofbox/scripts/Containers/storage"
+
 (* nb of services to duplicate when scaling *)
 let nb_duplicates = ref 8
 
@@ -27,25 +30,34 @@ let l =
     { cmd = "docker_arch_alt-ergo-2.4.0_1"; opts = [ "ls"; "-a" ] };
   ]
 
+let timelimit_opt (solver : string) (tl : int) =
+  if solver = "cvc" then "--tlimit=" ^ string_of_int (tl * 1000)
+  else if solver = "z3" then "-T:" ^ string_of_int (tl * 1000)
+  else "-t " ^ string_of_int tl
+
 (** Builds commands that will be given to [docker exec] *)
 let cmds_builder (toml_ht : (string, string) Stdlib__hashtbl.t)
     (files_l : string list) (max_containers_available : int ref) =
   let all_cmds = [] in
   let solver = Hashtbl.find toml_ht "jd_solver" in
   let solver_version = Hashtbl.find toml_ht "jd_solver_version" in
+  let verbosity = bool_of_string (Hashtbl.find toml_ht "jd_verbosity") in
+  let time_limit = int_of_string (Hashtbl.find toml_ht "jd_time_limit") in
+  let stats = bool_of_string (Hashtbl.find toml_ht "jd_stats") in
   List.fold_right
     (fun x l_acc ->
-      (* think about scaling :: unscale with uptime & container status ? *)
       {
         cmd =
           "docker_arch_" ^ solver ^ "-" ^ solver_version ^ "_"
-          ^ string_of_int (Random.int !max_containers_available + 1)
-          (* rand int -> switch to list managment *);
+          ^ string_of_int (Random.int !max_containers_available + 1);
         opts =
           [
-            (if solver <> "z3" then solver ^ "-" ^ solver_version else solver);
-            "-v";
-            "-t 20";
+            (if solver = "cvc" || solver = "z3" then
+             solver ^ "-" ^ solver_version
+            else solver);
+            (if verbosity && solver <> "z3" then "-v" else "");
+            (if stats && solver = "cvc" then "--stats" else "");
+            timelimit_opt solver time_limit;
             x;
           ];
       }
@@ -70,11 +82,12 @@ let run_cmd (cmds : opt_l) =
   let available_targets =
     List.filter (fun x -> List.length (C.l_procs x) = 1) targets
   in
-  print_endline
-    (Printf.sprintf "targets : %s" (stringlist_tostring "//" available_targets));
+  (* print_endline
+     (Printf.sprintf "targets : %s"
+        (stringlist_tostring " // " available_targets)); *)
   while List.length available_targets = 0 do
     print_endline "sleeping : no free containers available";
-    Unix.sleepf 0.2
+    Unix.sleepf 0.5
   done;
   let e =
     C.Exec.create
@@ -88,9 +101,12 @@ let run_cmd (cmds : opt_l) =
     | Docker.Stream.Stdout -> "out> " ^ s
     | Docker.Stream.Stderr -> "err> " ^ s
   in
+  let path_res =
+    List.hd @@ String.split_on_char '/' (List.hd @@ List.rev cmds.opts)
+  in
   let oc =
     Stdlib.open_out
-      ("/home/elias/OCP/ez_proofbox/writters_draft/res" ^ cmds.cmd ^ "-"
+      (storage_dir ^ "/" ^ path_res ^ "/results/" ^ cmds.cmd ^ "-"
       ^ (Filename.basename @@ List.nth (List.rev cmds.opts) 0)
       ^ ".txt")
   in
