@@ -6,6 +6,33 @@ open Tools
 open Toml_reader.Utils
 open Parmap
 open Misc
+open Cohttp
+open Cohttp_lwt_unix
+open Lwt
+open Data_types
+
+let postData email name =
+  Printf.sprintf
+    "{\n\
+    \    \"sender\": {\n\
+    \        \"name\": \"ProofBox\",\n\
+    \        \"email\": \"azwbdj@gmail.com.com\"\n\
+    \    },\n\
+    \    \"to\": [\n\
+    \        {\n\
+    \            \"email\": \"%s\",\n\
+    \            \"name\": \"%s\"\n\
+    \        }\n\
+    \    ],\n\
+    \    \"subject\": \"Job done\",\n\
+    \    \"htmlContent\": \"<html><head></head><body><p>Hello,</p>Your job \
+     submitted to the proofbox server is complete. Please retrieve it using \
+     the appropriate method.</p></body></html>\"\n\
+     }" email name
+
+(* Sendgrid api key *)
+let sendgrid_api_key =
+  "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"
 
 (* server status *)
 let server_job_manager_status = ref "Idle"
@@ -30,6 +57,19 @@ let jobs_todo () =
   let res = Db.get_jobs () in
   res
 
+let send_job_done email name =
+  let uri = Uri.of_string "https://api.sendinblue.com/v3/smtp/email/" in
+  let headers =
+    Header.init () |> fun h ->
+    Header.add h "Accept" "application/json" |> fun h ->
+    Header.add h "api-key"
+      "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"
+    |> fun h -> Header.add h "Content-Type" "application/json"
+  in
+  let body = Cohttp_lwt.Body.of_string (postData email name) in
+  Client.call ~headers ~body `POST uri >>= fun (_resp, body) ->
+  body |> Cohttp_lwt.Body.to_string >|= fun body -> body
+
 let scale_arch (file_l : string list) (solver : string) (version : string)
     (nb_dup : int) =
   (* don't count toml file --> don't run solver on toml file *)
@@ -53,7 +93,7 @@ let rec scheduler_main_loop () =
   let%lwt todo_list = jobs_todo () in
   if List.length todo_list = 0 then (
     server_job_manager_status := "Idle";
-    print_endline "waiting for a reason to exist";
+    (* print_endline "waiting for a reason to exist"; *)
     let _ = Lwt_unix.sleep 5. in
     scheduler_main_loop ())
   else
@@ -61,6 +101,8 @@ let rec scheduler_main_loop () =
     print_endline
       (Printf.sprintf "In scheduler main loop : \n %s"
          (job_list_to_string [ task_to_solve ]));
+    let%lwt user_data_l = Db.get_user_wname task_to_solve.job_client in
+    let user_data = List.hd user_data_l in
     (* set server status to [Working] *)
     server_job_manager_status := "Working";
     let working_dir = Filename.dirname task_to_solve.path_to_f ^ "/unzipped/" in
@@ -118,6 +160,7 @@ let rec scheduler_main_loop () =
         "solved"
     in
     (* send mail *)
+    let%lwt _ = send_job_done user_data.email user_data.username in
     (* scale down *)
     scale_arch real_path_for_container
       (Hashtbl.find toml_spec "jd_solver")

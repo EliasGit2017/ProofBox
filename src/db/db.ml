@@ -76,6 +76,13 @@ let get_all_users () =
       [%pgsql.object dbh "select * from users"]
       >|= users_of_rows
 
+let get_user_wname (username : string) =
+with_dbh >>> fun dbh -> catch_db_error @@
+fun () ->
+  [%pgsql.object dbh "select *
+                      from users
+                      where username = $username"]
+  >|= users_of_rows
 
 let get_user {username; _} =
   with_dbh >>> fun dbh -> catch_db_error @@

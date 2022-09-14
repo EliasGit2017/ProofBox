@@ -6,7 +6,7 @@
 (library
  (name manager)
  (modules manager)
- (libraries tools toml_reader db_lwt misc)
+ (libraries tools toml_reader db_lwt misc ez_api.sendgrid cohttp cohttp-lwt-unix)
  (preprocess
   (pps lwt_ppx)))
 
