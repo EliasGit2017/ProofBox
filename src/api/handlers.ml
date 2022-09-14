@@ -3,6 +3,7 @@ open Data_types
 open Db
 open Bcrypt
 open Utils
+module Ztools = Toml_reader.Utils
 
 (* ****************************************************************** *)
 
@@ -247,6 +248,28 @@ let handler_job_main_service _params (job_payload : Data_types.job_payload) =
               (storage_dest ^ Filename.basename job_payload.job_archive_name);
           priority = job_payload.priority;
           job_return = inserted_jobs;
+          code = 200;
+        })
+
+let job_retriever_handler _params (job_payload : Data_types.job_payload) =
+  to_api
+    (let job_id = int_of_string job_payload.desc in
+     let client = job_payload.job_client_id in
+     let%lwt cached_l = Db.get_f_cache job_id client in
+     let cached = List.hd cached_l in
+     let zip_path = cached.path_to_res ^ "/result.zip" in
+     Ztools.make_zipbundle ~keep_dir_struct:false cached.path_to_res false
+       (cached.path_to_res ^ "/result.zip");
+     Lwt.return_ok
+     @@ {
+          job_archive_name = "result.zip";
+          job_client_id = "ProofBox";
+          desc = "job_retriever response : result zip";
+          infos_pb = Utils.get_bytes zip_path;
+          checksum_type = "MD5";
+          checksum = md5_checksum zip_path;
+          priority = -100;
+          job_return = [];
           code = 200;
         })
 

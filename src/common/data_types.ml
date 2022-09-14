@@ -95,3 +95,10 @@ type job_payload = {
   job_return : jobs_descr list;
   code : int;
 }
+
+type job_cache = {
+  job_id : int;
+  path_to_res : string;
+  time : string;
+  status : string;
+}

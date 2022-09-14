@@ -40,6 +40,12 @@ let update_cache (job_id : int) (ptf : string) (status : string) =
       [%pgsql dbh "INSERT INTO jobs_cache (job_id, path_to_results, time_taken, status)
                    VALUES (${Int32.of_int job_id}, $ptf, $fld_to_caltype, $status)"]
 
+let get_f_cache (id : int) (client : string) =
+  with_dbh >>> fun dbh -> catch_db_error @@
+    fun () ->
+      [%pgsql.object dbh "select * from jobs_cache where job_id = ${Int32.of_int id} and status = 'solved'"]
+      >|= job_cache_of_rows
+
 (** Retrieve all jobs from user having username specified in
     [Data_types.all_jobs_get.job_client_req] . (TO DO) *)
 let get_all_jobs_from_user {job_client_req} =

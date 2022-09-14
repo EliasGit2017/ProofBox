@@ -9,7 +9,7 @@
  (name api_lib)
  (wrapped false)
  (modules handlers api server)
- (libraries ez_api.server ez_api.server_session api_services db_lwt safepass uuidm)
+ (libraries ez_api.server ez_api.server_session api_services db_lwt safepass uuidm toml_reader)
  (preprocess (pps lwt_ppx)))
 
 (executable

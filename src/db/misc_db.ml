@@ -37,6 +37,20 @@ let jobs_of_rows rows =
           })
     rows
 
+let job_cache_of_rows rows =
+  List.map
+    (function
+      | row ->
+          {
+            job_id = Int32.to_int row#job_id;
+            path_to_res = row#path_to_results;
+            time =
+              (* CalendarLib.Printer.TimePrinter.to_string @@ CalendarLib.Calendar.to_time *)
+              CalendarLib.Printer.Calendar.to_string row#time_taken;
+            status = row#status;
+          })
+    rows
+
 (** Creates [Data_types.user_description] from DB users table rows *)
 let users_of_rows rows =
   List.map

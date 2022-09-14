@@ -82,14 +82,21 @@ type nonrec meta_payload = Data_types.meta_payload = {
 [@@deriving json_encoding]
 
 type nonrec job_payload = Data_types.job_payload = {
-  job_archive_name : string;
-  job_client_id : string;
-  desc : string;
-  infos_pb : int list;
-  checksum_type : string;
-  checksum : string;
-  priority : int;
-  job_return : jobs_descr list;
-  code : int;
+  job_archive_name : string; (* zip results *)
+  job_client_id : string; (* client *)
+  desc : string; (* job_id *)
+  infos_pb : int list; (* zip *)
+  checksum_type : string; (* md5 *)
+  checksum : string; (* md5 *)
+  priority : int; (* -100 *)
+  job_return : jobs_descr list; (* jobs in cache for client x *)
+  code : int; (* 200 *)
 }
 [@@deriving json_encoding { remove_prefix = false }]
+
+type nonrec job_cache = Data_types.job_cache = {
+  job_id : int;
+  path_to_res : string;
+  time : string;
+  status : string;
+}[@@deriving json_encoding { remove_prefix = false }]

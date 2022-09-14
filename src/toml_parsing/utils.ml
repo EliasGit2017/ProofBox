@@ -258,11 +258,11 @@ let write_gzipped_file (file_name : string) (s : string) : unit =
     (absolute path). The directory structure is not preserved when
     [keep_dir_struct] is set to false as all the files are bundled together in
     the same main zipped directory. *)
-let make_zipbundle ?(keep_dir_struct = true) (dir_name : string)
+let make_zipbundle ?(keep_dir_struct = true) (dir_name : string) (to_or:bool)
     (archive_name : string) : unit =
   try
     (* Include toml file and verify it is unique *)
-    let target_files = get_main_toml dir_name :: dir_contents dir_name in
+    let target_files = if to_or then( get_main_toml dir_name :: dir_contents dir_name) else (dir_contents dir_name) in
     let main_archive =
       Zip.open_out ~comment:"Main archive containing target files" archive_name
     in

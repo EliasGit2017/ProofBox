@@ -11,7 +11,7 @@ open Cohttp_lwt_unix
 open Lwt
 open Data_types
 
-let postData email name =
+let postData email name job_id =
   Printf.sprintf
     "{\n\
     \    \"sender\": {\n\
@@ -25,10 +25,10 @@ let postData email name =
     \        }\n\
     \    ],\n\
     \    \"subject\": \"Job done\",\n\
-    \    \"htmlContent\": \"<html><head></head><body><p>Hello,</p>Your job \
+    \    \"htmlContent\": \"<html><head></head><body><p>Hello,</p>Your job with id : %d \
      submitted to the proofbox server is complete. Please retrieve it using \
      the appropriate method.</p></body></html>\"\n\
-     }" email name
+     }" email name job_id
 
 (* Sendgrid api key *)
 let sendgrid_api_key =
@@ -57,7 +57,7 @@ let jobs_todo () =
   let res = Db.get_jobs () in
   res
 
-let send_job_done email name =
+let send_job_done email name id =
   let uri = Uri.of_string "https://api.sendinblue.com/v3/smtp/email/" in
   let headers =
     Header.init () |> fun h ->
@@ -66,10 +66,11 @@ let send_job_done email name =
       "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"
     |> fun h -> Header.add h "Content-Type" "application/json"
   in
-  let body = Cohttp_lwt.Body.of_string (postData email name) in
+  let body = Cohttp_lwt.Body.of_string (postData email name id) in
   Client.call ~headers ~body `POST uri >>= fun (_resp, body) ->
   body |> Cohttp_lwt.Body.to_string >|= fun body -> body
 
+(** Scale and unscale containers *)
 let scale_arch (file_l : string list) (solver : string) (version : string)
     (nb_dup : int) =
   (* don't count toml file --> don't run solver on toml file *)
@@ -160,7 +161,7 @@ let rec scheduler_main_loop () =
         "solved"
     in
     (* send mail *)
-    let%lwt _ = send_job_done user_data.email user_data.username in
+    let%lwt _ = send_job_done user_data.email user_data.username task_to_solve.job_ref_tag in
     (* scale down *)
     scale_arch real_path_for_container
       (Hashtbl.find toml_spec "jd_solver")

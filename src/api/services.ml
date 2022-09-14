@@ -4,6 +4,8 @@ open EzAPI
 open Utils
 
 let section_main = Doc.section "Main services"
+
+let second_main = Doc.section "Retrieve"
 let sections = [ section_main ]
 
 let arg_test =
@@ -155,3 +157,14 @@ let send_job_main_service : (job_payload, job_payload, server_error_type, no_sec
   ~output:job_payload_enc
   ~errors:Errors.server_errors
   Path.(root // "main_job_send")
+
+let retrieve_job_result : (job_payload, job_payload, server_error_type, no_security) post_service0 =
+  post_service
+  ~section:section_main
+  ~name:"Retrieve job once notified by email and run succesfull"
+  ~descr:"Get job result in job_payload record"
+  ~params:[]
+  ~input:job_payload_enc
+  ~output:job_payload_enc
+  ~errors:Errors.server_errors
+  Path.(root // "retrieve_job_result")
