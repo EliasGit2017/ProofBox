@@ -94,8 +94,8 @@ let rec scheduler_main_loop () =
   let%lwt todo_list = jobs_todo () in
   if List.length todo_list = 0 then (
     server_job_manager_status := "Idle";
-    (* print_endline "waiting for a reason to exist"; *)
-    let _ = Lwt_unix.sleep 5. in
+    let%lwt _ = Lwt_unix.sleep 5. in
+    print_endline "waiting for a reason to exist";
     scheduler_main_loop ())
   else
     let task_to_solve = List.hd @@ todo_list in
