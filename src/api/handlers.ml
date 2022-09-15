@@ -251,6 +251,18 @@ let handler_job_main_service _params (job_payload : Data_types.job_payload) =
           code = 200;
         })
 
+let cache_for_client _params (job_payload : Data_types.job_payload_cache) =
+  to_api
+    (let%lwt cache = Db.get_cache_f_u job_payload.job_client_id in
+     Lwt.return_ok
+     @@ {
+          job_archive_name = "None";
+          job_client_id = "ProofBox";
+          desc = "cache response : all jobs in cache for user job_payload.job_client_id";
+          job_return = cache;
+          code = 200;
+        })
+
 let job_retriever_handler _params (job_payload : Data_types.job_payload) =
   to_api
     (let job_id = int_of_string job_payload.desc in

@@ -100,3 +100,11 @@ type nonrec job_cache = Data_types.job_cache = {
   time : string;
   status : string;
 }[@@deriving json_encoding { remove_prefix = false }]
+
+type nonrec job_payload_cache = Data_types.job_payload_cache = {
+  job_archive_name : string;
+  job_client_id : string;
+  desc : string;
+  job_return : job_cache list;
+  code : int;
+}[@@deriving json_encoding { remove_prefix = false }]

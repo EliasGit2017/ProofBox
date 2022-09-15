@@ -136,17 +136,6 @@ let send_job_metadata : (meta_payload, jobs, server_error_type, no_security) pos
   ~errors:Errors.server_errors
   Path.(root // "job_metadata")
 
-(* let send_job_metadata_and_payload : (meta_payload, meta_payload, server_error_type, no_security) ws_service0 =
-  ws_service
-  ~section:section_main
-  ~name:"send_job_metadata"
-  ~descr:"send metadata associated to a job (and ask for server availability)"
-  ~params:[]
-  ~input:(Json meta_payload_enc)
-  ~output:(Json meta_payload_enc)
-  ~errors:Errors.server_errors
-  Path.(root // "job_metadata_and_payload") *)
-
 let send_job_main_service : (job_payload, job_payload, server_error_type, no_security) post_service0 =
   post_service
   ~section:section_main
@@ -168,3 +157,14 @@ let retrieve_job_result : (job_payload, job_payload, server_error_type, no_secur
   ~output:job_payload_enc
   ~errors:Errors.server_errors
   Path.(root // "retrieve_job_result")
+
+let consult_cache : (job_payload_cache, job_payload_cache, server_error_type, no_security) post_service0 =
+  post_service
+  ~section:section_main
+  ~name:"Retrieve cache for specific user"
+  ~descr:"get all cached jobs for user"
+  ~params:[]
+  ~input:job_payload_cache_enc
+  ~output:job_payload_cache_enc
+  ~errors:Errors.server_errors
+  Path.(root // "retrieve_jobs_cache")
