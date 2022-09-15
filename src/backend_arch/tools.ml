@@ -32,7 +32,7 @@ let l =
 
 let timelimit_opt (solver : string) (tl : int) =
   if solver = "cvc" then "--tlimit=" ^ string_of_int (tl * 1000)
-  else if solver = "z3" then "-T:" ^ string_of_int (tl * 1000)
+  else if solver = "z3" then "-T:" ^ string_of_int tl
   else "-t " ^ string_of_int tl
 
 (** Builds commands that will be given to [docker exec] *)
@@ -52,11 +52,11 @@ let cmds_builder (toml_ht : (string, string) Stdlib__hashtbl.t)
           ^ string_of_int (Random.int !max_containers_available + 1);
         opts =
           [
-            (if solver = "cvc" || solver = "z3" then
+            (if solver = "cvc" || solver = "alt-ergo" then
              solver ^ "-" ^ solver_version
             else solver);
-            (if verbosity && solver <> "z3" then "-v" else "");
-            (if stats && solver = "cvc" then "--stats" else "");
+            (if verbosity && solver <> "z3" then "-v" else "-v:10");
+            (if stats && solver = "cvc" then "--stats" else if solver = "z3" then "-st" else "");
             timelimit_opt solver time_limit;
             x;
           ];
