@@ -25,10 +25,11 @@ let postData email name job_id =
     \        }\n\
     \    ],\n\
     \    \"subject\": \"Job done\",\n\
-    \    \"htmlContent\": \"<html><head></head><body><p>Hello,</p>Your job with id : %d \
-     submitted to the proofbox server is complete. Please retrieve it using \
-     the appropriate method.</p></body></html>\"\n\
-     }" email name job_id
+    \    \"htmlContent\": \"<html><head></head><body><p>Hello,</p>Your job \
+     with id : %d submitted to the proofbox server is complete. Please \
+     retrieve it using the appropriate method.</p></body></html>\"\n\
+     }"
+    email name job_id
 
 (* Sendgrid api key *)
 let sendgrid_api_key =
@@ -151,7 +152,8 @@ let rec scheduler_main_loop () =
       in
       ());
     (* run jobs *)
-    pariter ~ncores:5 run_cmd (L all_cmds);
+    let f () = pariter ~ncores:5 run_cmd (L all_cmds) in
+    let%lwt () = Lwt_preemptive.detach f () in
     (* update dbs *)
     print_endline (Printf.sprintf "%s" task_to_solve.path_to_f);
     let%lwt _ = Db.job_done task_to_solve.path_to_f in
@@ -161,7 +163,9 @@ let rec scheduler_main_loop () =
         "solved"
     in
     (* send mail *)
-    let%lwt _ = send_job_done user_data.email user_data.username task_to_solve.job_ref_tag in
+    let%lwt _ =
+      send_job_done user_data.email user_data.username task_to_solve.job_ref_tag
+    in
     (* scale down *)
     scale_arch real_path_for_container
       (Hashtbl.find toml_spec "jd_solver")

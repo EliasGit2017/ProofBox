@@ -30,6 +30,8 @@ let server services =
 
   Arg.parse [] (fun config_file -> load_config config_file) "API server";
   let servers = [ (!api_port, EzAPIServerUtils.API services) ] in
+  (* let _ = Lwt_preemptive.detach Manager.scheduler_main_loop () in *)
+  (* Lwt.async (fun () -> Manager.scheduler_main_loop ()); *)
   Lwt_main.run
   @@ Lwt.join
        [
@@ -37,7 +39,9 @@ let server services =
             (String.concat ","
                (List.map (fun (port, _) -> string_of_int port) servers));
           EzAPIServer.server ~catch servers);
-         Manager.scheduler_main_loop ()
+         Manager.scheduler_main_loop ();
        ]
 
-let () = server Api.services
+let () =
+  (* Lwt.async (fun () -> Manager.scheduler_main_loop ()); *)
+  server Api.services
