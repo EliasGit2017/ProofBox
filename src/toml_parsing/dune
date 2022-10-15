@@ -1,0 +1,4 @@
+(library
+ (name toml_reader)
+ (modules utils)
+ (libraries otoml camlzip data_common unix stdlib-shims str))

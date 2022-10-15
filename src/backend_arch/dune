@@ -1,0 +1,28 @@
+(library
+ (name tools)
+ (modules tools)
+ (libraries camlzip data_common unix stdlib-shims str docker-api parmap))
+
+(library
+ (name manager)
+ (modules manager)
+ (libraries tools toml_reader db_lwt misc ez_api.sendgrid cohttp cohttp-lwt-unix)
+ (preprocess
+  (pps lwt_ppx)))
+
+(executable ; executable for tests
+ (name main)
+ (modules main)
+ (libraries tools parmap))
+
+(executable ; playground to test functions
+ (name playground)
+ (modules playground)
+ (libraries data_common unix stdlib-shims str parmap docker-api db_lwt)
+ (preprocess
+  (pps lwt_ppx)))
+
+(executable ; playground to test ocaml-docker
+ (name docker_comm)
+ (modules docker_comm)
+ (libraries docker-api dockerfile-cmd dockerfile dockerfile-opam unix))

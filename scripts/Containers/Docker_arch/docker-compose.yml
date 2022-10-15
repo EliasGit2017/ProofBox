@@ -1,0 +1,251 @@
+version: '3'
+
+services:
+
+  # postgres:
+  #   # No need to specify port info as networkig will be handled by compose.
+  #   # Those lines are kept as comments as the web server is tested locally before 
+  #   # running `docker-compose up` to avoid rebuilding the image at each modification
+  #   # in the server code. (the first compilation stage takes a decent amount of time,
+  #   # it needs to be cached and handled more carefully)
+
+  #   image: postgres
+  #   restart: always
+  #   expose:
+  #     - 5432
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     - POSTGRES_USER=iamproof
+  #     - POSTGRES_PASSWORD=GenProof23!!
+  #     - POSTGRES_DB=proof_db
+  #     # - POSTGRES_HOST_AUTH_METHOD=trust
+  #   volumes:
+  #     - db_data:/var/lib/postgresql/data
+
+  # services for alt-ergo job queries
+
+  # CVC services :
+
+  z3-4.11.2: # fixed to z3 version 4.11.2 (latest one yet)
+    image: elias2049/z3-4.11.2-base
+    command: tail -f /dev/null
+    restart: always
+    deploy:
+        resources:
+          limits:
+            cpus: "2"
+            memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/proofs
+
+  cvc-4-1.0:
+    image: elias2049/cvc:cvc4-1.0-base
+    command: tail -f /dev/null
+    restart: always
+    deploy:
+        resources:
+          limits:
+            cpus: "2"
+            memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/proofs
+
+  cvc-4-1.1:
+    image: elias2049/cvc:cvc4-1.1-base
+    command: tail -f /dev/null
+    restart: always
+    deploy:
+        resources:
+          limits:
+            cpus: "2"
+            memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/proofs
+  cvc-4-1.2:
+    image: elias2049/cvc:cvc4-1.2-base
+    command: tail -f /dev/null
+    restart: always
+    deploy:
+        resources:
+          limits:
+            cpus: "2"
+            memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/proofs
+
+  cvc-4-1.3:
+    image: elias2049/cvc:cvc4-1.3-base
+    command: tail -f /dev/null
+    restart: always
+    deploy:
+        resources:
+          limits:
+            cpus: "2"
+            memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/proofs
+
+  cvc-4-1.4:
+    image: elias2049/cvc:cvc4-1.4-base
+    command: tail -f /dev/null
+    restart: always
+    deploy:
+        resources:
+          limits:
+            cpus: "2"
+            memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/proofs
+
+  cvc-4-1.5:
+    image: elias2049/cvc:cvc4-1.5-base
+    command: tail -f /dev/null
+    restart: always
+    deploy:
+        resources:
+          limits:
+            cpus: "2"
+            memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/proofs
+  cvc-4-1.6:
+    image: elias2049/cvc:cvc4-1.6-base
+    command: tail -f /dev/null #entrypoint is z3 ... special cmds for z3
+    restart: always
+    deploy:
+        resources:
+          limits:
+            cpus: "2"
+            memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/proofs
+  cvc-4-1.7:
+    image: elias2049/cvc:cvc4-1.7-base
+    command: tail -f /dev/null
+    restart: always
+    deploy:
+        resources:
+          limits:
+            cpus: "2"
+            memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/proofs
+  cvc-4-1.8:
+    image: elias2049/cvc:cvc4-1.8-base
+    command: tail -f /dev/null
+    restart: always
+    deploy:
+        resources:
+          limits:
+            cpus: "2"
+            memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/proofs
+  cvc-5:
+    image: elias2049/cvc:cvc5-base
+    command: tail -f /dev/null
+    restart: always
+    deploy:
+        resources:
+          limits:
+            cpus: "2"
+            memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/proofs
+
+  alt-ergo-2.4.2:
+    image: elias2049/ae_mono:alt-ergo.2.4.2-slim
+    command: tail -f /dev/null
+    # cpus: "0.6"
+    # mem_limit: "600M"
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+
+  alt-ergo-2.4.1:
+    image: elias2049/ae_mono:alt-ergo.2.4.1-slim
+    command: tail -f /dev/null
+    # cpus: "0.6"
+    # mem_limit: "600M"
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+
+  alt-ergo-2.4.0:
+    image: elias2049/ae_mono:alt-ergo.2.4.0-slim
+    command: tail -f /dev/null
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+
+  alt-ergo-2.3.3:
+    image: elias2049/ae_mono:alt-ergo.2.3.3-slim
+    command: tail -f /dev/null
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+
+  alt-ergo-2.3.2:
+    image: elias2049/ae_mono:alt-ergo.2.3.2-slim
+    command: tail -f /dev/null
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+
+  alt-ergo-2.3.1:
+    image: elias2049/ae_mono:alt-ergo.2.3.1-slim
+    command: tail -f /dev/null
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+
+  alt-ergo-2.3.0:
+    image: elias2049/ae_mono:alt-ergo.2.3.0-slim
+    command: tail -f /dev/null
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 600M
+    volumes:
+      - ~/OCP/ez_proofbox/scripts/Containers/storage/:/home/ocaml
+
+volumes:
+  jobs_data:
+
+    # driver: flocker
+    # driver_opts:
+    #   size: "5GiB"
+    # job_stock: # Currently writing to local folder as server is tested locally

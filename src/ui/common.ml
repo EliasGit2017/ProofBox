@@ -1,4 +1,7 @@
 open Js_of_ocaml
+open EzAPI.TYPES
+
+let test_host_api = BASE (PConfig.api_host ^ (string_of_int PConfig.api_port))
 
 let html_escaped s =
   let len = String.length s in
@@ -13,6 +16,9 @@ let html_escaped s =
   done;
   Buffer.contents b
 
+let js s = Js.string s
+(** Converts [string] to [js_string t].*)
+
 let host () =
   let host =
     match Url.url_of_string (Js.to_string Dom_html.window##.location##.href) with
@@ -21,7 +27,7 @@ let host () =
     | _ -> PConfig.web_host in
   EzAPI.TYPES.BASE host
 
-let logs s = Firebug.console##log (Js.string s)
+let logs s = Firebug.console##log (js s)
 
 let path () =
   match Url.url_of_string (Js.to_string Dom_html.window##.location##.href) with
@@ -40,3 +46,6 @@ let set_path ?(scroll=true) ?(args=[]) path =
 
 let wait ?(t=1.) f =
   Dom_html.window##setTimeout (Js.wrap_callback f) t |> ignore
+
+let warn s = Firebug.console##warn (js s)
+(** [warn s] prints [s] in console as a warning. *)
