@@ -1,6 +1,7 @@
 # ProofBox : Docker-compose platform providing SMT solvers services
 
-![](/home/elias/Pictures/server arch.svg)
+
+<img src="./static/server_arch.svg" alt="picture">
 
 `ez_proofbox` is a docker platform designed as a server intended to provide services for SMT solvers.
 
